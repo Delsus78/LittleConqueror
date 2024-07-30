@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleConqueror", "LittleConqueror\LittleConqueror.csproj", "{C70E15EC-0FDA-4BB4-9FFF-EB9E0278CCF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleConqueror.Core", "LittleConqueror.Core\LittleConqueror.Core.csproj", "{D1B5D90C-0737-4AE7-A351-89035DAF5328}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C70E15EC-0FDA-4BB4-9FFF-EB9E0278CCF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70E15EC-0FDA-4BB4-9FFF-EB9E0278CCF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70E15EC-0FDA-4BB4-9FFF-EB9E0278CCF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70E15EC-0FDA-4BB4-9FFF-EB9E0278CCF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1B5D90C-0737-4AE7-A351-89035DAF5328}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1B5D90C-0737-4AE7-A351-89035DAF5328}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1B5D90C-0737-4AE7-A351-89035DAF5328}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1B5D90C-0737-4AE7-A351-89035DAF5328}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
