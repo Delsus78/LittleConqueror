@@ -4,17 +4,20 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>LittleConqueror.Persistence</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.7" />
+      <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0-preview.6.24327.7" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="DatabaseAdapters\" />
-      <Folder Include="FetchingAdapters\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LittleConqueror.AppService\LittleConqueror.AppService.csproj" />
     </ItemGroup>
 
 </Project>

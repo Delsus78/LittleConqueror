@@ -1,6 +1,6 @@
-using Little_Conqueror.Models.DataTransferObjects;
+using LittleConqueror.AppService.Domain.Models;
 
-namespace LittleConqueror.AppService.Ports;
+namespace LittleConqueror.AppService.DrivenPorts;
 
 public interface IOSMCityFetcher
 {

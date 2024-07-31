@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleConqueror", "LittleCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleConqueror.AppService", "LittleConqueror.AppService\LittleConqueror.AppService.csproj", "{D1B5D90C-0737-4AE7-A351-89035DAF5328}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleConqueror.API", "LittleConqueror.API\LittleConqueror.API.csproj", "{885B78E7-5AD6-400E-964E-8F53FE838259}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LittleConqueror.Infrastructure", "LittleConqueror.Infrastructure\LittleConqueror.Infrastructure.csproj", "{E7B1065A-7B8F-499D-97AD-620396D48C92}"
 EndProject
 Global
@@ -22,10 +20,6 @@ Global
 		{D1B5D90C-0737-4AE7-A351-89035DAF5328}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1B5D90C-0737-4AE7-A351-89035DAF5328}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1B5D90C-0737-4AE7-A351-89035DAF5328}.Release|Any CPU.Build.0 = Release|Any CPU
-		{885B78E7-5AD6-400E-964E-8F53FE838259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{885B78E7-5AD6-400E-964E-8F53FE838259}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{885B78E7-5AD6-400E-964E-8F53FE838259}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{885B78E7-5AD6-400E-964E-8F53FE838259}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7B1065A-7B8F-499D-97AD-620396D48C92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E7B1065A-7B8F-499D-97AD-620396D48C92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7B1065A-7B8F-499D-97AD-620396D48C92}.Release|Any CPU.ActiveCfg = Release|Any CPU

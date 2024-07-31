@@ -1,7 +1,9 @@
-
+using LittleConqueror.AppService.Domain.Services;
+using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.DrivingPorts;
-using LittleConqueror.AppService.Services;
 using LittleConqueror.Exceptions;
+using LittleConqueror.Infrastructure.FetchingAdapters;
+using LittleConqueror.Models.Mappers;
 using LittleConqueror.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,8 +35,15 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-// Services
+// Services Driving
 builder.Services.AddScoped<ICityService, CityService>();
+
+// Services Driven
+builder.Services.AddScoped<IOSMCityFetcher, NominatimOSMFetcherAdapter>();
+
+// Others
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 // HttpClients
 builder.Services.AddHttpClient("NominatimOSM", httpClient =>
