@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DatabaseAdapters\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\LittleConqueror.AppService\LittleConqueror.AppService.csproj" />
     </ItemGroup>
 

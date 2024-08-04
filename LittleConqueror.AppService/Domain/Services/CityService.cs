@@ -1,36 +1,40 @@
+using LittleConqueror.AppService.Domain.DrivenModels;
 using LittleConqueror.AppService.DomainEntities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.DrivingPorts;
+using Geojson = LittleConqueror.AppService.DomainEntities.Geojson;
 
 namespace LittleConqueror.AppService.Domain.Services;
 
-public class CityService(IOSMCityFetcher osmCityFetcher) : ICityService
+public class CityService(IOSMCityFetcherPort osmCityFetcher, ICityDatabasePort cityDatabase) : ICityService
 {
-    public Task<City> GetCityById(int id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<City> GetCityByLongitudeAndLatitude(double longitude, double latitude)
     {
-        var city = await osmCityFetcher.GetCityByLongitudeAndLatitude(longitude, latitude);
+        var cityOSM = await osmCityFetcher.GetCityByLongitudeAndLatitude(longitude, latitude);
         
-        // TODO Get Database City informations 
-
+        var dbCity = await cityDatabase.GetCityById(cityOSM.PlaceId); 
+        
+        if (dbCity == null)
+                await cityDatabase.AddCity(new City
+                {
+                    Id = cityOSM.PlaceId,
+                    Name = cityOSM.Name,
+                    Population = cityOSM.Extratags?.Population ?? 0
+                });
+        
         return new City
         {
-            Id = city.PlaceId,
-            Country = city.Address?.Country ?? string.Empty,
-            Name = city.Name,
-            Latitude = city.Lat,
-            Longitude = city.Lon,
-            Population = city.Extratags?.Population ?? 0,
+            Id = cityOSM.PlaceId,
+            Country = cityOSM.Address?.Country ?? string.Empty,
+            Name = cityOSM.Name,
+            Latitude = cityOSM.Lat,
+            Longitude = cityOSM.Lon,
+            Population = cityOSM.Extratags?.Population ?? 0,
             Geojson = new Geojson
             {
-                Type = city.Geojson?.Type ?? string.Empty,
-                Coordinates = city.Geojson?.Coordinates ?? new List<List<List<double>>>()
+                Type = cityOSM.Geojson?.Type ?? string.Empty,
+                Coordinates = cityOSM.Geojson?.Coordinates ?? new List<List<List<double>>>()
             }
-            //Territory = TODO with db info
         };
     }
 }

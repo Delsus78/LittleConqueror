@@ -1,11 +1,11 @@
 using System.Text.Json;
+using LittleConqueror.AppService.Domain.DrivenModels;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Persistence.JsonConverters;
-using OSMCityResponse = LittleConqueror.AppService.Domain.Models.OSMCityResponse;
 
 namespace LittleConqueror.Infrastructure.FetchingAdapters;
 
-public class NominatimOSMFetcherAdapter(IHttpClientFactory httpClientFactory) : IOSMCityFetcher
+public class NominatimOSMFetcherAdapter(IHttpClientFactory httpClientFactory) : IOSMCityFetcherPort
 {
     private readonly JsonSerializerOptions jsonOptions = new()
     {
@@ -13,7 +13,7 @@ public class NominatimOSMFetcherAdapter(IHttpClientFactory httpClientFactory) : 
         Converters = {new StringOrNumberToDoubleConverter(), new StringToIntConverter()}
     };
 
-    public async Task<OSMCityResponse> GetCityByLongitudeAndLatitude(double longitude, double latitude)
+    public async Task<CityOSM> GetCityByLongitudeAndLatitude(double longitude, double latitude)
     {
         var httpClient = httpClientFactory.CreateClient("NominatimOSM");
 
@@ -26,7 +26,7 @@ public class NominatimOSMFetcherAdapter(IHttpClientFactory httpClientFactory) : 
         
         var content = await response.Content.ReadAsStringAsync();
         
-        var city = JsonSerializer.Deserialize<OSMCityResponse>(content, jsonOptions);
+        var city = JsonSerializer.Deserialize<CityOSM>(content, jsonOptions);
         return city;
     }
 }

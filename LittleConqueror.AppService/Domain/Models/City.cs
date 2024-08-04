@@ -9,7 +9,6 @@ public class City
     public string Country { get; set; }
     public Geojson Geojson { get; set; }
     public int Population { get; set; }
-    public Territory? Territory { get; set; }
 }
 
 public record Geojson

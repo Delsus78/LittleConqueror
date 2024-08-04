@@ -10,5 +10,6 @@ public class MappingProfile : Profile
     {
         CreateMap<City, CityDto>().ReverseMap();
         CreateMap<Geojson, GeojsonDto>().ReverseMap();
+        CreateMap<User, UserDto>().ReverseMap();
     }
 }
