@@ -1,5 +1,5 @@
 using System.Text.Json;
-using LittleConqueror.AppService.Domain.DrivenModels;
+using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Persistence.JsonConverters;
 

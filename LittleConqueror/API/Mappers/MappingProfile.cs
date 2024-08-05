@@ -1,9 +1,9 @@
 using AutoMapper;
+using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
-using LittleConqueror.Models.Dtos;
 
-namespace LittleConqueror.Mappers;
+namespace LittleConqueror.API.Mappers;
 
 public class MappingProfile : Profile
 {

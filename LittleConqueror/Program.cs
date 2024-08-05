@@ -1,3 +1,4 @@
+using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Exceptions;
@@ -5,7 +6,6 @@ using LittleConqueror.Infrastructure;
 using LittleConqueror.Infrastructure.DatabaseAdapters;
 using LittleConqueror.Infrastructure.FetchingAdapters;
 using LittleConqueror.Infrastructure.Repositories;
-using LittleConqueror.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

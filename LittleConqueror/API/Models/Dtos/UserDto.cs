@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LittleConqueror.Models.Dtos;
+namespace LittleConqueror.API.Models.Dtos;
 
 public record UserDto([Required] string Name);

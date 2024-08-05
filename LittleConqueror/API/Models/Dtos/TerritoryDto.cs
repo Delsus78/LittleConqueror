@@ -1,4 +1,4 @@
-namespace LittleConqueror.Models.Dtos;
+namespace LittleConqueror.API.Models.Dtos;
 
 public class TerritoryDto
 {

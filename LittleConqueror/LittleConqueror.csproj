@@ -29,4 +29,8 @@
       <ProjectReference Include="..\LittleConqueror.Infrastructure\LittleConqueror.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="API\" />
+    </ItemGroup>
+
 </Project>

@@ -20,12 +20,15 @@ public class CreateUserHandler(
         user = await userDatabase.CreateUser(user);
         
         if (user == null)
-        {
             throw new AppException("User creation failed", 500);
-        }
 
         var territory = new Territory { Owner = user };
-        await territoryDatabase.CreateTerritory(territory);
+        var resultedTerritory = await territoryDatabase.CreateTerritory(territory);
+        
+        if (resultedTerritory == null)
+            throw new AppException("Territory creation failed", 500);
+
+        user.Territory = resultedTerritory;
         
         return user;
     }

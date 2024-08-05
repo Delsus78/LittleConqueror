@@ -1,12 +1,12 @@
 using AutoMapper;
+using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers;
 using LittleConqueror.AppService.Exceptions;
-using LittleConqueror.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LittleConqueror.RestAdapters;
+namespace LittleConqueror.API.RestAdapters;
 
 [ApiController]
 [Route("api/Users")]
