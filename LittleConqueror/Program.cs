@@ -1,12 +1,11 @@
-using LittleConqueror.AppService.Domain.Services;
+using LittleConqueror.AppService.Domain.Handlers;
 using LittleConqueror.AppService.DrivenPorts;
-using LittleConqueror.AppService.DrivingPorts;
 using LittleConqueror.Exceptions;
 using LittleConqueror.Infrastructure;
 using LittleConqueror.Infrastructure.DatabaseAdapters;
 using LittleConqueror.Infrastructure.FetchingAdapters;
 using LittleConqueror.Infrastructure.Repositories;
-using LittleConqueror.Models.Mappers;
+using LittleConqueror.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,8 +37,10 @@ builder.Services.AddDbContext<DataContext>(options =>
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // Services Driving
-builder.Services.AddScoped<ICityService, CityService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>();
+builder.Services.AddScoped<IGetTerritoryByUserIdHandler, GetTerritoryByUserIdHandler>();
+builder.Services.AddScoped<IGetUserByIdHandler, GetUserByIdHandler>();
+builder.Services.AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>();
 
 // Services Driven
 builder.Services.AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>();
@@ -47,6 +48,8 @@ builder.Services.AddScoped<ICityDatabasePort, CityDatabaseAdapter>();
 builder.Services.AddScoped<CityRepository>();
 builder.Services.AddScoped<IUserDatabasePort, UserDatabaseAdapter>();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<ITerritoryDatabasePort, TerritoryDatabaseAdapter>();
+builder.Services.AddScoped<TerritoryRepository>();
 
 // Others
 builder.Services.AddAutoMapper(typeof(MappingProfile));

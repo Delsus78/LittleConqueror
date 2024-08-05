@@ -1,5 +1,6 @@
 using AutoMapper;
-using LittleConqueror.AppService.DrivingPorts;
+using LittleConqueror.AppService.Domain.DrivingModels.Queries;
+using LittleConqueror.AppService.Domain.Handlers;
 using LittleConqueror.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,12 +8,12 @@ namespace LittleConqueror.RestAdapters;
 
 [ApiController]
 [Route("api/Cities")]
-public class CityRestAdapter(ICityService cityService, IMapper mapper) : ControllerBase
+public class CityRestAdapter(
+    IGetCityByLongitudeAndLatitudeHandler getCityByLongitudeAndLatitudeHandler, 
+    IMapper mapper) : ControllerBase
 {
     [HttpGet]
-    public async Task<CityDto> GetCity([FromQuery] CityRequestDto cityRequestDto)
-    {
-        var city = await cityService.GetCityByLongitudeAndLatitude(cityRequestDto.Longitude, cityRequestDto.Latitude);
-        return mapper.Map<CityDto>(city);
-    }
+    public async Task<CityDto> GetCity([FromQuery] GetCityByLongitudeLatitudeQuery query)
+        => mapper.Map<CityDto>(await getCityByLongitudeAndLatitudeHandler.Handle(query));
+    
 }

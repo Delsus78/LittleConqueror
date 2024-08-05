@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace LittleConqueror.Infrastructure.Repositories;
 
@@ -7,8 +8,9 @@ public interface IRepository<T> where T : class
 {
     Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true);
     Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true);
-    Task CreateAsync(T entity);
+    Task<EntityEntry<T>> CreateAsync(T entity);
     Task RemoveAsync(T entity);
+    Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
     Task SaveAsync();
 }
 public class Repository<T> : IRepository<T> where T : class
@@ -23,10 +25,12 @@ public class Repository<T> : IRepository<T> where T : class
     }
 
 
-    public async Task CreateAsync(T entity)
+    public async Task<EntityEntry<T>> CreateAsync(T entity)
     {
-        await _dbSet.AddAsync(entity);
+        var response = await _dbSet.AddAsync(entity);
         await SaveAsync();
+        
+        return response;
     }
 
     public async Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true)
@@ -68,6 +72,11 @@ public class Repository<T> : IRepository<T> where T : class
         await SaveAsync();
     }
 
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> filter)
+    {
+        return await _dbSet.AnyAsync(filter);
+    }
+    
     public async Task SaveAsync()
     {
         await _applicationDbContext.SaveChangesAsync();

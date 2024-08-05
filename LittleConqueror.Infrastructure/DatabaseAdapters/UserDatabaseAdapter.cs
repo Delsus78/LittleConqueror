@@ -1,24 +1,20 @@
-using LittleConqueror.AppService.DomainEntities;
+using AutoMapper;
+using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
+using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
 using LittleConqueror.Infrastructure.Repositories;
-using LittleConqueror.Persistence.Entities;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters;
 
-public class UserDatabaseAdapter(UserRepository userRepository) : IUserDatabasePort
+public class UserDatabaseAdapter(
+    UserRepository userRepository, 
+    IMapper mapper) : IUserDatabasePort
 {
     public async Task<User?> GetUserById(int id)
     {
         var userEntity = await userRepository.GetAsync(entity => entity.Id == id);
         
-        if (userEntity == null)
-            return null;
-
-        return new User
-        {
-            Id = userEntity.Id,
-            Name = userEntity.Name
-        };
+        return userEntity == null ? null : mapper.Map<User>(userEntity);
     }
 
     public async Task<User?> CreateUser(User user)
@@ -28,13 +24,12 @@ public class UserDatabaseAdapter(UserRepository userRepository) : IUserDatabaseP
             Name = user.Name
         };
 
-        await userRepository.CreateAsync(userEntity);
+        var entityEntry = await userRepository.CreateAsync(userEntity);
         await userRepository.SaveAsync();
-        
-        return new User
-        {
-            Id = userEntity.Id,
-            Name = userEntity.Name
-        };
+
+        return mapper.Map<User>(entityEntry.Entity);
     }
+
+    public Task<bool> IsUserExist(int id) 
+        => userRepository.AnyAsync(entity => entity.Id == id);
 }

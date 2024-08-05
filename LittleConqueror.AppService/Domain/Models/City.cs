@@ -1,4 +1,4 @@
-namespace LittleConqueror.AppService.DomainEntities;
+namespace LittleConqueror.AppService.Domain.Models;
 
 public class City
 {

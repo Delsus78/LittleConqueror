@@ -1,7 +1,6 @@
-using LittleConqueror.AppService.DomainEntities;
-using LittleConqueror.Persistence;
-using LittleConqueror.Persistence.Entities;
+using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
 
 namespace LittleConqueror.Infrastructure.Repositories;
 
-public class CityRepository(DataContext applicationDbContext) : Repository<CityEntity>(applicationDbContext);
+public class CityRepository(DataContext applicationDbContext) 
+    : Repository<CityEntity>(applicationDbContext);

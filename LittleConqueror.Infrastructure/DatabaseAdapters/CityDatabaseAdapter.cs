@@ -1,30 +1,24 @@
-using LittleConqueror.AppService.DomainEntities;
+using AutoMapper;
+using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
+using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
 using LittleConqueror.Infrastructure.Repositories;
-using LittleConqueror.Persistence.Entities;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters;
 
-public class CityDatabaseAdapter(CityRepository cityRepository) : ICityDatabasePort
+public class CityDatabaseAdapter(
+    CityRepository cityRepository, 
+    IMapper mapper) : ICityDatabasePort
 {
     public async Task<City?> GetCityById(int id)
     {
         var entity = await cityRepository.GetAsync(cityEntity => cityEntity.Id == id);
-
-        if (entity == null)
-            return null;
-        
-        return new City
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            Population = entity.Population
-        };
+        return entity == null ? null : mapper.Map<City>(entity);
     }
 
     public async Task<City?> AddCity(City city)
     {
-        await cityRepository.CreateAsync(new CityEntity
+        var entityEntry = await cityRepository.CreateAsync(new CityEntity
         {
             Id = city.Id,
             Name = city.Name,
@@ -33,6 +27,6 @@ public class CityDatabaseAdapter(CityRepository cityRepository) : ICityDatabaseP
         
         await cityRepository.SaveAsync();
         
-        return city;
+        return mapper.Map<City?>(entityEntry.Entity);
     }
 }

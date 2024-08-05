@@ -1,4 +1,4 @@
-namespace LittleConqueror.Persistence.Entities;
+namespace LittleConqueror.Infrastructure.Entities.DatabaseEntities;
 
 public class CityEntity
 {
