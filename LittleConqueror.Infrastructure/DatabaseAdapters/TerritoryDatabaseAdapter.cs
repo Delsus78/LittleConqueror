@@ -10,7 +10,7 @@ public class TerritoryDatabaseAdapter(
     TerritoryRepository territoryRepository, 
     IMapper mapper) : ITerritoryDatabasePort
 {
-    public async Task<Territory?> CreateTerritory(Territory territory)
+    public async Task<Territory> CreateTerritory(Territory territory)
     {
         var entityEntry = await territoryRepository.CreateAsync(new TerritoryEntity
         {
@@ -19,13 +19,13 @@ public class TerritoryDatabaseAdapter(
         
         await territoryRepository.SaveAsync();
         
-        return mapper.Map<Territory?>(entityEntry.Entity);
+        return mapper.Map<Territory>(entityEntry.Entity);
     }
 
-    public async Task<Territory?> GetTerritoryOfUser(int userId)
+    public async Task<Territory> GetTerritoryOfUser(int userId)
     {
         var territoryEntity = await territoryRepository.GetAsync(entity => entity.OwnerId == userId);
         
-        return territoryEntity == null ? null : mapper.Map<Territory?>(territoryEntity);
+        return mapper.Map<Territory>(territoryEntity);
     }
 }

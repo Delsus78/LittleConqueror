@@ -13,6 +13,7 @@ public class MappingProfile : Profile
         CreateMap<Geojson, GeojsonDto>().ReverseMap();
         CreateMap<User, UserDto>().ReverseMap();
         CreateMap<Territory, TerritoryDto>().ReverseMap();
+        CreateMap<UserInformations, UserInformationsDto>().ReverseMap();
         
         CreateMap<User, UserEntity>().ReverseMap();
         CreateMap<City, CityEntity>().ReverseMap();

@@ -41,6 +41,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>();
 builder.Services.AddScoped<IGetTerritoryByUserIdHandler, GetTerritoryByUserIdHandler>();
 builder.Services.AddScoped<IGetUserByIdHandler, GetUserByIdHandler>();
 builder.Services.AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>();
+builder.Services.AddScoped<IGetUserInformationsHandler, GetUserInformationsHandler>();
 
 // Services Driven
 builder.Services.AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>();
