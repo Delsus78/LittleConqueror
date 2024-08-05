@@ -16,10 +16,10 @@ public class UserRestAdapter(
     IGetTerritoryByUserIdHandler getTerritoryByUserIdHandler,
     IMapper mapper) : ControllerBase
 {
-    [HttpGet("{Id}")]
-    public async Task<UserDto> GetUser(int id)
+    [HttpGet("{userId}")]
+    public async Task<UserDto> GetUser(int userId)
         => mapper.Map<UserDto>(
-            await getUserByIdHandler.Handle(new GetUserByIdQuery {UserId = id}) 
+            await getUserByIdHandler.Handle(new GetUserByIdQuery {UserId = userId}) 
             ?? throw new AppException("User not found", 404));
     
     [HttpPost]

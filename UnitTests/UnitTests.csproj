@@ -25,9 +25,4 @@
       <ProjectReference Include="..\LittleConqueror.AppService\LittleConqueror.AppService.csproj" />
     </ItemGroup>
 
-
-    <ItemGroup>
-      <Folder Include="Domain\Models\" />
-    </ItemGroup>
-
 </Project>
