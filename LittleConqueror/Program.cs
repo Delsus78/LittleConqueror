@@ -1,6 +1,9 @@
 using LittleConqueror;
 using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers;
+using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
+using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
+using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Singletons;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Authentication;
@@ -98,6 +101,8 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IRegisterAuthUserHandler, RegisterAuthUserHandler>()
     .AddScoped<IGetAuthenticatedUserByIdHandler, GetAuthenticatedUserByIdHandler>()
     .AddScoped<IAuthenticateUserHandler, AuthenticateUserHandler>()
+    .AddScoped<IAddCityToATerritoryHandler, AddCityToATerritoryHandler>()
+    .AddScoped<IGetCityByOsmIdHandler, GetCityByOsmIdHandler>()
 
 // Services Driven
     .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()

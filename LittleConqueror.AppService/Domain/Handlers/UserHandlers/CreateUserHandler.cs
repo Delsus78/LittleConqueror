@@ -3,7 +3,7 @@ using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
-namespace LittleConqueror.AppService.Domain.Handlers;
+namespace LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 
 public interface ICreateUserHandler
 {

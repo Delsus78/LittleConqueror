@@ -9,6 +9,7 @@ public interface IRepository<T> where T : class
     Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true);
     Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true);
     Task<EntityEntry<T>> CreateAsync(T entity);
+    Task<EntityEntry<T>> UpdateAsync(T entity);
     Task RemoveAsync(T entity);
     Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
     Task SaveAsync();
@@ -28,6 +29,14 @@ public class Repository<T> : IRepository<T> where T : class
     public async Task<EntityEntry<T>> CreateAsync(T entity)
     {
         var response = await _dbSet.AddAsync(entity);
+        await SaveAsync();
+        
+        return response;
+    }
+
+    public async Task<EntityEntry<T>> UpdateAsync(T entity)
+    {
+        var response = _dbSet.Update(entity);
         await SaveAsync();
         
         return response;

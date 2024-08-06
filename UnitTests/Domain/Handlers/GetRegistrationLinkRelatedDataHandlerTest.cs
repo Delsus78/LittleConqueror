@@ -1,4 +1,5 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
+using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Singletons;
 
 namespace UnitTests.Domain.Handlers;

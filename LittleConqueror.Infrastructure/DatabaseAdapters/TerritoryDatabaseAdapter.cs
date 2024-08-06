@@ -28,4 +28,20 @@ public class TerritoryDatabaseAdapter(
         
         return mapper.Map<Territory>(territoryEntity);
     }
+
+    public async Task<Territory> GetTerritoryById(int territoryId)
+    {
+        var territoryEntity = await territoryRepository.GetAsync(entity => entity.Id == territoryId);
+        
+        return mapper.Map<Territory>(territoryEntity);
+    }
+
+    public async Task<Territory> UpdateTerritory(Territory territory)
+    {
+        var entity = mapper.Map<TerritoryEntity>(territory);
+        
+        var entityEntry = await territoryRepository.UpdateAsync(entity);
+        
+        return mapper.Map<Territory>(entityEntry.Entity);
+    }
 }

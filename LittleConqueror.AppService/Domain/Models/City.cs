@@ -3,10 +3,10 @@ namespace LittleConqueror.AppService.Domain.Models;
 public class City
 {
     public int Id { get; set; }
+    public char OsmType { get; set; }
     public string Name { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
-    public string Country { get; set; }
     public Geojson Geojson { get; set; }
     public int Population { get; set; }
 }

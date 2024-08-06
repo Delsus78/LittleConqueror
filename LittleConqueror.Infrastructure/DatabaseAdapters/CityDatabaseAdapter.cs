@@ -21,6 +21,7 @@ public class CityDatabaseAdapter(
         var entityEntry = await cityRepository.CreateAsync(new CityEntity
         {
             Id = city.Id,
+            OsmType = city.OsmType,
             Name = city.Name,
             Population = city.Population
         });

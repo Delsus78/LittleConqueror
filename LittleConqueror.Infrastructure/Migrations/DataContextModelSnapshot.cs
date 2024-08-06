@@ -56,7 +56,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Hash = "$2a$13$jDoKTNLi8fj3TqXG5vFdN.0hIjVG/ZB2uRWa.uG4naBmwAafpX1Ey",
+                            Hash = "$2a$13$1NDyDQsvH4F2GkUqzWlveOWdmW/zEy.d1U3SyXyR8Vz0f.MOnY2F.",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -73,6 +73,9 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<char>("OsmType")
+                        .HasColumnType("character(1)");
 
                     b.Property<int>("Population")
                         .HasColumnType("integer");

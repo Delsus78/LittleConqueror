@@ -1,4 +1,5 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
+using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
 
@@ -24,13 +25,11 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
         // arrange
         var cityOSM = new CityOSM(
             1,
+            "R",
             1,
             1,
             null,
             "City",
-            "CityName",
-            new Address("City", "State", "Country"),
-            new List<double>(),
             new Extratags(1000),
             null);
         _osmCityFetcher
@@ -46,8 +45,7 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
         // assert
         result.Should().BeEquivalentTo(new City
         {
-            Id = cityOSM.PlaceId,
-            Country = cityOSM.Address?.Country ?? string.Empty,
+            Id = cityOSM.OsmId,
             Name = cityOSM.Name,
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,

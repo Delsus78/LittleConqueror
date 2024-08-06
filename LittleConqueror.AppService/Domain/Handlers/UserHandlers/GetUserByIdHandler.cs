@@ -2,7 +2,7 @@ using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
 
-namespace LittleConqueror.AppService.Domain.Handlers;
+namespace LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 
 public interface IGetUserByIdHandler
 {

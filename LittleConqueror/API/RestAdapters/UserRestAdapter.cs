@@ -3,6 +3,7 @@ using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers;
+using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 

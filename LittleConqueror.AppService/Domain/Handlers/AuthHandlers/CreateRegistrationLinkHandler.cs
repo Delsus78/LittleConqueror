@@ -1,7 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.Singletons;
 
-namespace LittleConqueror.AppService.Domain.Handlers;
+namespace LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 
 public interface ICreateRegistrationLinkHandler
 {
