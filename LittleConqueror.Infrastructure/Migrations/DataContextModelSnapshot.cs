@@ -22,6 +22,46 @@ namespace LittleConqueror.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.AuthUserEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("AuthUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Hash = "$2a$13$jDoKTNLi8fj3TqXG5vFdN.0hIjVG/ZB2uRWa.uG4naBmwAafpX1Ey",
+                            Role = "Admin",
+                            Username = "admin"
+                        });
+                });
+
             modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.CityEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -83,6 +123,15 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.AuthUserEntity", b =>
+                {
+                    b.HasOne("LittleConqueror.Infrastructure.Entities.DatabaseEntities.UserEntity", "User")
+                        .WithOne("AuthUser")
+                        .HasForeignKey("LittleConqueror.Infrastructure.Entities.DatabaseEntities.AuthUserEntity", "UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.CityEntity", b =>
                 {
                     b.HasOne("LittleConqueror.Infrastructure.Entities.DatabaseEntities.TerritoryEntity", null)
@@ -108,6 +157,9 @@ namespace LittleConqueror.Infrastructure.Migrations
 
             modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.UserEntity", b =>
                 {
+                    b.Navigation("AuthUser")
+                        .IsRequired();
+
                     b.Navigation("Territory")
                         .IsRequired();
                 });

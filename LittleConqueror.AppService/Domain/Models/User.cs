@@ -6,4 +6,6 @@ public class User
     public string Name { get; set; }
     
     public Territory Territory { get; set; }
+    
+    public AuthUser AuthUser { get; set; }
 }

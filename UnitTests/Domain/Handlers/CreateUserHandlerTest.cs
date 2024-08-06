@@ -1,11 +1,6 @@
-using AutoFixture.Xunit2;
-using FluentAssertions;
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
-using LittleConqueror.AppService.Domain.Handlers;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
-using Moq;
-using Xunit;
 
 namespace UnitTests.Domain.Handlers;
 
@@ -31,6 +26,10 @@ public class CreateUserHandlerTest
         _userDatabase
             .Setup(x => x.CreateUser(It.IsAny<User>()))
             .ReturnsAsync(expected);
+        
+        _territoryDatabase
+            .Setup(x => x.CreateTerritory(It.IsAny<Territory>()))
+            .ReturnsAsync((Territory t) => t);
         
         // act
         var result = await _createUserHandler.Handle(command);

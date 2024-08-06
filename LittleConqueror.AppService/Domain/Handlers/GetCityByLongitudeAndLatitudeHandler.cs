@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.DrivenPorts;
+using LittleConqueror.AppService.Exceptions;
 
 namespace LittleConqueror.AppService.Domain.Handlers;
 
@@ -15,6 +16,8 @@ public class GetCityByLongitudeAndLatitudeHandler(
     public async Task<City> Handle(GetCityByLongitudeLatitudeQuery query)
     {
         var cityOSM = await osmCityFetcher.GetCityByLongitudeAndLatitude(query.Longitude, query.Latitude);
+        if (string.IsNullOrEmpty(cityOSM.Name))
+            throw new AppException("City not found", 404);
         
         var dbCity = await cityDatabase.GetCityById(cityOSM.PlaceId); 
         

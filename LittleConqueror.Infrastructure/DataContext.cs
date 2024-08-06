@@ -1,14 +1,18 @@
+using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LittleConqueror.Infrastructure;
 
-public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
+public class DataContext(
+    DbContextOptions<DataContext> options,
+    IPasswordHasherPort passwordHasher) : DbContext(options)
 {
     #region DBSETS
     public DbSet<CityEntity> Cities { get; set; }
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<TerritoryEntity> Territories { get; set; }
+    public DbSet<AuthUserEntity> AuthUsers { get; set; }
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,6 +37,23 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             entity.HasOne(territory => territory.Owner)
                 .WithOne(user => user.Territory);
             entity.HasMany(territory => territory.Cities);
+        });
+        
+        modelBuilder.Entity<AuthUserEntity>(entity =>
+        {
+            entity.HasOne(authUser => authUser.User)
+                .WithOne(user => user.AuthUser);
+            
+            entity.HasKey(authUser => authUser.Id);
+            entity.Property(authUser => authUser.Id).ValueGeneratedOnAdd();
+            
+            entity.HasData(new AuthUserEntity
+            {
+                Id = 1,
+                Username = "admin",
+                Hash = passwordHasher.EnhancedHashPassword("aDxGschD3vCe"),
+                Role = "Admin"
+            });
         });
     }
 }
