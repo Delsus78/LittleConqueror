@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 
 namespace UnitTests.Domain.Handlers;
@@ -25,7 +26,7 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
         // arrange
         var cityOSM = new CityOSM(
             1,
-            "R",
+            'R',
             1,
             1,
             null,
@@ -46,6 +47,7 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
         result.Should().BeEquivalentTo(new City
         {
             Id = cityOSM.OsmId,
+            OsmType = cityOSM.OsmIdType,
             Name = cityOSM.Name,
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
@@ -55,7 +57,9 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
                 Type = cityOSM.Geojson?.Type ?? string.Empty,
                 Coordinates = cityOSM.Geojson?.Coordinates ?? new List<List<List<double>>>()
             }
-        });
+        },options => options
+            .ComparingByMembers<City>()
+            .ComparingByMembers<Geojson>());
         
         _cityDatabase.Verify(x => x.AddCity(It.IsAny<City>()), Times.Once);
     }

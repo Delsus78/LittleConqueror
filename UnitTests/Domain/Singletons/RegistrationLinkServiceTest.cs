@@ -1,3 +1,4 @@
+using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Singletons;
 
 namespace UnitTests.Domain.Singletons;
@@ -8,37 +9,37 @@ public class RegistrationLinkServiceTest
 
 
     [Theory, AutoData]
-    public void CreateRegistrationLink_ReturnsLink(string role, int firstCityId)
+    public void CreateRegistrationLink_ReturnsLink(RegistrationLinkData data)
     {
         // act
-        var result = _registrationLinkService.CreateRegistrationLink(role, firstCityId);
+        var result = _registrationLinkService.CreateRegistrationLink(data);
         
         // assert
         result.Should().NotBeNullOrEmpty();
     }
     
     [Theory, AutoData]
-    public void GetLinkRelatedData_ReturnsData(string role, int firstCityId)
+    public void GetLinkRelatedData_ReturnsData(RegistrationLinkData data)
     {
         // arrange
-        var link = _registrationLinkService.CreateRegistrationLink(role, firstCityId);
+        var link = _registrationLinkService.CreateRegistrationLink(data);
         
         // act
-        var result = _registrationLinkService.GetLinkRelatedData(link);
+        var result = _registrationLinkService.ConsumeLinkRelatedData(link);
         
         // assert
-        result.valid.Should().BeTrue();
-        result.role.Should().Be(role);
-        result.firstCardId.Should().Be(firstCityId);
+        result.Valid.Should().BeTrue();
+        result.Role.Should().Be(data.Role);
+        result.FirstOsmId.Should().Be(data.FirstOsmId);
     }
     
     [Theory, AutoData]
     public void GetLinkRelatedData_ReturnsInvalidData(string link)
     {
         // act
-        var result = _registrationLinkService.GetLinkRelatedData(link);
+        var result = _registrationLinkService.ConsumeLinkRelatedData(link);
         
         // assert
-        result.valid.Should().BeFalse();
+        result.Valid.Should().BeFalse();
     }
 }

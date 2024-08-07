@@ -22,7 +22,7 @@ namespace LittleConqueror.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.AuthUserEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.AuthUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -55,20 +55,30 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            Hash = "$2a$13$1NDyDQsvH4F2GkUqzWlveOWdmW/zEy.d1U3SyXyR8Vz0f.MOnY2F.",
+                            Id = -1,
+                            Hash = "$2a$13$pO3CFNoHZBWbDdXEeHO/TuU4BqY/PZUpplEw/pkLAH0Ky9g/XotVK",
                             Role = "Admin",
                             Username = "admin"
                         });
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.CityEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Geojson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -80,17 +90,17 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.Property<int>("Population")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TerritoryEntityId")
+                    b.Property<int?>("TerritoryId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TerritoryEntityId");
+                    b.HasIndex("TerritoryId");
 
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.TerritoryEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Territory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +119,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.ToTable("Territories");
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.UserEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,45 +136,46 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.AuthUserEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.AuthUser", b =>
                 {
-                    b.HasOne("LittleConqueror.Infrastructure.Entities.DatabaseEntities.UserEntity", "User")
+                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.User", "User")
                         .WithOne("AuthUser")
-                        .HasForeignKey("LittleConqueror.Infrastructure.Entities.DatabaseEntities.AuthUserEntity", "UserId");
+                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.AuthUser", "UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.CityEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.City", b =>
                 {
-                    b.HasOne("LittleConqueror.Infrastructure.Entities.DatabaseEntities.TerritoryEntity", null)
+                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.Territory", "Territory")
                         .WithMany("Cities")
-                        .HasForeignKey("TerritoryEntityId");
+                        .HasForeignKey("TerritoryId");
+
+                    b.Navigation("Territory");
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.TerritoryEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Territory", b =>
                 {
-                    b.HasOne("LittleConqueror.Infrastructure.Entities.DatabaseEntities.UserEntity", "Owner")
+                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.User", "Owner")
                         .WithOne("Territory")
-                        .HasForeignKey("LittleConqueror.Infrastructure.Entities.DatabaseEntities.TerritoryEntity", "OwnerId")
+                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.Territory", "OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.TerritoryEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Territory", b =>
                 {
                     b.Navigation("Cities");
                 });
 
-            modelBuilder.Entity("LittleConqueror.Infrastructure.Entities.DatabaseEntities.UserEntity", b =>
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.User", b =>
                 {
                     b.Navigation("AuthUser")
                         .IsRequired();
 
-                    b.Navigation("Territory")
-                        .IsRequired();
+                    b.Navigation("Territory");
                 });
 #pragma warning restore 612, 618
         }

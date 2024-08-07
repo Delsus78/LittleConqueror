@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

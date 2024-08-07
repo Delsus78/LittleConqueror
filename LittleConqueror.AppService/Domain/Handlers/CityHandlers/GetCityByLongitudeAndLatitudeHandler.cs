@@ -1,5 +1,5 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
-using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
@@ -25,7 +25,7 @@ public class GetCityByLongitudeAndLatitudeHandler(
             await cityDatabase.AddCity(new City
             {
                 Id = cityOSM.OsmId,
-                OsmType = cityOSM.OsmIdType[0],
+                OsmType = cityOSM.OsmIdType,
                 Name = cityOSM.Name,
                 Population = cityOSM.Extratags?.Population ?? 0
             });
@@ -33,7 +33,7 @@ public class GetCityByLongitudeAndLatitudeHandler(
         return new City
         {
             Id = cityOSM.OsmId,
-            OsmType = cityOSM.OsmIdType[0],
+            OsmType = cityOSM.OsmIdType,
             Name = cityOSM.Name,
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,

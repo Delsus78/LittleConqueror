@@ -1,4 +1,4 @@
-using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 
 namespace LittleConqueror.AppService.DrivenPorts;
 

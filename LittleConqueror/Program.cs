@@ -1,6 +1,5 @@
 using LittleConqueror;
 using LittleConqueror.API.Mappers;
-using LittleConqueror.AppService.Domain.Handlers;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
@@ -96,7 +95,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetUserByIdHandler, GetUserByIdHandler>()
     .AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>()
     .AddScoped<IGetUserInformationsHandler, GetUserInformationsHandler>()
-    .AddScoped<IGetRegistrationLinkRelatedDataHandler, GetRegistrationLinkRelatedDataHandler>()
+    .AddScoped<IGetRegistrationLinkRelatedDataHandler, ConsumeRegistrationLinkRelatedDataHandler>()
     .AddScoped<ICreateRegistrationLinkHandler, CreateRegistrationLinkHandler>()
     .AddScoped<IRegisterAuthUserHandler, RegisterAuthUserHandler>()
     .AddScoped<IGetAuthenticatedUserByIdHandler, GetAuthenticatedUserByIdHandler>()
@@ -112,6 +111,8 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IJwtTokenProviderPort, JwtTokenProviderAdapter>()
     .AddScoped<IPasswordHasherPort, PasswordHasherAdapter>()
     .AddScoped<IAuthUserDatabasePort, AuthUserDatabaseAdapter>()
+    .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
+    .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()
     .AddScoped<CityRepository>()

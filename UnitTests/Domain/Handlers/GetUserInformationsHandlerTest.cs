@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
@@ -31,8 +32,8 @@ public class GetUserInformationsHandlerTest
             Owner = user,
             Cities = new List<City>
             {
-                new() { Id = 1, Name = "City1", Population = 100 },
-                new() { Id = 2, Name = "City2", Population = 200 }
+                new() { Id = 1, OsmType = 'R', Name = "City1", Population = 100 },
+                new() { Id = 2, OsmType = 'R', Name = "City2", Population = 200 }
             }
         };
         _userDatabase

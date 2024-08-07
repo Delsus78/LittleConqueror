@@ -1,7 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
-using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
@@ -23,19 +23,21 @@ public class RegisterAuthUserHandler(
         var registrationLinkData = 
             getRegistrationLinkRelatedDataHandler.Handle(new GetRegistrationLinkRelatedDataQuery{Link = command.ValidRegistrationLink});
         
-        if (!registrationLinkData.valid)
+        if (!registrationLinkData.Valid)
             throw new AppException("Invalid registration link", 400);
         
         var authUser = new AuthUser{
             Username = command.Username,
             Hash = passwordHasherPort.EnhancedHashPassword(command.Password), 
-            Role = registrationLinkData.role
+            Role = registrationLinkData.Role
         };
         
         // create user entity
         var user = await createUserHandler.Handle(new CreateUserCommand
         {
-            Name = command.Username
+            Name = command.Username,
+            FirstOsmId = registrationLinkData.FirstOsmId,
+            FirstOsmType = registrationLinkData.FirstOsmType
         });
         
         authUser.User = user;

@@ -1,15 +1,17 @@
+using LittleConqueror.AppService.Domain.Models;
+
 namespace LittleConqueror.AppService.Domain.Singletons;
 
 public interface IRegistrationLinkService
 {
-    public string CreateRegistrationLink(string role, int firstCityId);
-    public (bool valid, string role, int firstCardId) GetLinkRelatedData(string link);
+    public string CreateRegistrationLink(RegistrationLinkData data);
+    public RegistrationLinkData ConsumeLinkRelatedData(string link);
 }
 public class RegistrationLinkService : IRegistrationLinkService
 {
-    private readonly Dictionary<string, (string role, int firstCardId)> _validLinks = new();
+    private readonly Dictionary<string, RegistrationLinkData> _validLinks = new();
 
-    public string CreateRegistrationLink(string role, int firstCityId)
+    public string CreateRegistrationLink(RegistrationLinkData data)
     {
         // generate a random string of 20 characters
         var random = new Random();
@@ -17,10 +19,16 @@ public class RegistrationLinkService : IRegistrationLinkService
         var link = new string(Enumerable.Repeat(chars, 20)
             .Select(s => s[random.Next(s.Length)]).ToArray());
         
-        _validLinks.Add(link, (role, firstCityId));
+        data.Valid = true;
+        
+        _validLinks.Add(link, data);
         return link;
     }
 
-    public (bool valid, string role, int firstCardId) GetLinkRelatedData(string link) 
-        => !_validLinks.TryGetValue(link, out var value) ? (false, "", 0) : (true, value.role, value.firstCardId);
+    public RegistrationLinkData ConsumeLinkRelatedData(string link)
+    {
+        var linkData = !_validLinks.TryGetValue(link, out var value) ? new RegistrationLinkData { Valid = false } : value;
+        _validLinks.Remove(link);
+        return linkData;
+    }
 }

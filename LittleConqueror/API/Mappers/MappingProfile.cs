@@ -1,7 +1,7 @@
 using AutoMapper;
 using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.AppService.Domain.Models;
-using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
+using LittleConqueror.AppService.Domain.Models.Entities;
 
 namespace LittleConqueror.API.Mappers;
 
@@ -17,15 +17,10 @@ public class MappingProfile : Profile
         CreateMap<AuthUser, AuthUserDto>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User.Id))
             .ReverseMap();
-        
+
         CreateMap<(AuthUser AuthUser, string Token), AuthenticateResponseDto>()
             .ConstructUsing((src, context) => new AuthenticateResponseDto(
                 context.Mapper.Map<AuthUserDto>(src.AuthUser), src.Token))
             .ReverseMap();
-            
-        CreateMap<User, UserEntity>().ReverseMap();
-        CreateMap<City, CityEntity>().ReverseMap();
-        CreateMap<Territory, TerritoryEntity>().ReverseMap();
-        CreateMap<AuthUser, AuthUserEntity>().ReverseMap();
     }
 }

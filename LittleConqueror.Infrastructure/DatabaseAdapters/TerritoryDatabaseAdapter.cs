@@ -1,7 +1,8 @@
 using AutoMapper;
-using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
-using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
+using LittleConqueror.AppService.DrivenPorts.Specifications;
+using LittleConqueror.AppService.Exceptions;
 using LittleConqueror.Infrastructure.Repositories;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters;
@@ -12,36 +13,24 @@ public class TerritoryDatabaseAdapter(
 {
     public async Task<Territory> CreateTerritory(Territory territory)
     {
-        var entityEntry = await territoryRepository.CreateAsync(new TerritoryEntity
-        {
-            OwnerId = territory.Owner.Id
-        });
+        var entityEntry = await territoryRepository.CreateAsync(territory);
         
         await territoryRepository.SaveAsync();
         
-        return mapper.Map<Territory>(entityEntry.Entity);
+        return entityEntry.Entity;
     }
 
-    public async Task<Territory> GetTerritoryOfUser(int userId)
-    {
-        var territoryEntity = await territoryRepository.GetAsync(entity => entity.OwnerId == userId);
-        
-        return mapper.Map<Territory>(territoryEntity);
-    }
+    public async Task<Territory?> GetTerritoryOfUser(int userId)
+        => (await territoryRepository.GetAsync(new TerritoryFromUserIdWithCitiesSpec(userId))).FirstOrDefault();
+    
 
-    public async Task<Territory> GetTerritoryById(int territoryId)
+    public async Task<Territory?> GetTerritoryById(int territoryId)
+        => await territoryRepository.GetByIdAsync(territoryId);
+    
+    private async Task ValidateIfNotExistAsync(int Id)
     {
-        var territoryEntity = await territoryRepository.GetAsync(entity => entity.Id == territoryId);
-        
-        return mapper.Map<Territory>(territoryEntity);
-    }
-
-    public async Task<Territory> UpdateTerritory(Territory territory)
-    {
-        var entity = mapper.Map<TerritoryEntity>(territory);
-        
-        var entityEntry = await territoryRepository.UpdateAsync(entity);
-        
-        return mapper.Map<Territory>(entityEntry.Entity);
+        var existingEntity = await territoryRepository.GetAsync(entity => entity.Id == Id);
+        if (existingEntity == null)
+            throw new AppException($"Entity with the id : {Id} dont exist.", 404);
     }
 }
