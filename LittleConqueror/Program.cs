@@ -1,17 +1,53 @@
+using LittleConqueror;
 using LittleConqueror.API.Mappers;
-using LittleConqueror.AppService.Domain.Handlers;
+using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
+using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
+using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
+using LittleConqueror.AppService.Domain.Singletons;
 using LittleConqueror.AppService.DrivenPorts;
+using LittleConqueror.Authentication;
 using LittleConqueror.Exceptions;
 using LittleConqueror.Infrastructure;
 using LittleConqueror.Infrastructure.DatabaseAdapters;
 using LittleConqueror.Infrastructure.FetchingAdapters;
+using LittleConqueror.Infrastructure.JwtAdapters;
 using LittleConqueror.Infrastructure.Repositories;
+using LittleConqueror.Middlewares;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Little Conqueror", Version = "v1" });
+    c.CustomSchemaIds(x => x.FullName); // Enables to support different classes with the same name using the full name with namespace
+    c.SchemaFilter<NamespaceSchemaFilter>();
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 // cors
 builder.Services.AddCors(options =>
@@ -31,32 +67,64 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<AppExceptionFiltersAttribute>();
 });
 
-builder.Services.AddDbContext<DataContext>(options =>
-   options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+builder.Services.AddDbContext<DataContext>(options => 
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")))
+    .Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"))
+    .AddOptions<AppSettings>()
+        .Bind(builder.Configuration.GetSection("AppSettings"))
+        .ValidateDataAnnotations()
+        .Validate(appSettings =>
+        {
+            if (string.IsNullOrEmpty(appSettings.Secret))
+                throw new ArgumentException("Secret is missing");
+            if (string.IsNullOrEmpty(appSettings.Issuer))
+                throw new ArgumentException("Issuer is missing");
+            if (string.IsNullOrEmpty(appSettings.Audience))
+                throw new ArgumentException("Audience is missing");
+            if (appSettings.ExpirationInMinutes <= 0)
+                throw new ArgumentException("ExpirationInMinutes must be greater than 0");
+
+            return true;
+        });
+
 // Services Driving
-builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>();
-builder.Services.AddScoped<IGetTerritoryByUserIdHandler, GetTerritoryByUserIdHandler>();
-builder.Services.AddScoped<IGetUserByIdHandler, GetUserByIdHandler>();
-builder.Services.AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>();
+builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
+    .AddScoped<IGetTerritoryByUserIdHandler, GetTerritoryByUserIdHandler>()
+    .AddScoped<IGetUserByIdHandler, GetUserByIdHandler>()
+    .AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>()
+    .AddScoped<IGetUserInformationsHandler, GetUserInformationsHandler>()
+    .AddScoped<IGetRegistrationLinkRelatedDataHandler, ConsumeRegistrationLinkRelatedDataHandler>()
+    .AddScoped<ICreateRegistrationLinkHandler, CreateRegistrationLinkHandler>()
+    .AddScoped<IRegisterAuthUserHandler, RegisterAuthUserHandler>()
+    .AddScoped<IGetAuthenticatedUserByIdHandler, GetAuthenticatedUserByIdHandler>()
+    .AddScoped<IAuthenticateUserHandler, AuthenticateUserHandler>()
+    .AddScoped<IAddCityToATerritoryHandler, AddCityToATerritoryHandler>()
+    .AddScoped<IGetCityByOsmIdHandler, GetCityByOsmIdHandler>()
 
 // Services Driven
-builder.Services.AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>();
-builder.Services.AddScoped<ICityDatabasePort, CityDatabaseAdapter>();
-builder.Services.AddScoped<CityRepository>();
-builder.Services.AddScoped<IUserDatabasePort, UserDatabaseAdapter>();
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<ITerritoryDatabasePort, TerritoryDatabaseAdapter>();
-builder.Services.AddScoped<TerritoryRepository>();
+    .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()
+    .AddScoped<ICityDatabasePort, CityDatabaseAdapter>()
+    .AddScoped<IUserDatabasePort, UserDatabaseAdapter>()
+    .AddScoped<ITerritoryDatabasePort, TerritoryDatabaseAdapter>()
+    .AddScoped<IJwtTokenProviderPort, JwtTokenProviderAdapter>()
+    .AddScoped<IPasswordHasherPort, PasswordHasherAdapter>()
+    .AddScoped<IAuthUserDatabasePort, AuthUserDatabaseAdapter>()
+    .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
+    .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
+    .AddScoped<UserRepository>()
+    .AddScoped<TerritoryRepository>()
+    .AddScoped<CityRepository>()
+    .AddScoped<AuthUserRepository>()
 
 // Others
-builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-
+    .AddAutoMapper(typeof(MappingProfile))
+    .ConfigureJwt(builder.Configuration.GetSection("AppSettings").Get<AppSettings>())
+    .AddSingleton<IRegistrationLinkService, RegistrationLinkService>()
+    .AddSingleton<ITokenManagerService, TokenManagerService>()
 // HttpClients
-builder.Services.AddHttpClient("NominatimOSM", httpClient =>
+    .AddHttpClient("NominatimOSM", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://nominatim.openstreetmap.org/");
     httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("LittleConqueror/1.0");
@@ -70,9 +138,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<TokenBlacklistMiddleware>();
+
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseCors();
 app.UseHttpsRedirection();
-app.MapControllers()
-    .WithOpenApi();
+app.MapControllers().WithOpenApi();
 
 app.Run();

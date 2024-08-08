@@ -1,6 +1,6 @@
-using LittleConqueror.Infrastructure.Entities.DatabaseEntities;
+using LittleConqueror.AppService.Domain.Models.Entities;
 
 namespace LittleConqueror.Infrastructure.Repositories;
 
 public class UserRepository(DataContext applicationDbContext) 
-    : Repository<UserEntity>(applicationDbContext);
+    : Repository<User>(applicationDbContext);

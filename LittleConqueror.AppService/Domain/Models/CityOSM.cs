@@ -1,12 +1,28 @@
 using System.Text.Json.Serialization;
+using LittleConqueror.AppService.Domain.Models.Entities;
 
 namespace LittleConqueror.AppService.Domain.Models;
 
-public record Address(string? City, string? State, string? Country);
-public record GeojsonOSM(string Type, List<List<List<double>>> Coordinates);
 public record Extratags(int? Population);
 
 public record CityOSM(
-    [property: JsonPropertyName("place_id")] int PlaceId, double Lat, double Lon, double? Importance, string Name,
-    [property: JsonPropertyName("display_name")] string? DisplayName, Address? Address, List<double> Boundingbox, 
-    Extratags? Extratags, GeojsonOSM? Geojson);
+    [property: JsonPropertyName("osm_id")] int OsmId,
+    [property: JsonPropertyName("osm_type")] char OsmIdType,
+    double Lat,
+    double Lon,
+    double? Importance,
+    string Name,
+    Extratags? Extratags,
+    Geojson? Geojson);
+
+public record CityOSMByDetails(
+    [property: JsonPropertyName("osm_id")] int OsmId,
+    [property: JsonPropertyName("osm_type")]
+    char OsmIdType,
+    Names Names,
+    Extratags? Extratags,
+    Centroid? Centroid,
+    Geojson? Geometry);
+    
+public record Names(string Name);
+public record Centroid(string type, List<double> coordinates);
