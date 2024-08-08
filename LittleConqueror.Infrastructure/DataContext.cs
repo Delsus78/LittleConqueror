@@ -15,6 +15,7 @@ public class DataContext(
     public DbSet<User> Users { get; set; }
     public DbSet<Territory> Territories { get; set; }
     public DbSet<AuthUser> AuthUsers { get; set; }
+    public DbSet<Resources> Resources { get; set; }
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -30,7 +31,19 @@ public class DataContext(
             entity.HasOne(user => user.Territory)
                 .WithOne(territory => territory.Owner)
                 .HasForeignKey<Territory>(territory => territory.OwnerId);
+            entity.HasOne(user => user.Resources)
+                .WithOne(resources => resources.User)
+                .HasForeignKey<Resources>(resources => resources.UserId);
         });
+        
+        modelBuilder.Entity<Resources>(
+            entity =>
+            {
+                entity.HasKey(resources => resources.Id);
+                entity.Property(resources => resources.Id).ValueGeneratedOnAdd();
+                entity.HasOne(resources => resources.User)
+                    .WithOne(user => user.Resources);
+            });
 
         modelBuilder.Entity<City>(entity =>
         {

@@ -6,4 +6,5 @@ public class UserInformationsDto
     public string Name { get; set; }
     public int? TotalPopulation { get; set; }
     public int? TotalCities { get; set; }
+    public ResourcesDto? Resources { get; set; }
 }

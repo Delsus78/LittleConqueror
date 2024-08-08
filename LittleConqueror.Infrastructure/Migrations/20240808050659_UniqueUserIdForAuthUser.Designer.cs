@@ -3,6 +3,7 @@ using System;
 using LittleConqueror.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LittleConqueror.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240808050659_UniqueUserIdForAuthUser")]
+    partial class UniqueUserIdForAuthUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,7 +59,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                         new
                         {
                             Id = -1,
-                            Hash = "$2a$13$bU7oM3UvB9/WjwxU1UB7ku7Mki1qX1VwZyHoBBxzfpMj2YF9R//0C",
+                            Hash = "$2a$13$XePFdIPxMQ.XYe0u8QM2EefJ.kDexprmR77HD6jeOwFpHLQ2SI/Ri",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -98,46 +101,6 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.HasIndex("TerritoryId");
 
                     b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Resources", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Diamond")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Food")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Gold")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Iron")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Petrol")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Stone")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Wood")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Resources");
                 });
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Territory", b =>
@@ -194,17 +157,6 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.Navigation("Territory");
                 });
 
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Resources", b =>
-                {
-                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.User", "User")
-                        .WithOne("Resources")
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.Resources", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Territory", b =>
                 {
                     b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.User", "Owner")
@@ -225,8 +177,6 @@ namespace LittleConqueror.Infrastructure.Migrations
                 {
                     b.Navigation("AuthUser")
                         .IsRequired();
-
-                    b.Navigation("Resources");
 
                     b.Navigation("Territory");
                 });

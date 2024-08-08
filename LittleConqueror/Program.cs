@@ -2,6 +2,8 @@ using LittleConqueror;
 using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
+using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
+using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Singletons;
 using LittleConqueror.AppService.DrivenPorts;
@@ -102,6 +104,9 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IAuthenticateUserHandler, AuthenticateUserHandler>()
     .AddScoped<IAddCityToATerritoryHandler, AddCityToATerritoryHandler>()
     .AddScoped<IGetCityByOsmIdHandler, GetCityByOsmIdHandler>()
+    .AddScoped<ICreateTerritoryHandler, CreateTerritoryHandler>()
+    .AddScoped<ICreateResourcesForUserHandler, CreateResourcesForUserHandler>()
+    .AddScoped<IGetResourcesForUserHandler, GetResourcesForUserHandler>()
 
 // Services Driven
     .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()
@@ -113,10 +118,12 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IAuthUserDatabasePort, AuthUserDatabaseAdapter>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
+    .AddScoped<IResourcesDatabasePort, ResourcesDatabaseAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()
     .AddScoped<CityRepository>()
     .AddScoped<AuthUserRepository>()
+    .AddScoped<ResourcesRepository>()
 
 // Others
     .AddAutoMapper(typeof(MappingProfile))
