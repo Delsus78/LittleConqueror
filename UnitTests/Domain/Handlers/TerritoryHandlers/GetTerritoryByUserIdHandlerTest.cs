@@ -1,9 +1,9 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
-using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
+using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 
-namespace UnitTests.Domain.Handlers;
+namespace UnitTests.Domain.Handlers.TerritoryHandlers;
 
 public class GetTerritoryByUserIdHandlerTest
 {

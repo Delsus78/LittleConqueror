@@ -1,5 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
+using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
+using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
@@ -12,8 +14,9 @@ public interface ICreateUserHandler
 }
 public class CreateUserHandler(
     IUserDatabasePort userDatabase, 
-    ITerritoryDatabasePort territoryDatabase,
+    ICreateTerritoryHandler createTerritoryHandler,
     IAddCityToATerritoryHandler cityToATerritoryHandler,
+    ICreateResourcesForUserHandler createResourcesForUserHandler,
     ITransactionManagerPort transactionManager) : ICreateUserHandler
 {
 
@@ -27,19 +30,25 @@ public class CreateUserHandler(
 
             if (user == null)
                 throw new AppException("User creation failed", 500);
+
             
-            var resultedTerritory = await territoryDatabase.CreateTerritory(new Territory
+            // TERRITORY INITIALIZATION
+            var resultedTerritory = await createTerritoryHandler.Handle(new CreateTerritoryCommand
             {
                 OwnerId = user.Id
             });
-            if (resultedTerritory == null)
-                throw new AppException("Territory creation failed", 500);
 
             await cityToATerritoryHandler.Handle(new AddCityToATerritoryCommand
             {
                 CityId = command.FirstOsmId,
                 CityType = command.FirstOsmType,
                 TerritoryId = resultedTerritory.Id
+            });
+            
+            // RESOURCES INITIALIZATION
+            await createResourcesForUserHandler.Handle(new CreateResourcesForUserCommand
+            {
+                UserId = user.Id
             });
             
             await transactionManager.CommitTransaction();

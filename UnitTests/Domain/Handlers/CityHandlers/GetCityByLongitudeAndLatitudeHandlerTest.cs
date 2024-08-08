@@ -4,7 +4,7 @@ using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 
-namespace UnitTests.Domain.Handlers;
+namespace UnitTests.Domain.Handlers.CityHandlers;
 
 public class GetCityByLongitudeAndLatitudeHandlerTest
 {
