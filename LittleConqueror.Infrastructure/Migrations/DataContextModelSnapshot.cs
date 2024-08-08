@@ -56,7 +56,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                         new
                         {
                             Id = -1,
-                            Hash = "$2a$13$pO3CFNoHZBWbDdXEeHO/TuU4BqY/PZUpplEw/pkLAH0Ky9g/XotVK",
+                            Hash = "$2a$13$XePFdIPxMQ.XYe0u8QM2EefJ.kDexprmR77HD6jeOwFpHLQ2SI/Ri",
                             Role = "Admin",
                             Username = "admin"
                         });

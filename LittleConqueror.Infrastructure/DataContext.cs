@@ -60,6 +60,9 @@ public class DataContext(
                 .WithOne(user => user.AuthUser)
                 .HasForeignKey<AuthUser>(authUser => authUser.UserId);
             
+            // UserId is unique
+            entity.HasIndex(authUser => authUser.UserId).IsUnique();
+            
             entity.HasData(new AuthUser
             {
                 Id = -1,
