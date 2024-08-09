@@ -17,6 +17,7 @@ using LittleConqueror.Infrastructure.Repositories;
 using LittleConqueror.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,7 +68,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<AppExceptionFiltersAttribute>();
-});
+}).AddNewtonsoftJson(options =>
+    {
+        // Configurations supplémentaires si nécessaire
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    });
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -128,6 +134,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
 // Others
     .AddAutoMapper(typeof(MappingProfile))
     .ConfigureJwt(builder.Configuration.GetSection("AppSettings").Get<AppSettings>())
+    .Configure<OSMSettings>(builder.Configuration.GetSection("OSMSettings"))
     .AddSingleton<IRegistrationLinkService, RegistrationLinkService>()
     .AddSingleton<ITokenManagerService, TokenManagerService>()
 // HttpClients
@@ -135,6 +142,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
 {
     httpClient.BaseAddress = new Uri("https://nominatim.openstreetmap.org/");
     httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("LittleConqueror/1.0");
+    httpClient.DefaultRequestHeaders.AcceptLanguage.ParseAdd("fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7");
 });
 
 var app = builder.Build();

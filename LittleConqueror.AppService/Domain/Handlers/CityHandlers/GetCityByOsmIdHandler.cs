@@ -40,11 +40,7 @@ public class GetCityByOsmIdHandler(
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
             Population = cityOSM.Extratags?.Population ?? 0,
-            Geojson = new Geojson
-            {
-                Type = cityOSM.Geojson?.Type ?? string.Empty,
-                Coordinates = cityOSM.Geojson?.Coordinates ?? new List<List<List<double>>>()
-            }
+            Geojson = cityOSM.Geojson
         };
     }
 }

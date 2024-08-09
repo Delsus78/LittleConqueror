@@ -16,6 +16,6 @@ public class ResourcesDatabaseAdapter(
         return entityEntry.Entity;
     }
 
-    public async Task<Resources?> GetResourcesOfUser(int userId)
+    public async Task<Resources?> GetResourcesOfUser(long userId)
         => await resourcesRepository.GetAsync(resources => resources.UserId == userId);
 }

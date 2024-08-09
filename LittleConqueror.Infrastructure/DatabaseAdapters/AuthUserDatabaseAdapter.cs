@@ -19,6 +19,6 @@ public class AuthUserDatabaseAdapter(
         return entityEntry.Entity;
     }
 
-    public async Task<AuthUser?> GetAuthUserById(int userId)
+    public async Task<AuthUser?> GetAuthUserById(long userId)
         => await authUserRepository.GetAsync(x => x.UserId == userId);
 }

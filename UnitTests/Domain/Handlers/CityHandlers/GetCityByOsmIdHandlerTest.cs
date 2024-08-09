@@ -47,14 +47,9 @@ public class GetCityByOsmIdHandlerTest
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
             Population = cityOSM.Extratags?.Population ?? 0,
-            Geojson = new Geojson
-            {
-                Type = cityOSM.Geojson?.Type ?? string.Empty,
-                Coordinates = cityOSM.Geojson?.Coordinates ?? new List<List<List<double>>>()
-            }
+            Geojson = cityOSM.Geojson
         },options => options
-            .ComparingByMembers<City>()
-            .ComparingByMembers<Geojson>());
+            .ComparingByMembers<City>());
     }
     
     [Theory, AutoData]
@@ -91,13 +86,8 @@ public class GetCityByOsmIdHandlerTest
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
             Population = cityOSM.Extratags?.Population ?? 0,
-            Geojson = new Geojson
-            {
-                Type = cityOSM.Geojson?.Type ?? string.Empty,
-                Coordinates = cityOSM.Geojson?.Coordinates ?? new List<List<List<double>>>()
-            }
+            Geojson = cityOSM.Geojson
         },options => options
-            .ComparingByMembers<City>()
-            .ComparingByMembers<Geojson>());
+            .ComparingByMembers<City>());
     }
 }

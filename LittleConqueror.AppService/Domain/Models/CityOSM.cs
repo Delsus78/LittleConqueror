@@ -1,28 +1,31 @@
-using System.Text.Json.Serialization;
-using LittleConqueror.AppService.Domain.Models.Entities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LittleConqueror.AppService.Domain.Models;
 
-public record Extratags(int? Population);
+public record Extratags(
+    int? Population, 
+    [property: JsonProperty("linked_place")] string? LinkedPlace = null);
 
 public record CityOSM(
-    [property: JsonPropertyName("osm_id")] int OsmId,
-    [property: JsonPropertyName("osm_type")] char OsmIdType,
+    [property: JsonProperty("osm_id")] long OsmId,
+    [property: JsonProperty("osm_type")] char OsmIdType,
     double Lat,
     double Lon,
-    double? Importance,
     string Name,
     Extratags? Extratags,
-    Geojson? Geojson);
+    string? AddressType,
+    JToken? Geojson);
 
 public record CityOSMByDetails(
-    [property: JsonPropertyName("osm_id")] int OsmId,
-    [property: JsonPropertyName("osm_type")]
+    [property: JsonProperty("osm_id")] long OsmId,
+    [property: JsonProperty("osm_type")]
     char OsmIdType,
     Names Names,
     Extratags? Extratags,
+    string? AddressType,
     Centroid? Centroid,
-    Geojson? Geometry);
+    JToken? Geometry);
     
 public record Names(string Name);
 public record Centroid(string type, List<double> coordinates);

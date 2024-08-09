@@ -13,11 +13,11 @@ public class Resources : Entity
     public int Petrol { get; set; }
     
     // 1:1 relationship
-    public int UserId { get; set; }
+    public long UserId { get; set; }
     public User User { get; set; }
     
-    public static Resources CreateDefaultResources(int userId)
-        => new Resources
+    public static Resources CreateDefaultResources(long userId)
+        => new()
         {
             UserId = userId,
             Food = 2000,

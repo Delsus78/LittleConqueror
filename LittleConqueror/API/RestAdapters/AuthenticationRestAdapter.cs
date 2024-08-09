@@ -21,7 +21,7 @@ public class AuthenticationRestAdapter(
 
     [Authorize(Roles = "Admin")]
     [HttpPut("desactivateToken/{userId}")]
-    public ActionResult DesactivateTokenJTI(int userId)
+    public ActionResult DesactivateTokenJTI(long userId)
     {
         tokenBlacklist.DesactivateTokenJTI(userId);
         return Ok();

@@ -4,6 +4,6 @@ namespace LittleConqueror.AppService.DrivenPorts;
 
 public interface IUserDatabasePort
 {
-    Task<User?> GetUserById(int id);
+    Task<User?> GetUserById(long id);
     Task<User?> CreateUser(User user);
 }

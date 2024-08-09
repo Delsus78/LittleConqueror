@@ -27,7 +27,10 @@ public class GetCityByLongitudeAndLatitudeHandler(
                 Id = cityOSM.OsmId,
                 OsmType = cityOSM.OsmIdType,
                 Name = cityOSM.Name,
-                Population = cityOSM.Extratags?.Population ?? 0
+                Population = cityOSM.Extratags?.Population ?? 0,
+                Latitude = cityOSM.Lat,
+                Longitude = cityOSM.Lon,
+                Geojson = cityOSM.Geojson
             });
         
         return new City
@@ -38,11 +41,7 @@ public class GetCityByLongitudeAndLatitudeHandler(
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
             Population = cityOSM.Extratags?.Population ?? 0,
-            Geojson = new Geojson
-            {
-                Type = cityOSM.Geojson?.Type ?? string.Empty,
-                Coordinates = cityOSM.Geojson?.Coordinates ?? new List<List<List<double>>>()
-            }
+            Geojson = cityOSM.Geojson
         };
     }
 }

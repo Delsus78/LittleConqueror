@@ -1,7 +1,7 @@
 namespace LittleConqueror.API.Models.Dtos;
 
 public record AuthUserDto(
-    int Id, 
+    long Id, 
     string Username, 
     string Role, 
-    int? UserId);
+    long? UserId);

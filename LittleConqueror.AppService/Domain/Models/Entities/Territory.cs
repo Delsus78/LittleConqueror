@@ -9,6 +9,6 @@ public class Territory : Entity
     public List<City> Cities { get; set; } = new();
     
     // 1:1 relationship
-    public int OwnerId { get; set; }
+    public long OwnerId { get; set; }
     public User Owner { get; set; }
 }

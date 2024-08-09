@@ -29,12 +29,12 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
             'R',
             1,
             1,
-            null,
             "City",
             new Extratags(1000),
+            "",
             null);
         _osmCityFetcher
-            .Setup(x => x.GetCityByLongitudeAndLatitude(query.Longitude, query.Latitude))
+            .Setup(x => x.GetCityByLongitudeAndLatitude(query.Longitude, query.Latitude, 0))
             .ReturnsAsync(cityOSM);
         _cityDatabase
             .Setup(x => x.AddCity(It.IsAny<City>()))
@@ -52,14 +52,9 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
             Population = cityOSM.Extratags?.Population ?? 0,
-            Geojson = new Geojson
-            {
-                Type = cityOSM.Geojson?.Type ?? string.Empty,
-                Coordinates = cityOSM.Geojson?.Coordinates ?? new List<List<List<double>>>()
-            }
+            Geojson = cityOSM.Geojson
         },options => options
-            .ComparingByMembers<City>()
-            .ComparingByMembers<Geojson>());
+            .ComparingByMembers<City>());
         
         _cityDatabase.Verify(x => x.AddCity(It.IsAny<City>()), Times.Once);
     }

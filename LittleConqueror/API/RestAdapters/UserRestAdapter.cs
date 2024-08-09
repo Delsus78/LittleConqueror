@@ -17,7 +17,7 @@ public class UserRestAdapter(
     IMapper mapper) : ControllerBase
 {
     [HttpGet("{userId}")]
-    public async Task<UserDto> GetUser(int userId)
+    public async Task<UserDto> GetUser(long userId)
         => mapper.Map<UserDto>(
             await getUserByIdHandler.Handle(new GetUserByIdQuery {UserId = userId}));
     
@@ -27,12 +27,12 @@ public class UserRestAdapter(
     //         await createUserHandler.Handle(command));
     
     [HttpGet("{userId}/Territory")]
-    public async Task<TerritoryDto> GetTerritoryOfUser(int userId)
+    public async Task<TerritoryDto> GetTerritoryOfUser(long userId)
         => mapper.Map<TerritoryDto>(
             await getTerritoryByUserIdHandler.Handle(new GetTerritoryByUserIdQuery {UserId = userId}));
     
     [HttpGet("{userId}/Informations")]
-    public async Task<UserInformationsDto> GetUserInformations(int userId, [FromQuery] GetUserInformationsQueryDto query)
+    public async Task<UserInformationsDto> GetUserInformations(long userId, [FromQuery] GetUserInformationsQueryDto query)
         => mapper.Map<UserInformationsDto>(
                await getUserInformationsHandler.Handle(
                    new GetUserInformationsQuery {
