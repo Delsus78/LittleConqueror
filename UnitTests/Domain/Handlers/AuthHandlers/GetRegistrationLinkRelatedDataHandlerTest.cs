@@ -7,12 +7,12 @@ namespace UnitTests.Domain.Handlers.AuthHandlers;
 
 public class GetRegistrationLinkRelatedDataHandlerTest
 {
-    private readonly Mock<IRegistrationLinkService> _registrationLinkService;
+    private readonly Mock<ITemporaryCodeService> _registrationLinkService;
     private readonly ConsumeRegistrationLinkRelatedDataHandler _consumeRegistrationLinkRelatedDataHandler;
     
     public GetRegistrationLinkRelatedDataHandlerTest()
     {
-        _registrationLinkService = new Mock<IRegistrationLinkService>();
+        _registrationLinkService = new Mock<ITemporaryCodeService>();
         
         _consumeRegistrationLinkRelatedDataHandler = new ConsumeRegistrationLinkRelatedDataHandler(_registrationLinkService.Object);
     }
@@ -23,7 +23,7 @@ public class GetRegistrationLinkRelatedDataHandlerTest
         // arrange
         var expected = new RegistrationLinkData { Valid = true, Role = "Admin", FirstOsmId = 'R' };
         _registrationLinkService
-            .Setup(x => x.ConsumeLinkRelatedData(It.IsAny<string>()))
+            .Setup(x => x.ConsumeLinkRelatedData<RegistrationLinkData>(query.Link))
             .Returns(expected);
         
         // act

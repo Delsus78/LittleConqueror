@@ -38,7 +38,7 @@ public class AddCityToATerritoryHandlerTest
             .ReturnsAsync(city);
         
         _territoryDatabaseMock
-            .Setup(database => database.GetTerritoryById(It.IsAny<int>()))
+            .Setup(database => database.GetTerritoryById(It.IsAny<long>()))
             .ReturnsAsync(territory);
         
         // act

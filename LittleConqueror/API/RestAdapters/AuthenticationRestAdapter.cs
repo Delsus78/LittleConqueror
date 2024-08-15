@@ -2,8 +2,6 @@ using AutoMapper;
 using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
-using LittleConqueror.Infrastructure.JwtAdapters;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LittleConqueror.API.RestAdapters;
@@ -12,18 +10,15 @@ namespace LittleConqueror.API.RestAdapters;
 [Route("api/Authenticate")]
 public class AuthenticationRestAdapter(
     IAuthenticateUserHandler authenticateHandler,
-    ITokenManagerService tokenBlacklist,
+    IChangePasswordHandler changePasswordHandler,
     IMapper mapper): ControllerBase
 {
     [HttpPost]
     public async Task<AuthenticateResponseDto> Authenticate([FromBody] AuthenticateUserCommand model)
         => mapper.Map<AuthenticateResponseDto>(await authenticateHandler.Handle(model));
 
-    [Authorize(Roles = "Admin")]
-    [HttpPut("desactivateToken/{userId}")]
-    public ActionResult DesactivateTokenJTI(long userId)
-    {
-        tokenBlacklist.DesactivateTokenJTI(userId);
-        return Ok();
-    }
+    [HttpPost("changePassword")]
+    public async Task ChangePassword([FromBody] ChangePasswordCommand model)
+        => await changePasswordHandler.Handle(model);
+
 }

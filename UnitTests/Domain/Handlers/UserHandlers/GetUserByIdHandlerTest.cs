@@ -24,7 +24,7 @@ public class GetUserByIdHandlerTest
         // arrange
         var expected = new User { Id = query.UserId, Name = "Test" };
         _userDatabase
-            .Setup(x => x.GetUserById(It.IsAny<int>()))
+            .Setup(x => x.GetUserById(It.IsAny<long>()))
             .ReturnsAsync(expected);
         
         // act

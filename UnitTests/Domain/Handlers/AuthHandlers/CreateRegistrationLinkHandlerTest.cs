@@ -8,11 +8,11 @@ namespace UnitTests.Domain.Handlers.AuthHandlers;
 public class CreateRegistrationLinkHandlerTest
 {
     private readonly CreateRegistrationLinkHandler _createRegistrationLinkHandler;
-    private readonly Mock<IRegistrationLinkService> _userDatabase;
+    private readonly Mock<ITemporaryCodeService> _userDatabase;
     
     public CreateRegistrationLinkHandlerTest()
     {
-        _userDatabase = new Mock<IRegistrationLinkService>();
+        _userDatabase = new Mock<ITemporaryCodeService>();
         _createRegistrationLinkHandler = new CreateRegistrationLinkHandler(_userDatabase.Object);
     }
     

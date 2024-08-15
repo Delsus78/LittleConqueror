@@ -4,13 +4,13 @@ using LittleConqueror.AppService.Domain.Singletons;
 
 namespace LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 
-public interface IGetRegistrationLinkRelatedDataHandler
+public interface IConsumeRegistrationLinkRelatedDataHandler
 {
     RegistrationLinkData Handle(GetRegistrationLinkRelatedDataQuery query);
 }
 public class ConsumeRegistrationLinkRelatedDataHandler(
-    IRegistrationLinkService registrationLinkService) : IGetRegistrationLinkRelatedDataHandler
+    ITemporaryCodeService temporaryCodeService) : IConsumeRegistrationLinkRelatedDataHandler
 {
     public RegistrationLinkData Handle(GetRegistrationLinkRelatedDataQuery query) 
-        => registrationLinkService.ConsumeLinkRelatedData(query.Link);
+        => temporaryCodeService.ConsumeLinkRelatedData<RegistrationLinkData>(query.Link) ?? new RegistrationLinkData { Valid = false };
 }

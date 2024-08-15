@@ -5,14 +5,14 @@ namespace UnitTests.Domain.Singletons;
 
 public class RegistrationLinkServiceTest
 {
-    private readonly RegistrationLinkService _registrationLinkService = new();
+    private readonly TemporaryCodeService _temporaryCodeService = new();
 
 
     [Theory, AutoData]
     public void CreateRegistrationLink_ReturnsLink(RegistrationLinkData data)
     {
         // act
-        var result = _registrationLinkService.CreateRegistrationLink(data);
+        var result = _temporaryCodeService.CreateRegistrationLink(data);
         
         // assert
         result.Should().NotBeNullOrEmpty();
@@ -22,10 +22,10 @@ public class RegistrationLinkServiceTest
     public void GetLinkRelatedData_ReturnsData(RegistrationLinkData data)
     {
         // arrange
-        var link = _registrationLinkService.CreateRegistrationLink(data);
+        var link = _temporaryCodeService.CreateRegistrationLink(data);
         
         // act
-        var result = _registrationLinkService.ConsumeLinkRelatedData(link);
+        var result = _temporaryCodeService.ConsumeLinkRelatedData<RegistrationLinkData>(link);
         
         // assert
         result.Valid.Should().BeTrue();
@@ -37,7 +37,7 @@ public class RegistrationLinkServiceTest
     public void GetLinkRelatedData_ReturnsInvalidData(string link)
     {
         // act
-        var result = _registrationLinkService.ConsumeLinkRelatedData(link);
+        var result = _temporaryCodeService.ConsumeLinkRelatedData<RegistrationLinkData>(link);
         
         // assert
         result.Valid.Should().BeFalse();

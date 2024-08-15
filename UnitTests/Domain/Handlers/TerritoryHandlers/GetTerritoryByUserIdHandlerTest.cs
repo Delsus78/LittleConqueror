@@ -26,7 +26,7 @@ public class GetTerritoryByUserIdHandlerTest
         owner.Territory = expectedTerritory;
         
         _territoryDatabase
-            .Setup(x => x.GetTerritoryOfUser(It.IsAny<int>()))
+            .Setup(x => x.GetTerritoryOfUser(It.IsAny<long>()))
             .ReturnsAsync(expectedTerritory);
         
         // act
