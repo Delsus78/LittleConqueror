@@ -2,6 +2,8 @@ using LittleConqueror;
 using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
+using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
+using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Singletons;
 using LittleConqueror.AppService.DrivenPorts;
@@ -15,6 +17,7 @@ using LittleConqueror.Infrastructure.Repositories;
 using LittleConqueror.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,7 +68,12 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<AppExceptionFiltersAttribute>();
-});
+}).AddNewtonsoftJson(options =>
+    {
+        // Configurations supplémentaires si nécessaire
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+    });
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -95,13 +103,20 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetUserByIdHandler, GetUserByIdHandler>()
     .AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>()
     .AddScoped<IGetUserInformationsHandler, GetUserInformationsHandler>()
-    .AddScoped<IGetRegistrationLinkRelatedDataHandler, ConsumeRegistrationLinkRelatedDataHandler>()
+    .AddScoped<IConsumeRegistrationLinkRelatedDataHandler, ConsumeRegistrationLinkRelatedDataHandler>()
+    .AddScoped<IConsumeForgotPasswordLinkRelatedDataHandler, ConsumeForgotPasswordLinkRelatedDataHandler>()
     .AddScoped<ICreateRegistrationLinkHandler, CreateRegistrationLinkHandler>()
+    .AddScoped<ICreateForgetPasswordLinkHandler, CreateForgetPasswordLinkHandler>()
+    .AddScoped<IChangePasswordHandler, ChangePasswordHandler>()
     .AddScoped<IRegisterAuthUserHandler, RegisterAuthUserHandler>()
+    .AddScoped<IChangePasswordHandler, ChangePasswordHandler>()
     .AddScoped<IGetAuthenticatedUserByIdHandler, GetAuthenticatedUserByIdHandler>()
     .AddScoped<IAuthenticateUserHandler, AuthenticateUserHandler>()
     .AddScoped<IAddCityToATerritoryHandler, AddCityToATerritoryHandler>()
     .AddScoped<IGetCityByOsmIdHandler, GetCityByOsmIdHandler>()
+    .AddScoped<ICreateTerritoryHandler, CreateTerritoryHandler>()
+    .AddScoped<ICreateResourcesForUserHandler, CreateResourcesForUserHandler>()
+    .AddScoped<IGetResourcesForUserHandler, GetResourcesForUserHandler>()
 
 // Services Driven
     .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()
@@ -113,21 +128,25 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IAuthUserDatabasePort, AuthUserDatabaseAdapter>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
+    .AddScoped<IResourcesDatabasePort, ResourcesDatabaseAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()
     .AddScoped<CityRepository>()
     .AddScoped<AuthUserRepository>()
+    .AddScoped<ResourcesRepository>()
 
 // Others
     .AddAutoMapper(typeof(MappingProfile))
     .ConfigureJwt(builder.Configuration.GetSection("AppSettings").Get<AppSettings>())
-    .AddSingleton<IRegistrationLinkService, RegistrationLinkService>()
+    .Configure<OSMSettings>(builder.Configuration.GetSection("OSMSettings"))
+    .AddSingleton<ITemporaryCodeService, TemporaryCodeService>()
     .AddSingleton<ITokenManagerService, TokenManagerService>()
 // HttpClients
     .AddHttpClient("NominatimOSM", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://nominatim.openstreetmap.org/");
     httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("LittleConqueror/1.0");
+    httpClient.DefaultRequestHeaders.AcceptLanguage.ParseAdd("fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7");
 });
 
 var app = builder.Build();

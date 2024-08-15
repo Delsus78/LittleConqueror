@@ -2,7 +2,7 @@ using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace LittleConqueror.Infrastructure;
 
@@ -15,13 +15,14 @@ public class DataContext(
     public DbSet<User> Users { get; set; }
     public DbSet<Territory> Territories { get; set; }
     public DbSet<AuthUser> AuthUsers { get; set; }
+    public DbSet<Resources> Resources { get; set; }
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        var geoJsonConverter = new ValueConverter<Geojson, string>(
-            v => JsonConvert.SerializeObject(v),
-            v => JsonConvert.DeserializeObject<Geojson>(v) ?? new Geojson());
+        var geoJsonConverter = new ValueConverter<JToken, string>(
+            v => v.ToString(),
+            v => JToken.Parse(v));
         
         modelBuilder.Entity<User>(entity =>
         {
@@ -30,12 +31,24 @@ public class DataContext(
             entity.HasOne(user => user.Territory)
                 .WithOne(territory => territory.Owner)
                 .HasForeignKey<Territory>(territory => territory.OwnerId);
+            entity.HasOne(user => user.Resources)
+                .WithOne(resources => resources.User)
+                .HasForeignKey<Resources>(resources => resources.UserId);
         });
+        
+        modelBuilder.Entity<Resources>(
+            entity =>
+            {
+                entity.HasKey(resources => resources.Id);
+                entity.Property(resources => resources.Id).ValueGeneratedOnAdd();
+                entity.HasOne(resources => resources.User)
+                    .WithOne(user => user.Resources);
+            });
 
         modelBuilder.Entity<City>(entity =>
         {
             entity.HasKey(city => city.Id);
-            entity.Property(city => city.Id).ValueGeneratedOnAdd();
+            entity.Property(city => city.Id);
             entity.Property(city => city.Geojson).HasConversion(geoJsonConverter);
             entity.HasOne(city => city.Territory)
                 .WithMany(territory => territory.Cities)

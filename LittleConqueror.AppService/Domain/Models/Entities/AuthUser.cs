@@ -9,6 +9,6 @@ public class AuthUser : Entity
     public string Role { get; init; }
     
     // 1:1 relationship
-    public int? UserId { get; set; }
+    public long? UserId { get; set; }
     public User? User { get; set; }
 }

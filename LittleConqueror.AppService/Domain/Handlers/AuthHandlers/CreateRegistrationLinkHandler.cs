@@ -8,10 +8,10 @@ public interface ICreateRegistrationLinkHandler
 {
     string Handle(CreateRegistrationLinkCommand command);
 }
-public class CreateRegistrationLinkHandler(IRegistrationLinkService registrationLinkService) : ICreateRegistrationLinkHandler
+public class CreateRegistrationLinkHandler(ITemporaryCodeService temporaryCodeService) : ICreateRegistrationLinkHandler
 {
     public string Handle(CreateRegistrationLinkCommand command) 
-        => registrationLinkService.CreateRegistrationLink(new RegistrationLinkData
+        => temporaryCodeService.CreateRegistrationLink(new RegistrationLinkData
         {
             Role = command.Role, 
             FirstOsmId = command.FirstOsmId,

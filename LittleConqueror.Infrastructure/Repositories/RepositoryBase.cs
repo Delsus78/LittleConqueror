@@ -70,7 +70,7 @@ public class Repository<T> : IRepository<T> where T : Entity
         return await ApplySpecification(spec).ToListAsync();
     }
 
-    public async Task<T?> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(long id)
     {
         return await _dbSet.FindAsync(id);
     }

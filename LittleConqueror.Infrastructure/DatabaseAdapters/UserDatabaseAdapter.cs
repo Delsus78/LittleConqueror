@@ -7,7 +7,7 @@ namespace LittleConqueror.Infrastructure.DatabaseAdapters;
 public class UserDatabaseAdapter(
     UserRepository userRepository) : IUserDatabasePort
 {
-    public async Task<User?> GetUserById(int id)
+    public async Task<User?> GetUserById(long id)
         => await userRepository.GetAsync(entity => entity.Id == id);
 
     public async Task<User?> CreateUser(User user)

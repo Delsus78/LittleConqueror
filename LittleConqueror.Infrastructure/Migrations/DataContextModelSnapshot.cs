@@ -24,11 +24,11 @@ namespace LittleConqueror.Infrastructure.Migrations
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.AuthUser", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Hash")
                         .IsRequired()
@@ -38,8 +38,8 @@ namespace LittleConqueror.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -55,8 +55,8 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = -1,
-                            Hash = "$2a$13$XePFdIPxMQ.XYe0u8QM2EefJ.kDexprmR77HD6jeOwFpHLQ2SI/Ri",
+                            Id = -1L,
+                            Hash = "$2a$13$FWVeWDfCWuRqInM7ugLTEOBD0Uw7RTzr7dGm2I9M/i98f3r.8lJpy",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -64,11 +64,11 @@ namespace LittleConqueror.Infrastructure.Migrations
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.City", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Geojson")
                         .IsRequired()
@@ -90,8 +90,8 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.Property<int>("Population")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("TerritoryId")
-                        .HasColumnType("integer");
+                    b.Property<long?>("TerritoryId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -100,16 +100,56 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Resources", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("Diamond")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Food")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Gold")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Iron")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Petrol")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Stone")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("Wood")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Resources");
+                });
+
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Territory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("integer");
+                    b.Property<long>("OwnerId")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -121,11 +161,11 @@ namespace LittleConqueror.Infrastructure.Migrations
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -154,6 +194,17 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.Navigation("Territory");
                 });
 
+            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Resources", b =>
+                {
+                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.User", "User")
+                        .WithOne("Resources")
+                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.Resources", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.Territory", b =>
                 {
                     b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.User", "Owner")
@@ -174,6 +225,8 @@ namespace LittleConqueror.Infrastructure.Migrations
                 {
                     b.Navigation("AuthUser")
                         .IsRequired();
+
+                    b.Navigation("Resources");
 
                     b.Navigation("Territory");
                 });

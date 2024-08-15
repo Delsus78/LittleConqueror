@@ -20,14 +20,14 @@ public class TerritoryDatabaseAdapter(
         return entityEntry.Entity;
     }
 
-    public async Task<Territory?> GetTerritoryOfUser(int userId)
+    public async Task<Territory?> GetTerritoryOfUser(long userId)
         => (await territoryRepository.GetAsync(new TerritoryFromUserIdWithCitiesSpec(userId))).FirstOrDefault();
     
 
-    public async Task<Territory?> GetTerritoryById(int territoryId)
+    public async Task<Territory?> GetTerritoryById(long territoryId)
         => await territoryRepository.GetByIdAsync(territoryId);
     
-    private async Task ValidateIfNotExistAsync(int Id)
+    private async Task ValidateIfNotExistAsync(long Id)
     {
         var existingEntity = await territoryRepository.GetAsync(entity => entity.Id == Id);
         if (existingEntity == null)

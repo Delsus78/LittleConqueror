@@ -13,7 +13,7 @@ public interface IRegisterAuthUserHandler
 }
 public class RegisterAuthUserHandler(
     IPasswordHasherPort passwordHasherPort,
-    IGetRegistrationLinkRelatedDataHandler getRegistrationLinkRelatedDataHandler,
+    IConsumeRegistrationLinkRelatedDataHandler getRegistrationLinkRelatedDataHandler,
     IAuthUserDatabasePort authUserDatabase,
     ICreateUserHandler createUserHandler) : IRegisterAuthUserHandler
 {

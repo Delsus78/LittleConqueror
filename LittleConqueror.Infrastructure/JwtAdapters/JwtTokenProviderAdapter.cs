@@ -28,13 +28,14 @@ public class JwtTokenProviderAdapter(IOptions<AppSettings> options, ITokenManage
                     new Claim(ClaimTypes.Name, user.Username),
                     new Claim(ClaimTypes.Role, user.Role),
                     new Claim(JwtRegisteredClaimNames.Jti, tokenJti),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString())
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                    new Claim("AppName", "LittleConqueror")
                 }),
                 Expires = expiration,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             
-            tokenManagerService.AddTokenJTI(tokenJti, user.Id);
+            tokenManagerService.SetTokenJTI(tokenJti, user.Id);
             
             return tokenHandler.CreateToken(tokenDescriptor);
         });

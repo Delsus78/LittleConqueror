@@ -6,5 +6,6 @@ public interface IAuthUserDatabasePort
 {
     Task<AuthUser?> GetAuthUserByUsername(string username);
     Task<AuthUser> AddAsync(AuthUser authUser);
-    Task<AuthUser?> GetAuthUserById(int userId);
+    Task<AuthUser?> GetAuthUserById(long userId);
+    Task UpdateAsync(AuthUser authUser);
 }

@@ -7,12 +7,12 @@ using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
-namespace UnitTests.Domain.Handlers;
+namespace UnitTests.Domain.Handlers.AuthHandlers;
 
 public class RegisterAuthUserHandlerTest
 {
     private readonly Mock<IPasswordHasherPort> _passwordHasherPort;
-    private readonly Mock<IGetRegistrationLinkRelatedDataHandler> _getRegistrationLinkRelatedDataHandler;
+    private readonly Mock<IConsumeRegistrationLinkRelatedDataHandler> _getRegistrationLinkRelatedDataHandler;
     private readonly Mock<IAuthUserDatabasePort> _authUserDatabase;
     private readonly Mock<ICreateUserHandler> _createUserHandler;
     
@@ -21,7 +21,7 @@ public class RegisterAuthUserHandlerTest
     public RegisterAuthUserHandlerTest()
     {
         _passwordHasherPort = new Mock<IPasswordHasherPort>();
-        _getRegistrationLinkRelatedDataHandler = new Mock<IGetRegistrationLinkRelatedDataHandler>();
+        _getRegistrationLinkRelatedDataHandler = new Mock<IConsumeRegistrationLinkRelatedDataHandler>();
         _authUserDatabase = new Mock<IAuthUserDatabasePort>();
         _createUserHandler = new Mock<ICreateUserHandler>();
         

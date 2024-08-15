@@ -2,8 +2,9 @@ using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
+using LittleConqueror.AppService.Exceptions;
 
-namespace UnitTests.Domain.Handlers;
+namespace UnitTests.Domain.Handlers.UserHandlers;
 
 public class GetUserByIdHandlerTest
 {
@@ -23,7 +24,7 @@ public class GetUserByIdHandlerTest
         // arrange
         var expected = new User { Id = query.UserId, Name = "Test" };
         _userDatabase
-            .Setup(x => x.GetUserById(It.IsAny<int>()))
+            .Setup(x => x.GetUserById(It.IsAny<long>()))
             .ReturnsAsync(expected);
         
         // act
@@ -35,17 +36,18 @@ public class GetUserByIdHandlerTest
     }
     
     [Theory, AutoData]
-    public async Task Handle_GetUserByIdQuery_ReturnsNull(GetUserByIdQuery query)
+    public async Task Handle_GetUserByIdQuery_UserNotFound_ThrowsAppException(GetUserByIdQuery query)
     {
         // arrange
         _userDatabase
             .Setup(x => x.GetUserById(It.IsAny<int>()))
-            .ReturnsAsync((User?)null);
+            .ReturnsAsync((User)null);
         
         // act
-        var result = await _getUserByIdHandler.Handle(query);
+        Func<Task> act = async () => await _getUserByIdHandler.Handle(query);
         
         // assert
-        result.Should().BeNull();
+        await act.Should().ThrowAsync<AppException>()
+            .WithMessage("User not found");
     }
 }

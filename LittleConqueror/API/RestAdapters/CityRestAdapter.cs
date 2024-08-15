@@ -21,7 +21,7 @@ public class CityRestAdapter(
         => mapper.Map<CityDto>(await getCityByLongitudeAndLatitudeHandler.Handle(query));
     
     [HttpGet("ByOsmId")]
-    public async Task<CityDto> GetCityByOsmId([FromQuery] int osmId, [FromQuery] char osmType)
+    public async Task<CityDto> GetCityByOsmId([FromQuery] long osmId, [FromQuery] char osmType)
         => mapper.Map<CityDto>(await getCityByOsmIdHandler.Handle(new GetCityByOsmIdQuery { OsmId = osmId, OsmType = osmType }));
     
     [Authorize(Roles="Admin")]
