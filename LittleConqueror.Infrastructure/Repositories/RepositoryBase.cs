@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using LittleConqueror.AppService.Domain.Models.Entities.Base;
-using LittleConqueror.AppService.DrivenPorts.Specifications;
+using LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 

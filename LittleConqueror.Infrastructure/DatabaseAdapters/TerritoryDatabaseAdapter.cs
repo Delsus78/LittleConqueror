@@ -1,15 +1,12 @@
-using AutoMapper;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
-using LittleConqueror.AppService.DrivenPorts.Specifications;
-using LittleConqueror.AppService.Exceptions;
+using LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 using LittleConqueror.Infrastructure.Repositories;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters;
 
 public class TerritoryDatabaseAdapter(
-    TerritoryRepository territoryRepository, 
-    IMapper mapper) : ITerritoryDatabasePort
+    TerritoryRepository territoryRepository) : ITerritoryDatabasePort
 {
     public async Task<Territory> CreateTerritory(Territory territory)
     {
@@ -21,16 +18,9 @@ public class TerritoryDatabaseAdapter(
     }
 
     public async Task<Territory?> GetTerritoryOfUser(long userId)
-        => (await territoryRepository.GetAsync(new TerritoryFromUserIdWithCitiesSpec(userId))).FirstOrDefault();
+        => (await territoryRepository.GetAsync(new TerritoryFromUserIdWithCitiesAndActionSpec(userId)))[0];
     
 
     public async Task<Territory?> GetTerritoryById(long territoryId)
         => await territoryRepository.GetByIdAsync(territoryId);
-    
-    private async Task ValidateIfNotExistAsync(long Id)
-    {
-        var existingEntity = await territoryRepository.GetAsync(entity => entity.Id == Id);
-        if (existingEntity == null)
-            throw new AppException($"Entity with the id : {Id} dont exist.", 404);
-    }
 }

@@ -1,5 +1,5 @@
 using LittleConqueror.AppService.Domain.Models.Entities.Base;
-using LittleConqueror.AppService.DrivenPorts.Specifications;
+using LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace LittleConqueror.Infrastructure;
@@ -10,19 +10,17 @@ public class SpecificationEvaluator<T> where T : Entity
     {
         var query = inputQuery;
 
-        // modify the IQueryable using the specification's criteria expression
+        // Modify the IQueryable using the specification's criteria expression
         if (specification.Criteria != null)
         {
             query = query.Where(specification.Criteria);
         }
 
-        // Includes all expression-based includes
-        query = specification.Includes.Aggregate(query,
-            (current, include) => current.Include(include));
+        // Includes all expression-based includes with ThenInclude support
+        query = specification.Includes.Aggregate(query, (current, include) => include(current));
 
         // Include any string-based include statements
-        query = specification.IncludeStrings.Aggregate(query,
-            (current, include) => current.Include(include));
+        query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         // Apply ordering if expressions are set
         if (specification.OrderBy != null)
@@ -37,9 +35,9 @@ public class SpecificationEvaluator<T> where T : Entity
         // Apply paging if enabled
         if (specification.isPagingEnabled)
         {
-            query = query.Skip(specification.Skip)
-                .Take(specification.Take);
+            query = query.Skip(specification.Skip).Take(specification.Take);
         }
+
         return query;
     }
 }

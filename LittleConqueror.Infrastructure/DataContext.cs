@@ -1,8 +1,10 @@
 using LittleConqueror.AppService.Domain.Models.Entities;
+using LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 using LittleConqueror.AppService.DrivenPorts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json.Linq;
+using Action = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action;
 
 namespace LittleConqueror.Infrastructure;
 
@@ -16,6 +18,10 @@ public class DataContext(
     public DbSet<Territory> Territories { get; set; }
     public DbSet<AuthUser> AuthUsers { get; set; }
     public DbSet<Resources> Resources { get; set; }
+    
+    // ActionEntities
+    public DbSet<Action> Actions { get; set; }
+    public DbSet<Agricole> ActionsAgricoles { get; set; }
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -54,6 +60,11 @@ public class DataContext(
                 .WithMany(territory => territory.Cities)
                 .HasForeignKey(city => city.TerritoryId)
                 .IsRequired(false);
+
+            entity.HasOne(city => city.Action)
+                .WithOne(action => action.City)
+                .HasForeignKey<Action>(action => action.Id)
+                .IsRequired(false);
         });
 
         modelBuilder.Entity<Territory>(entity =>
@@ -84,5 +95,17 @@ public class DataContext(
                 Role = "Admin"
             });
         });
+
+        modelBuilder.Entity<Action>(entity =>
+        {
+            // primary key is the same as the city id
+            entity.HasKey(action => action.Id);
+            entity.HasOne(action => action.City)
+                .WithOne(city => city.Action)
+                .HasForeignKey<Action>(action => action.Id)
+                .IsRequired();
+        });
+        
+        modelBuilder.Entity<Agricole>().ToTable("ActionsAgricoles");
     }
 }

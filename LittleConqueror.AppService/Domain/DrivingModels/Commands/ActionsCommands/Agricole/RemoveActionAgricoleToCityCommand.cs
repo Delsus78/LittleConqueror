@@ -1,0 +1,3 @@
+namespace LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
+
+public class RemoveActionAgricoleOfCityCommand : RemoveActionOfCityCommand;
