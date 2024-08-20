@@ -16,4 +16,7 @@ public class City : Entity
     // n:1 relationship
     public long? TerritoryId { get; set; }
     public Territory Territory { get; set; }
+    
+    // 1:1 relationship
+    public virtual ActionEntities.Action? Action { get; set; }
 }

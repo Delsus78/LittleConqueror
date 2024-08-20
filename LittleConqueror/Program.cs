@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
 using LittleConqueror;
 using LittleConqueror.API.Mappers;
+using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
+using LittleConqueror.AppService.Domain.Handlers.ActionHandlers.Agricole;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
 using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
@@ -50,6 +53,10 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
+    
+    // polymorphism
+    c.UseOneOfForPolymorphism();
+    c.UseAllOfForInheritance();
 });
 
 // cors
@@ -65,6 +72,15 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+builder.Services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<AppExceptionFiltersAttribute>();
@@ -73,6 +89,9 @@ builder.Services.AddControllers(options =>
         // Configurations supplémentaires si nécessaire
         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+        
+        // Pour les enums
+        options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
     });
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -117,6 +136,10 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ICreateTerritoryHandler, CreateTerritoryHandler>()
     .AddScoped<ICreateResourcesForUserHandler, CreateResourcesForUserHandler>()
     .AddScoped<IGetResourcesForUserHandler, GetResourcesForUserHandler>()
+    .AddScoped<ISetActionToCityHandler, SetActionToCityHandler>()
+    .AddScoped<ISetActionAgricoleToCityHandler, SetActionAgricoleToCityHandler>()
+    .AddScoped<IRemoveActionOfCityHandler, RemoveActionOfCityHandler>()
+    .AddScoped<IRemoveActionAgricoleOfCityHandler, RemoveActionAgricoleOfCityHandler>()
 
 // Services Driven
     .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()
@@ -129,11 +152,13 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
     .AddScoped<IResourcesDatabasePort, ResourcesDatabaseAdapter>()
+    .AddScoped<IActionAgricoleDatabasePort, ActionAgricoleDatabaseAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()
     .AddScoped<CityRepository>()
     .AddScoped<AuthUserRepository>()
     .AddScoped<ResourcesRepository>()
+    .AddScoped<ActionAgricoleRepository>()
 
 // Others
     .AddAutoMapper(typeof(MappingProfile))
@@ -158,7 +183,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<TokenBlacklistMiddleware>();
-
+app.UseMiddleware<SetActionCommandMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

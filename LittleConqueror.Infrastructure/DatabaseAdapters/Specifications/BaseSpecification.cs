@@ -1,11 +1,12 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Query;
 
-namespace LittleConqueror.AppService.DrivenPorts.Specifications;
+namespace LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 
 public interface ISpecification<T>
 {
     Expression<Func<T, bool>> Criteria { get; }
-    List<Expression<Func<T, object>>> Includes { get; }
+    List<Func<IQueryable<T>, IIncludableQueryable<T, object>>> Includes { get; }
     List<string> IncludeStrings { get; }
     Expression<Func<T, object>> OrderBy { get; }
     Expression<Func<T, object>> OrderByDescending { get; }
@@ -17,7 +18,7 @@ public interface ISpecification<T>
 public abstract class BaseSpecification<T>(Expression<Func<T, bool>> criteria) : ISpecification<T>
 {
     public Expression<Func<T, bool>> Criteria { get; } = criteria;
-    public List<Expression<Func<T, object>>> Includes { get; } = new();
+    public List<Func<IQueryable<T>, IIncludableQueryable<T, object>>> Includes { get; } = new();
     public List<string> IncludeStrings { get; } = new();
     public Expression<Func<T, object>> OrderBy { get; private set; }
     public Expression<Func<T, object>> OrderByDescending { get; private set; }
@@ -26,24 +27,28 @@ public abstract class BaseSpecification<T>(Expression<Func<T, bool>> criteria) :
     public int Skip { get; private set; }
     public bool isPagingEnabled { get; private set; }
 
-    protected virtual void AddInclude(Expression<Func<T, object>> includeExpression)
+    protected virtual void AddInclude(Func<IQueryable<T>, IIncludableQueryable<T, object>> includeExpression)
     {
         Includes.Add(includeExpression);
     }
+
     protected virtual void AddInclude(string includeString)
     {
         IncludeStrings.Add(includeString);
     }
+    
     protected virtual void ApplyPaging(int skip, int take)
     {
         Skip = skip;
         Take = take;
         isPagingEnabled = true;
     }
+    
     protected virtual void ApplyOrderBy(Expression<Func<T, object>> orderByExpression)
     {
         OrderBy = orderByExpression;
     }
+
     protected virtual void ApplyOrderByDescending(Expression<Func<T, object>> orderByDescendingExpression)
     {
         OrderByDescending = orderByDescendingExpression;

@@ -3,6 +3,7 @@ using System;
 using LittleConqueror.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LittleConqueror.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240820082718_ActionsEntities")]
+    partial class ActionsEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,13 +27,16 @@ namespace LittleConqueror.Infrastructure.Migrations
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", b =>
                 {
+                    b.Property<long>("CityId")
+                        .HasColumnType("bigint");
+
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("Id");
+                    b.HasKey("CityId");
 
                     b.ToTable("Actions");
 
@@ -71,7 +77,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                         new
                         {
                             Id = -1L,
-                            Hash = "$2a$13$/qS7PwpJv0VX2Tl3Q3zfj.Ios0NVbuYDviv3D1sYujLLWBaPyKbv.",
+                            Hash = "$2a$13$Ck/xcNJxvZ7BUebWH.D5Gu3KHM99yCvU76qJcwYaFyu89Zpf4iluG",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -84,6 +90,9 @@ namespace LittleConqueror.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long?>("ActionId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Geojson")
                         .IsRequired()
@@ -202,7 +211,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                 {
                     b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.City", "City")
                         .WithOne("Action")
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", "Id")
+                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", "CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -253,7 +262,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                 {
                     b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", null)
                         .WithOne()
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Agricole", "Id")
+                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Agricole", "CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

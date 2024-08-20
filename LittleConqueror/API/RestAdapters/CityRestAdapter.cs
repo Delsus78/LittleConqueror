@@ -1,19 +1,24 @@
 using AutoMapper;
 using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
+using LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
+using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
+using LittleConqueror.AppService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LittleConqueror.API.RestAdapters;
 
+[Authorize]
 [ApiController]
 [Route("api/Cities")]
 public class CityRestAdapter(
     IGetCityByLongitudeAndLatitudeHandler getCityByLongitudeAndLatitudeHandler, 
     IGetCityByOsmIdHandler getCityByOsmIdHandler,
     IAddCityToATerritoryHandler addCityToTerritoryHandler,
+    ISetActionToCityHandler setActionToCityHandler,
     IMapper mapper) : ControllerBase
 {
     [HttpGet("ByLonLat")]
@@ -28,4 +33,15 @@ public class CityRestAdapter(
     [HttpPost("AddToTerritory")]
     public async Task AddCityToTerritory([FromBody] AddCityToATerritoryCommand command)
         => await addCityToTerritoryHandler.Handle(command);
+    
+    [HttpPost("setAction")]
+    public async Task SetAction([FromQuery] ActionType actionType, [FromBody] SetActionToCityCommand commandBody)
+    {
+        if (HttpContext.Items.TryGetValue("DeserializedCommand", out var commandObj) 
+            && commandObj is SetActionToCityCommand command)
+            await setActionToCityHandler.Handle(command);
+        else
+            throw new AppException("Invalid command", 400);
+        
+    }
 }

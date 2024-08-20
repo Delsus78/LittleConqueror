@@ -1,7 +1,9 @@
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
+using LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 using LittleConqueror.Infrastructure.Repositories;
+using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters;
 
@@ -10,6 +12,11 @@ public class CityDatabaseAdapter(
 {
     public async Task<City?> GetCityById(long id)
         => await cityRepository.GetAsync(cityEntity => cityEntity.Id == id);
+
+    public async Task<City?> GetCityWithAction(long id)
+    {
+        return (await cityRepository.GetAsync(new CityWithActionSpec(id)))[0];
+    }
 
     public async Task<City?> AddCity(City city)
     {
@@ -29,6 +36,15 @@ public class CityDatabaseAdapter(
             throw new AppException("City not found", 404);
         
         city.TerritoryId = territoryId;
+        
+        await cityRepository.UpdateAsync(city);
+    }
+    
+    public async Task SetAction(City city, ActionEntities.Action action)
+    {
+        await ValidateIfNotExistAsync(city.Id);
+        
+        city.Action = action;
         
         await cityRepository.UpdateAsync(city);
     }

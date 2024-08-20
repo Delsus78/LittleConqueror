@@ -60,6 +60,8 @@ public class NominatimOSMFetcherAdapter(
     public async Task<CityOSM> GetCityByOsmId(long osmId, char osmType)
     {
         var httpClient = httpClientFactory.CreateClient("NominatimOSM");
+        
+        osmType = osmType.ToString().ToUpper()[0];
 
         var urlparams = $"details?format=json&osmid={osmId}&osmtype={osmType}&zoom=10&polygon_geojson=1&extratags=1";
 
