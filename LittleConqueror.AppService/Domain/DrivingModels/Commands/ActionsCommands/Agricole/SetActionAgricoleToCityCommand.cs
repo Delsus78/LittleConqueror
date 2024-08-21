@@ -1,3 +1,0 @@
-namespace LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands.Agricole;
-
-public class SetActionAgricoleToCityCommand : SetActionToCityCommand;

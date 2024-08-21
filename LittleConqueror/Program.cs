@@ -2,13 +2,17 @@ using System.Text.Json.Serialization;
 using LittleConqueror;
 using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
-using LittleConqueror.AppService.Domain.Handlers.ActionHandlers.Agricole;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
 using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
+using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Singletons;
+using LittleConqueror.AppService.Domain.Strategies;
+using LittleConqueror.AppService.Domain.Strategies.ActionStrategies;
+using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Remove;
+using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Set;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Authentication;
 using LittleConqueror.Exceptions;
@@ -136,11 +140,14 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ICreateTerritoryHandler, CreateTerritoryHandler>()
     .AddScoped<ICreateResourcesForUserHandler, CreateResourcesForUserHandler>()
     .AddScoped<IGetResourcesForUserHandler, GetResourcesForUserHandler>()
+    .AddScoped<IStrategyContext, StrategyContext>()
     .AddScoped<ISetActionToCityHandler, SetActionToCityHandler>()
-    .AddScoped<ISetActionAgricoleToCityHandler, SetActionAgricoleToCityHandler>()
     .AddScoped<IRemoveActionOfCityHandler, RemoveActionOfCityHandler>()
-    .AddScoped<IRemoveActionAgricoleOfCityHandler, RemoveActionAgricoleOfCityHandler>()
 
+// Strategies KeyedServices
+    .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
+    .AddKeyedScoped<IRemoveActionStrategy, RemoveActionAgricoleStrategy>(ActionType.Agricole)
+    
 // Services Driven
     .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()
     .AddScoped<ICityDatabasePort, CityDatabaseAdapter>()
@@ -183,7 +190,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<TokenBlacklistMiddleware>();
-app.UseMiddleware<SetActionCommandMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -3,19 +3,15 @@ using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
-namespace LittleConqueror.AppService.Domain.Handlers.ActionHandlers.Agricole;
+namespace LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Remove;
 
-public interface IRemoveActionAgricoleOfCityHandler
-{
-    Task Handle(RemoveActionAgricoleOfCityCommand command);
-}
-public class RemoveActionAgricoleOfCityHandler(
+public class RemoveActionAgricoleStrategy(
     ICityDatabasePort cityDatabase,
-    IActionAgricoleDatabasePort actionAgricoleDatabase): IRemoveActionAgricoleOfCityHandler
+    IActionAgricoleDatabasePort actionAgricoleDatabase) : IRemoveActionStrategy
 {
-    public async Task Handle(RemoveActionAgricoleOfCityCommand command)
+    public async Task<object?> Execute(RemoveActionOfCityCommand input, CancellationToken cancellationToken)
     {
-        var city = await cityDatabase.GetCityWithAction(command.CityId);
+        var city = await cityDatabase.GetCityWithAction(input.CityId);
         if (city == null)
             throw new AppException("City not found", 404);
         
@@ -26,5 +22,7 @@ public class RemoveActionAgricoleOfCityHandler(
             throw new AppException("Action is not an agricole action", 400);
         
         await actionAgricoleDatabase.DeleteActionAgricole(actionAgricole);
+        
+        return null;
     }
 }

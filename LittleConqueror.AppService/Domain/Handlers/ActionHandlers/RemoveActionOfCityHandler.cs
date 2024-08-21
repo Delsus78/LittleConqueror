@@ -1,5 +1,6 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
-using LittleConqueror.AppService.Domain.Handlers.ActionHandlers.Agricole;
+using LittleConqueror.AppService.Domain.Strategies;
+using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Remove;
 
 namespace LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
 
@@ -9,18 +10,12 @@ public interface IRemoveActionOfCityHandler
 }
 
 public class RemoveActionOfCityHandler(
-    IRemoveActionAgricoleOfCityHandler removeActionAgricoleOfCityHandler
+    IStrategyContext strategyContext
     ) : IRemoveActionOfCityHandler
 {
     public async Task Handle(RemoveActionOfCityCommand command)
     {
-        switch (command)
-        {
-            case RemoveActionAgricoleOfCityCommand removeActionAgricoleOfCityCommand:
-                await removeActionAgricoleOfCityHandler.Handle(removeActionAgricoleOfCityCommand);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
+        await strategyContext.ExecuteStrategy<RemoveActionOfCityCommand, object?, IRemoveActionStrategy>(
+            command.ActionType, command, default);
     }
 }

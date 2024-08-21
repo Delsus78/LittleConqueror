@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
+using LittleConqueror.AppService.Domain.Models;
 
 namespace LittleConqueror.API.Models.Dtos.ActionsDtos;
 

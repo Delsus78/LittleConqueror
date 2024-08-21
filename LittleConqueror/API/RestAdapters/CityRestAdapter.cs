@@ -5,7 +5,6 @@ using LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
-using LittleConqueror.AppService.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,13 +34,8 @@ public class CityRestAdapter(
         => await addCityToTerritoryHandler.Handle(command);
     
     [HttpPost("setAction")]
-    public async Task SetAction([FromQuery] ActionType actionType, [FromBody] SetActionToCityCommand commandBody)
+    public async Task SetAction([FromBody] SetActionToCityCommand command)
     {
-        if (HttpContext.Items.TryGetValue("DeserializedCommand", out var commandObj) 
-            && commandObj is SetActionToCityCommand command)
-            await setActionToCityHandler.Handle(command);
-        else
-            throw new AppException("Invalid command", 400);
-        
+        await setActionToCityHandler.Handle(command);
     }
 }
