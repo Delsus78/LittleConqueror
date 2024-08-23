@@ -3,6 +3,7 @@ using System;
 using LittleConqueror.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LittleConqueror.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240822113754_ActionsMiniere")]
+    partial class ActionsMiniere
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,6 +30,11 @@ namespace LittleConqueror.Infrastructure.Migrations
                     b.Property<long>("Id")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
 
@@ -34,7 +42,9 @@ namespace LittleConqueror.Infrastructure.Migrations
 
                     b.ToTable("Actions");
 
-                    b.UseTptMappingStrategy();
+                    b.HasDiscriminator().HasValue("Action");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.AuthUser", b =>
@@ -71,7 +81,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                         new
                         {
                             Id = -1L,
-                            Hash = "$2a$13$FPswCmAPqgeBVkuWUGPlBO0YN/TXnRRSpI.qeBtV1g7g6j3dMSI4u",
+                            Hash = "$2a$13$ZtJQ0IgbLmQmAMH8G67f3emKyQWI1KbrseY2gbz1XoLfUXAjpxI82",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -195,45 +205,14 @@ namespace LittleConqueror.Infrastructure.Migrations
                 {
                     b.HasBaseType("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action");
 
-                    b.ToTable("ActionsAgricoles", (string)null);
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Diplomatique", b =>
-                {
-                    b.HasBaseType("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action");
-
-                    b.ToTable("ActionsDiplomatiques", (string)null);
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Espionnage", b =>
-                {
-                    b.HasBaseType("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action");
-
-                    b.ToTable("ActionsEspionnages", (string)null);
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Militaire", b =>
-                {
-                    b.HasBaseType("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action");
-
-                    b.ToTable("ActionsMilitaires", (string)null);
+                    b.HasDiscriminator().HasValue("Agricole");
                 });
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Miniere", b =>
                 {
                     b.HasBaseType("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action");
 
-                    b.Property<int>("ResourceType")
-                        .HasColumnType("integer");
-
-                    b.ToTable("ActionsMiniere", (string)null);
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Technologique", b =>
-                {
-                    b.HasBaseType("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action");
-
-                    b.ToTable("ActionsTechnologiques", (string)null);
+                    b.HasDiscriminator().HasValue("Miniere");
                 });
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", b =>
@@ -285,60 +264,6 @@ namespace LittleConqueror.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Agricole", b =>
-                {
-                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", null)
-                        .WithOne()
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Agricole", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Diplomatique", b =>
-                {
-                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", null)
-                        .WithOne()
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Diplomatique", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Espionnage", b =>
-                {
-                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", null)
-                        .WithOne()
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Espionnage", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Militaire", b =>
-                {
-                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", null)
-                        .WithOne()
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Militaire", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Miniere", b =>
-                {
-                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", null)
-                        .WithOne()
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Miniere", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Technologique", b =>
-                {
-                    b.HasOne("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action", null)
-                        .WithOne()
-                        .HasForeignKey("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Technologique", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.City", b =>

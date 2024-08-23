@@ -10,19 +10,22 @@ public class SpecificationEvaluator<T> where T : Entity
     {
         var query = inputQuery;
 
-        // Modify the IQueryable using the specification's criteria expression
+        // Apply the specification's criteria
         if (specification.Criteria != null)
         {
             query = query.Where(specification.Criteria);
         }
 
-        // Includes all expression-based includes with ThenInclude support
-        query = specification.Includes.Aggregate(query, (current, include) => include(current));
+        // Apply includes and then includes
+        if (specification.Includes.Count != 0)
+            query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
 
-        // Include any string-based include statements
-        query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
+        // Apply select
+        if (specification.Select != null)
+            query = query.Select(specification.Select);
 
-        // Apply ordering if expressions are set
+        
+        // Apply ordering if specified
         if (specification.OrderBy != null)
         {
             query = query.OrderBy(specification.OrderBy);

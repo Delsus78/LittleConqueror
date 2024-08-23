@@ -18,9 +18,12 @@ public class TerritoryDatabaseAdapter(
     }
 
     public async Task<Territory?> GetTerritoryOfUser(long userId)
-        => (await territoryRepository.GetAsync(new TerritoryFromUserIdWithCitiesAndActionSpec(userId)))[0];
+    {
+        var response = await territoryRepository
+            .GetAsync(new GetTerritoryOfUserWithAllCitiesWithoutGeoJsonSpec(userId));
+        return response.FirstOrDefault();
+    }
     
-
     public async Task<Territory?> GetTerritoryById(long territoryId)
         => await territoryRepository.GetByIdAsync(territoryId);
 }

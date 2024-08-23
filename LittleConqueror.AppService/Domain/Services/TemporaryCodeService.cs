@@ -1,6 +1,6 @@
 using LittleConqueror.AppService.Domain.Models;
 
-namespace LittleConqueror.AppService.Domain.Singletons;
+namespace LittleConqueror.AppService.Domain.Services;
 
 public interface ITemporaryCodeService
 {

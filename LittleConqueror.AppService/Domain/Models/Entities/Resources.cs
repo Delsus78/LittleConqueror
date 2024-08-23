@@ -29,3 +29,14 @@ public class Resources : Entity
             Petrol = 0
         };
 }
+
+public enum ResourceType
+{
+    Food,
+    Wood,
+    Stone,
+    Iron,
+    Gold,
+    Diamond,
+    Petrol
+}
