@@ -8,7 +8,7 @@ using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Models;
-using LittleConqueror.AppService.Domain.Singletons;
+using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.Domain.Strategies;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Remove;
@@ -146,7 +146,9 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
+    .AddKeyedScoped<ISetActionStrategy, SetActionMiniereStrategy>(ActionType.Miniere)
     .AddKeyedScoped<IRemoveActionStrategy, RemoveActionAgricoleStrategy>(ActionType.Agricole)
+    .AddKeyedScoped<IRemoveActionStrategy, RemoveActionMiniereStrategy>(ActionType.Miniere)
     
 // Services Driven
     .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()
@@ -159,18 +161,19 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
     .AddScoped<ITransactionManagerPort, TransactionManagerAdapter>()
     .AddScoped<IResourcesDatabasePort, ResourcesDatabaseAdapter>()
-    .AddScoped<IActionAgricoleDatabasePort, ActionAgricoleDatabaseAdapter>()
+    .AddScoped<IActionDatabasePort, ActionDatabaseAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()
     .AddScoped<CityRepository>()
     .AddScoped<AuthUserRepository>()
     .AddScoped<ResourcesRepository>()
-    .AddScoped<ActionAgricoleRepository>()
+    .AddScoped<ActionRepository>()
 
 // Others
     .AddAutoMapper(typeof(MappingProfile))
     .ConfigureJwt(builder.Configuration.GetSection("AppSettings").Get<AppSettings>())
     .Configure<OSMSettings>(builder.Configuration.GetSection("OSMSettings"))
+    .AddScoped<IUserContext, UserContext>()
     .AddSingleton<ITemporaryCodeService, TemporaryCodeService>()
     .AddSingleton<ITokenManagerService, TokenManagerService>()
 // HttpClients
@@ -189,10 +192,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<TokenBlacklistMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<UserContextMiddleware>();
+app.UseMiddleware<TokenBlacklistMiddleware>();
+
 app.UseCors();
 app.UseHttpsRedirection();
 app.MapControllers().WithOpenApi();

@@ -19,29 +19,17 @@ public class GetCityByLongitudeAndLatitudeHandler(
         if (string.IsNullOrEmpty(cityOSM.Name))
             throw new AppException("City not found", 404);
         
-        var dbCity = await cityDatabase.GetCityById(cityOSM.OsmId); 
-        
-        if (dbCity == null)
-            await cityDatabase.AddCity(new City
-            {
-                Id = cityOSM.OsmId,
-                OsmType = cityOSM.OsmIdType,
-                Name = cityOSM.Name,
-                Population = cityOSM.Extratags?.Population ?? 0,
-                Latitude = cityOSM.Lat,
-                Longitude = cityOSM.Lon,
-                Geojson = cityOSM.Geojson
-            });
-        
-        return new City
+        var dbCity = await cityDatabase.GetCityById(cityOSM.OsmId) ?? await cityDatabase.AddCity(new City
         {
             Id = cityOSM.OsmId,
             OsmType = cityOSM.OsmIdType,
             Name = cityOSM.Name,
+            Population = cityOSM.Extratags?.Population ?? 0,
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
-            Population = cityOSM.Extratags?.Population ?? 0,
             Geojson = cityOSM.Geojson
-        };
+        });
+
+        return dbCity;
     }
 }

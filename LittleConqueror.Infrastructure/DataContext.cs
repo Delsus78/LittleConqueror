@@ -21,7 +21,13 @@ public class DataContext(
     
     // ActionEntities
     public DbSet<Action> Actions { get; set; }
+    
     public DbSet<Agricole> ActionsAgricoles { get; set; }
+    public DbSet<Miniere> ActionsMiniere { get; set; }
+    public DbSet<Militaire> ActionsMilitaires { get; set; }
+    public DbSet<Diplomatique> ActionsDiplomatiques { get; set; }
+    public DbSet<Espionnage> ActionsEspionnages { get; set; }
+    public DbSet<Technologique> ActionsTechnologiques { get; set; }
     #endregion
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -107,5 +113,10 @@ public class DataContext(
         });
         
         modelBuilder.Entity<Agricole>().ToTable("ActionsAgricoles");
+        modelBuilder.Entity<Miniere>().ToTable("ActionsMiniere");
+        modelBuilder.Entity<Militaire>().ToTable("ActionsMilitaires");
+        modelBuilder.Entity<Diplomatique>().ToTable("ActionsDiplomatiques");
+        modelBuilder.Entity<Espionnage>().ToTable("ActionsEspionnages");
+        modelBuilder.Entity<Technologique>().ToTable("ActionsTechnologiques");
     }
 }

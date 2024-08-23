@@ -3,6 +3,7 @@ using System;
 using LittleConqueror.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LittleConqueror.Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240822114144_ActionsMinierev2")]
+    partial class ActionsMinierev2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,7 +74,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                         new
                         {
                             Id = -1L,
-                            Hash = "$2a$13$FPswCmAPqgeBVkuWUGPlBO0YN/TXnRRSpI.qeBtV1g7g6j3dMSI4u",
+                            Hash = "$2a$13$6SNYT4gei59EQHI0v2v7zuhw1E1VkIZcjYIMuf.nuMLEKUtpU2n8K",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -222,9 +225,6 @@ namespace LittleConqueror.Infrastructure.Migrations
             modelBuilder.Entity("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Miniere", b =>
                 {
                     b.HasBaseType("LittleConqueror.AppService.Domain.Models.Entities.ActionEntities.Action");
-
-                    b.Property<int>("ResourceType")
-                        .HasColumnType("integer");
 
                     b.ToTable("ActionsMiniere", (string)null);
                 });

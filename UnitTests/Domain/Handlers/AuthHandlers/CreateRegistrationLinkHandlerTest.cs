@@ -1,7 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Models;
-using LittleConqueror.AppService.Domain.Singletons;
+using LittleConqueror.AppService.Domain.Services;
 
 namespace UnitTests.Domain.Handlers.AuthHandlers;
 

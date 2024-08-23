@@ -74,13 +74,18 @@ public class NominatimOSMFetcherAdapter(
         
         var cityOsmByDetails = JsonConvert.DeserializeObject<CityOSMByDetails>(content, jsonSettings);
 
-
+        var name = cityOsmByDetails.Localname;
+        if (name == null || 
+            !cityOsmByDetails.Names.TryGetValue("name:fr", out name) ||
+            !cityOsmByDetails.Names.TryGetValue("name:en", out name))
+            name = cityOsmByDetails.Names.First().Value;
+        
         return new CityOSM(
             cityOsmByDetails.OsmId, 
             cityOsmByDetails.OsmIdType, 
             cityOsmByDetails.Centroid.coordinates[1], 
             cityOsmByDetails.Centroid.coordinates[0],
-            cityOsmByDetails.Names.Name,
+            name,
             cityOsmByDetails.Extratags,
             cityOsmByDetails.AddressType,
             cityOsmByDetails.Geometry);

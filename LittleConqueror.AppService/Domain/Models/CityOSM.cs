@@ -21,11 +21,11 @@ public record CityOSMByDetails(
     [property: JsonProperty("osm_id")] long OsmId,
     [property: JsonProperty("osm_type")]
     char OsmIdType,
-    Names Names,
+    Dictionary<string, string> Names,
     Extratags? Extratags,
     string? AddressType,
+    string? Localname,
     Centroid? Centroid,
     JToken? Geometry);
     
-public record Names(string Name);
 public record Centroid(string type, List<double> coordinates);
