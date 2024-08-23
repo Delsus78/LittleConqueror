@@ -2,5 +2,5 @@ using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionE
 
 namespace LittleConqueror.Infrastructure.Repositories;
 
-public class ActionAgricoleRepository(DataContext applicationDbContext) 
-    : Repository<ActionEntities.Agricole>(applicationDbContext);
+public class ActionRepository(DataContext applicationDbContext) 
+    : Repository<ActionEntities.Action>(applicationDbContext);

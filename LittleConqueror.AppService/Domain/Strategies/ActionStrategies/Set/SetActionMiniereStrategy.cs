@@ -6,7 +6,7 @@ using LittleConqueror.AppService.Exceptions;
 
 namespace LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Set;
 
-public class SetActionAgricoleStrategy(
+public class SetActionMiniereStrategy(
     IActionDatabasePort actionDatabase,
     IRemoveActionOfCityHandler removeActionOfCityHandler,
     ITransactionManagerPort transactionManager) : ISetActionStrategy
@@ -16,26 +16,29 @@ public class SetActionAgricoleStrategy(
         await transactionManager.BeginTransaction();
         try
         {
-            var city = input.City ?? throw new AppException("ERROR IN SETACTIONAGRICOLE", 500);
+            var city = input.City ?? throw new AppException("ERROR IN SETACTIONMINIERE", 500);
 
             // Check if city already has an action, if so, call if the action is removable via the handler
             if (city.Action != null)
+            {
                 await removeActionOfCityHandler.Handle(new RemoveActionOfCityCommand
                 {
                     CityId = city.Id,
                     ActualActionType = city.Action.GetActionType()
                 });
+            }
 
-            var actionAgricole = new Models.Entities.ActionEntities.Agricole
+            var actionMiniere = new Models.Entities.ActionEntities.Miniere
             {
                 Id = city.Id,
-                StartTime = DateTime.Now
+                StartTime = DateTime.Now,
+                ResourceType = input.ResourceType
             };
 
-            await actionDatabase.AddAction(actionAgricole);
+            await actionDatabase.AddAction(actionMiniere);
             await transactionManager.CommitTransaction();
             
-            city.Action = actionAgricole;
+            city.Action = actionMiniere;
         }
         catch (Exception e)
         {

@@ -34,5 +34,10 @@ public class MappingProfile : Profile
         CreateMap<Agricole, ActionAgricoleDto>()
             .ForMember(dto => dto.ActionType, 
                 opt => opt.MapFrom(_ => ActionType.Agricole));
+        
+        CreateMap<Miniere, ActionMiniereDto>()
+            .ForMember(dto => dto.ActionType, 
+                opt => opt.MapFrom(_ => ActionType.Miniere));
+            
     }
 }

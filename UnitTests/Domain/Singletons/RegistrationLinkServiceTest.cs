@@ -1,5 +1,5 @@
 using LittleConqueror.AppService.Domain.Models;
-using LittleConqueror.AppService.Domain.Singletons;
+using LittleConqueror.AppService.Domain.Services;
 
 namespace UnitTests.Domain.Singletons;
 

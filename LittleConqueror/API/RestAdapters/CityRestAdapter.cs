@@ -34,8 +34,6 @@ public class CityRestAdapter(
         => await addCityToTerritoryHandler.Handle(command);
     
     [HttpPost("setAction")]
-    public async Task SetAction([FromBody] SetActionToCityCommand command)
-    {
-        await setActionToCityHandler.Handle(command);
-    }
+    public async Task<CityDto> SetAction([FromBody] SetActionToCityCommand command)
+        => mapper.Map<CityDto>(await setActionToCityHandler.Handle(command));
 }

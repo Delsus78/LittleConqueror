@@ -15,32 +15,26 @@ public class GetCityByOsmIdHandler(
 {
     public async Task<City> Handle(GetCityByOsmIdQuery query)
     {
+        var dbCity = await cityDatabase.GetCityById(query.OsmId);
+        if (dbCity != null)
+            return dbCity;
+        
+        // If city not found in database, fetch it from OSM
         var cityOSM = await osmCityFetcher.GetCityByOsmId(query.OsmId, query.OsmType);
         if (string.IsNullOrEmpty(cityOSM.Name))
             throw new AppException("City not found", 404);
         
-        var dbCity = await cityDatabase.GetCityById(cityOSM.OsmId);
-        if (dbCity == null)
-            await cityDatabase.AddCity(new City
-            {
-                Id = cityOSM.OsmId,
-                OsmType = cityOSM.OsmIdType,
-                Name = cityOSM.Name,
-                Latitude = cityOSM.Lat,
-                Longitude = cityOSM.Lon,
-                Geojson = cityOSM.Geojson,
-                Population = cityOSM.Extratags?.Population ?? 0
-            });
-        
-        return new City
+        dbCity = await cityDatabase.AddCity(new City
         {
             Id = cityOSM.OsmId,
             OsmType = cityOSM.OsmIdType,
             Name = cityOSM.Name,
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
-            Population = cityOSM.Extratags?.Population ?? 0,
-            Geojson = cityOSM.Geojson
-        };
+            Geojson = cityOSM.Geojson,
+            Population = cityOSM.Extratags?.Population ?? 0
+        });
+
+        return dbCity;
     }
 }
