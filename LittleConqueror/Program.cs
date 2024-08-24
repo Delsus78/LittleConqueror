@@ -123,6 +123,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Services Driving
 builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetTerritoryByUserIdHandler, GetTerritoryByUserIdHandler>()
+    .AddScoped<IGetTerritoryCitiesWithGeoJsonHandler, GetTerritoryCitiesWithGeoJsonByUserIdHandler>()
     .AddScoped<IGetUserByIdHandler, GetUserByIdHandler>()
     .AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>()
     .AddScoped<IGetUserInformationsHandler, GetUserInformationsHandler>()

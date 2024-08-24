@@ -24,6 +24,13 @@ public class TerritoryDatabaseAdapter(
         return response.FirstOrDefault();
     }
     
+    public async Task<List<City>> GetTerritoryCitiesFullDataOfUser(long userId)
+    {
+        var response = await territoryRepository
+            .GetAsync(new GetTerritoryCitiesOfUserWithFullDataSpec(userId));
+        return response[0].Cities;
+    }
+    
     public async Task<Territory?> GetTerritoryById(long territoryId)
         => await territoryRepository.GetByIdAsync(territoryId);
 }

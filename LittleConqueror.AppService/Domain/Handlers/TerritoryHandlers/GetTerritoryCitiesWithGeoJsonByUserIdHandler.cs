@@ -6,20 +6,22 @@ using LittleConqueror.AppService.Exceptions;
 
 namespace LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 
-public interface IGetTerritoryByUserIdHandler
+public interface IGetTerritoryCitiesWithGeoJsonHandler
 {
-    public Task<Territory> Handle(GetTerritoryByUserIdQuery query);
+    Task<List<City>> Handle(GetTerritoryCitiesWithGeoJsonByUserIdQuery query);
 }
-public class GetTerritoryByUserIdHandler(
+
+public class GetTerritoryCitiesWithGeoJsonByUserIdHandler(
     ITerritoryDatabasePort territoryDatabase,
-    IUserContext userContext) : IGetTerritoryByUserIdHandler
+    IUserContext userContext
+    ) : IGetTerritoryCitiesWithGeoJsonHandler
 {
-    public async Task<Territory> Handle(GetTerritoryByUserIdQuery query)
+    public async Task<List<City>> Handle(GetTerritoryCitiesWithGeoJsonByUserIdQuery query)
     {
         if (query.UserId != userContext.UserId)
             throw new AppException("You are not the owner of this territory", 403);
         
-        return await territoryDatabase.GetTerritoryOfUser(query.UserId) ??
+        return await territoryDatabase.GetTerritoryCitiesFullDataOfUser(query.UserId) ??
                throw new AppException("Territory not found", 404);
     }
 }
