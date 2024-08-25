@@ -21,7 +21,7 @@ public class ActionWithCityDto<T> where T : ActionDto
 
 public class ActionAgricoleDto : ActionDto
 {
-    public double? FoodProduction { get; set; }
+    public int? FoodProduction { get; set; }
     public double? AgriculturalFertility { get; set; }
 }
 

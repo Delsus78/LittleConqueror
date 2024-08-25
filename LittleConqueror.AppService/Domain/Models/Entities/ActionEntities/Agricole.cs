@@ -14,13 +14,15 @@ public class Agricole : Action
         return GeoProceduralConfigs.Perturb(fertility, config.FertilityVariance, random);
     }
     
-    private double? GetFoodProduction()
+    private int? GetFoodProduction()
     {
         if (City == null) return null;
         var fertility = GetAgriculturalFertility();
-        return fertility * City.Population;
+        
+        // round
+        return (int) Math.Round((double)(fertility * City.Population));
     }
     
-    public double? FoodProduction => GetFoodProduction();
+    public int? FoodProduction => GetFoodProduction();
     public double? AgriculturalFertility => GetAgriculturalFertility();
 }
