@@ -27,12 +27,23 @@ public class GetCityByOsmIdHandlerTest
         GetCityByOsmIdQuery query, CityOSM cityOSM)
     {
         // arrange
+        var city = new City
+        {
+            Id = cityOSM.OsmId,
+            OsmType = cityOSM.OsmIdType,
+            Name = cityOSM.Name,
+            Latitude = cityOSM.Lat,
+            Longitude = cityOSM.Lon,
+            Population = cityOSM.Extratags?.Population ?? 0,
+            Geojson = cityOSM.Geojson
+        };
         
         _osmCityFetcher
             .Setup(x => x.GetCityByOsmId(query.OsmId, query.OsmType))
             .ReturnsAsync(cityOSM);
         _cityDatabase
             .Setup(x => x.AddCity(It.IsAny<City>()))
+            .ReturnsAsync(city)
             .Verifiable();
         
         // act
@@ -72,6 +83,9 @@ public class GetCityByOsmIdHandlerTest
             .ReturnsAsync(cityOSM);
         _cityDatabase
             .Setup(x => x.GetCityById(cityOSM.OsmId))
+            .ReturnsAsync(city);
+        _cityDatabase
+            .Setup(x => x.AddCity(It.IsAny<City>()))
             .ReturnsAsync(city);
         
         // act

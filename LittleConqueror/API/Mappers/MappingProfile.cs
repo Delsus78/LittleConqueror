@@ -1,7 +1,6 @@
 using AutoMapper;
 using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.API.Models.Dtos.ActionsDtos;
-using LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
@@ -50,7 +49,11 @@ public class MappingProfile : Profile
 
         CreateMap<Agricole, ActionAgricoleDto>()
             .ForMember(dto => dto.ActionType, 
-                opt => opt.MapFrom(_ => ActionType.Agricole));
+                opt => opt.MapFrom(_ => ActionType.Agricole))
+            .ForMember(dto => dto.FoodProduction, 
+                opt => opt.MapFrom(action => action.FoodProduction))
+            .ForMember(dto => dto.AgriculturalFertility, 
+                opt => opt.MapFrom(action => action.AgriculturalFertility));
         
         CreateMap<Miniere, ActionMiniereDto>()
             .ForMember(dto => dto.ActionType, 

@@ -13,7 +13,11 @@ public abstract class ActionDto
     public DateTime StartTime { get; set; }
 }
 
-public class ActionAgricoleDto : ActionDto;
+public class ActionAgricoleDto : ActionDto
+{
+    public double? FoodProduction { get; set; }
+    public double? AgriculturalFertility { get; set; }
+}
 
 public class ActionMiniereDto : ActionDto
 {

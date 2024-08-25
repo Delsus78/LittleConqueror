@@ -36,6 +36,7 @@ public class SetActionAgricoleStrategy(
             await transactionManager.CommitTransaction();
             
             city.Action = actionAgricole;
+            actionAgricole.City = city;
         }
         catch (Exception e)
         {

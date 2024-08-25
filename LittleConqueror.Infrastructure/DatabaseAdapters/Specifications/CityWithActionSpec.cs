@@ -1,4 +1,5 @@
 using LittleConqueror.AppService.Domain.Models.Entities;
+using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 
@@ -19,7 +20,7 @@ public sealed class CityWithActionSpec
                 Id = city.Territory.Id,
                 OwnerId = city.Territory.OwnerId
             },
-            Action = city.Action,
+            Action = CityWithActionSpecExtensions.PopulateWithCity(city.Action, city),
             Name = city.Name,
             Latitude = city.Latitude,
             Longitude = city.Longitude,
@@ -27,5 +28,16 @@ public sealed class CityWithActionSpec
             Population = city.Population
         });
         
+    }
+}
+
+public static class CityWithActionSpecExtensions
+{
+    public static ActionEntities.Action? PopulateWithCity(ActionEntities.Action? action, City city)
+    {
+        if (action == null) return null;
+        
+        action.City = city;
+        return action;
     }
 }

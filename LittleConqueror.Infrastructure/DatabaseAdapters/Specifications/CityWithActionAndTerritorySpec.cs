@@ -19,7 +19,7 @@ public sealed class SetCityActionWithOwnerIdSpec
                 OwnerId = c.Territory.OwnerId
             },
             TerritoryId = c.TerritoryId,
-            Action = c.Action,
+            Action = CityWithActionSpecExtensions.PopulateWithCity(c.Action, c),
             Population = c.Population,
             Latitude = c.Latitude,
             Longitude = c.Longitude
