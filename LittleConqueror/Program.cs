@@ -144,6 +144,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IStrategyContext, StrategyContext>()
     .AddScoped<ISetActionToCityHandler, SetActionToCityHandler>()
     .AddScoped<IRemoveActionOfCityHandler, RemoveActionOfCityHandler>()
+    .AddScoped<IGetPaginatedActionsByUserIdHandler, GetPaginatedActionsByUserIdHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)

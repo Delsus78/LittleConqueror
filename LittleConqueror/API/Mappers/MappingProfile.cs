@@ -37,6 +37,9 @@ public class MappingProfile : Profile
         
         CreateMap<City, CityPropertiesDto>()
             .ReverseMap();
+
+        CreateMap<City, LowDataCityDto>()
+            .ReverseMap();
         
         CreateMap<List<City>, FullCitiesDataDto>()
             .ForMember(dto => dto.Features, 
@@ -44,6 +47,19 @@ public class MappingProfile : Profile
             .ReverseMap();
         
         // Actions
+        CreateMap<(int total, List<ActionEntities.Action> actions), ActionsListDto>()
+            .ForMember(dto => dto.Actions, 
+                opt => opt.MapFrom(src => src.actions))
+            .ForMember(dto => dto.TotalActions, 
+                opt => opt.MapFrom(src => src.total))
+            .ReverseMap();
+
+        CreateMap<ActionEntities.Action, ActionWithCityDto<ActionDto>>()
+            .ForMember(dto => dto.Action,
+                opt => opt.MapFrom(action => action))
+            .ForMember(dto => dto.City,
+                opt => opt.MapFrom(action => action.City));
+        
         CreateMap<ActionEntities.Action, ActionDto>()
             .IncludeAllDerived();
 

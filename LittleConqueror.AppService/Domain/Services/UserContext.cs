@@ -1,3 +1,5 @@
+using LittleConqueror.AppService.Exceptions;
+
 namespace LittleConqueror.AppService.Domain.Services;
 
 public interface IUserContext
@@ -7,5 +9,11 @@ public interface IUserContext
 
 public class UserContext : IUserContext
 {
-    public long UserId { get; set; }
+    private long? _userId;
+
+    public long UserId
+    {
+        get => _userId ?? throw new AppException("User Id is not set", 404);
+        set => _userId = value;
+    }
 }

@@ -13,6 +13,12 @@ public abstract class ActionDto
     public DateTime StartTime { get; set; }
 }
 
+public class ActionWithCityDto<T> where T : ActionDto
+{
+    public T Action { get; set; }
+    public LowDataCityDto City { get; set; }
+}
+
 public class ActionAgricoleDto : ActionDto
 {
     public double? FoodProduction { get; set; }
