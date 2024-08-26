@@ -39,6 +39,7 @@ public class SetActionMiniereStrategy(
             await transactionManager.CommitTransaction();
             
             city.Action = actionMiniere;
+            actionMiniere.City = city;
         }
         catch (Exception e)
         {

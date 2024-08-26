@@ -21,7 +21,7 @@ public interface IRepository<T> where T : class
 public class Repository<T> : IRepository<T> where T : Entity
 {
     private readonly DataContext _applicationDbContext;
-    private readonly DbSet<T> _dbSet;
+    protected readonly DbSet<T> _dbSet;
 
     public Repository(DataContext applicationDbContext)
     {
@@ -32,7 +32,7 @@ public class Repository<T> : IRepository<T> where T : Entity
 
     public Task<int> CountAsync(ISpecification<T> spec)
     {
-        throw new NotImplementedException();
+        return ApplySpecification(spec).CountAsync();
     }
 
     public async Task<EntityEntry<T>> CreateAsync(T entity)

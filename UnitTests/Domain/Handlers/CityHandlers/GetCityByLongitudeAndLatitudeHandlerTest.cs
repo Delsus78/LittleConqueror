@@ -33,18 +33,7 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
             new Extratags(1000),
             "",
             null);
-        _osmCityFetcher
-            .Setup(x => x.GetCityByLongitudeAndLatitude(query.Longitude, query.Latitude, 0))
-            .ReturnsAsync(cityOSM);
-        _cityDatabase
-            .Setup(x => x.AddCity(It.IsAny<City>()))
-            .Verifiable();
-        
-        // act
-        var result = await _getCityByLongitudeAndLatitudeHandler.Handle(query);
-        
-        // assert
-        result.Should().BeEquivalentTo(new City
+        var expectation = new City
         {
             Id = cityOSM.OsmId,
             OsmType = cityOSM.OsmIdType,
@@ -53,7 +42,21 @@ public class GetCityByLongitudeAndLatitudeHandlerTest
             Longitude = cityOSM.Lon,
             Population = cityOSM.Extratags?.Population ?? 0,
             Geojson = cityOSM.Geojson
-        },options => options
+        };
+        
+        _osmCityFetcher
+            .Setup(x => x.GetCityByLongitudeAndLatitude(query.Longitude, query.Latitude, 0))
+            .ReturnsAsync(cityOSM);
+        _cityDatabase
+            .Setup(x => x.AddCity(It.IsAny<City>()))
+            .ReturnsAsync(expectation)
+            .Verifiable();
+        
+        // act
+        var result = await _getCityByLongitudeAndLatitudeHandler.Handle(query);
+        
+        // assert
+        result.Should().BeEquivalentTo(expectation,options => options
             .ComparingByMembers<City>());
         
         _cityDatabase.Verify(x => x.AddCity(It.IsAny<City>()), Times.Once);

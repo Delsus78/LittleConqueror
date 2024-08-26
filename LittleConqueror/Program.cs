@@ -123,6 +123,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 // Services Driving
 builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetTerritoryByUserIdHandler, GetTerritoryByUserIdHandler>()
+    .AddScoped<IGetTerritoryCitiesWithGeoJsonHandler, GetTerritoryCitiesWithGeoJsonByUserIdHandler>()
     .AddScoped<IGetUserByIdHandler, GetUserByIdHandler>()
     .AddScoped<IGetCityByLongitudeAndLatitudeHandler, GetCityByLongitudeAndLatitudeHandler>()
     .AddScoped<IGetUserInformationsHandler, GetUserInformationsHandler>()
@@ -143,6 +144,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IStrategyContext, StrategyContext>()
     .AddScoped<ISetActionToCityHandler, SetActionToCityHandler>()
     .AddScoped<IRemoveActionOfCityHandler, RemoveActionOfCityHandler>()
+    .AddScoped<IGetPaginatedActionsByUserIdHandler, GetPaginatedActionsByUserIdHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)

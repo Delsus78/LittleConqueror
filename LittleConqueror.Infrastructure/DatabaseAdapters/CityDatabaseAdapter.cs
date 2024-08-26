@@ -10,11 +10,11 @@ public class CityDatabaseAdapter(
     CityRepository cityRepository) : ICityDatabasePort
 {
     public async Task<City?> GetCityById(long id)
-        => (await cityRepository.GetAsync(new CityWithActionSpec(id)))[0];
+        => (await cityRepository.GetAsync(new CityWithActionSpec(id))).FirstOrDefault();
 
     public async Task<City?> GetCityWithActionAndTerritoryOwnerId(long id)
     {
-        return (await cityRepository.GetAsync(new SetCityActionWithOwnerIdSpec(id)))[0];
+        return (await cityRepository.GetAsync(new SetCityActionWithOwnerIdSpec(id))).FirstOrDefault();
     }
 
     public async Task<City> AddCity(City city)

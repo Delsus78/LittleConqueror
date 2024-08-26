@@ -7,5 +7,5 @@ public abstract class Action : Entity
     public DateTime StartTime { get; set; }
     
     // 1:1 relationship
-    public virtual City City { get; set; }
+    public City? City { get; set; }
 }

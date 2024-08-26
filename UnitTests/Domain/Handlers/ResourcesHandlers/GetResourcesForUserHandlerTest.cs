@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
 using LittleConqueror.AppService.Domain.Models.Entities;
+using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
@@ -9,13 +10,18 @@ namespace UnitTests.Domain.Handlers.ResourcesHandlers;
 public class GetResourcesForUserHandlerTest
 {
     private readonly Mock<IResourcesDatabasePort> _resourceDatabaseMock;
+    private readonly Mock<IUserContext> _userContextMock;
+    
     private readonly GetResourcesForUserHandler _getResourcesForUserHandler;
     
     public GetResourcesForUserHandlerTest()
     {
         _resourceDatabaseMock = new Mock<IResourcesDatabasePort>();
+        _userContextMock = new Mock<IUserContext>();
         
-        _getResourcesForUserHandler = new GetResourcesForUserHandler(_resourceDatabaseMock.Object);
+        _getResourcesForUserHandler = new GetResourcesForUserHandler(
+            _resourceDatabaseMock.Object,
+            _userContextMock.Object);
     }
     
     [Theory, AutoData]

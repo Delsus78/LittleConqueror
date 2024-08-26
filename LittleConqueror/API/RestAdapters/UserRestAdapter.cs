@@ -16,6 +16,7 @@ public class UserRestAdapter(
     IGetUserByIdHandler getUserByIdHandler,
     IGetTerritoryByUserIdHandler getTerritoryByUserIdHandler,
     IGetUserInformationsHandler getUserInformationsHandler,
+    IGetTerritoryCitiesWithGeoJsonHandler getTerritoryCitiesWithGeoJsonHandler,
     IMapper mapper) : ControllerBase
 {
     [HttpGet("{userId}")]
@@ -27,6 +28,11 @@ public class UserRestAdapter(
     public async Task<TerritoryDto> GetTerritoryOfUser(long userId)
         => mapper.Map<TerritoryDto>(
             await getTerritoryByUserIdHandler.Handle(new GetTerritoryByUserIdQuery {UserId = userId}));
+    
+    [HttpGet("{userId}/Territory/Cities")]
+    public async Task<FullCitiesDataDto> GetFullCitiesData(long userId)
+        => mapper.Map<FullCitiesDataDto>(
+            await getTerritoryCitiesWithGeoJsonHandler.Handle(new GetTerritoryCitiesWithGeoJsonByUserIdQuery {UserId = userId}));
     
     [HttpGet("{userId}/Informations")]
     public async Task<UserInformationsDto> GetUserInformations(long userId, [FromQuery] GetUserInformationsQueryDto query)

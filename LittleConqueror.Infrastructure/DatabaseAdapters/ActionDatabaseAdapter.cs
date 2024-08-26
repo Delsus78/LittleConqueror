@@ -13,4 +13,13 @@ public class ActionDatabaseAdapter(
 
     public async Task AddAction(ActionEntities.Action action)
         => await actionRepository.CreateAsync(action);
+
+    public async Task<(int total, List<ActionEntities.Action> actions)> GetPaginatedActionsByUserId(long userId, int skip, int take)
+    {
+        var res = await actionRepository.GetPaginatedActionsByUserId(userId, skip, take);
+        return (res.TotalActions, res.Actions.ToList());
+    }
+    
+    public async Task<int> ComputeTotalFood(long userId)
+        => await actionRepository.ComputeTotalFood(userId);
 }
