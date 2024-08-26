@@ -4,25 +4,21 @@ namespace LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
 public class Agricole : Action
 {
-    private double? GetAgriculturalFertility()
+    public double AgriculturalFertility
     {
-        if (City == null) return null;
-        var config = new GeoProceduralConfigs();
-        var random = new Random(City.Latitude.GetHashCode() + City.Longitude.GetHashCode());
-        
-        var fertility = (1 - Math.Abs(City.Latitude) / 90.0) * config.BaseFertility;
-        return GeoProceduralConfigs.Perturb(fertility, config.FertilityVariance, random);
+        get
+        {
+            var baseFertility = GeoProceduralConfigs.BaseFertility;
+            return AgricoleExpressions.GetAgriculturalFertilityExpression(baseFertility).Compile().Invoke(this);
+        }
     }
-    
-    private int? GetFoodProduction()
+
+    public int FoodProduction
     {
-        if (City == null) return null;
-        var fertility = GetAgriculturalFertility();
-        
-        // round
-        return (int) Math.Round((double)(fertility * City.Population));
+        get
+        {
+            var baseFertility = GeoProceduralConfigs.BaseFertility;
+            return AgricoleExpressions.GetFoodProductionExpression(baseFertility).Compile().Invoke(this);
+        }
     }
-    
-    public int? FoodProduction => GetFoodProduction();
-    public double? AgriculturalFertility => GetAgriculturalFertility();
 }

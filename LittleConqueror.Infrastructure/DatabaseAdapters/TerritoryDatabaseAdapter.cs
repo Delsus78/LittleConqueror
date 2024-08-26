@@ -28,7 +28,7 @@ public class TerritoryDatabaseAdapter(
     {
         var response = await territoryRepository
             .GetAsync(new GetTerritoryCitiesOfUserWithFullDataSpec(userId));
-        return response[0].Cities;
+        return response.FirstOrDefault()?.Cities ?? new List<City>();
     }
     
     public async Task<Territory?> GetTerritoryById(long territoryId)

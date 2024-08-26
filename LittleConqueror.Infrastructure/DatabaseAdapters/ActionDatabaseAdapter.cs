@@ -19,4 +19,7 @@ public class ActionDatabaseAdapter(
         var res = await actionRepository.GetPaginatedActionsByUserId(userId, skip, take);
         return (res.TotalActions, res.Actions.ToList());
     }
+    
+    public async Task<int> ComputeTotalFood(long userId)
+        => await actionRepository.ComputeTotalFood(userId);
 }

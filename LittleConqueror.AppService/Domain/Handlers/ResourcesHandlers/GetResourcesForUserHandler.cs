@@ -1,5 +1,6 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Models.Entities;
+using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
@@ -11,9 +12,20 @@ public interface IGetResourcesForUserHandler
 }
 
 public class GetResourcesForUserHandler(
-    IResourcesDatabasePort resourcesDatabase) : IGetResourcesForUserHandler
+    IResourcesDatabasePort resourcesDatabase,
+    IActionDatabasePort actionDatabase,
+    IUserContext userContext) : IGetResourcesForUserHandler
 {
     public async Task<Resources> Handle(GetResourcesForUserQuery query)
-        => await resourcesDatabase.GetResourcesOfUser(query.UserId) ??
-              throw new AppException("Resources not found", 404);
+    {
+        if (query.UserId != userContext.UserId)
+            throw new AppException("You are not authorized to access this resource", 403);
+        
+        var resources = await resourcesDatabase.GetResourcesOfUser(query.UserId) ??
+                          throw new AppException("Resources not found", 404);
+
+        resources.Food += await actionDatabase.ComputeTotalFood(query.UserId);
+
+        return resources;
+    }
 }
