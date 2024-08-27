@@ -29,6 +29,7 @@ public class GetCityByOsmIdHandler(
             Id = cityOSM.OsmId,
             OsmType = cityOSM.OsmIdType,
             Name = cityOSM.Name,
+            AddressType = cityOSM.AddressType,
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,
             Geojson = cityOSM.Geojson,

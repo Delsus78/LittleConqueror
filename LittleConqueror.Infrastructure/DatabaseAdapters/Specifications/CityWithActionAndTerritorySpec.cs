@@ -13,11 +13,12 @@ public sealed class SetCityActionWithOwnerIdSpec
         {
             Id = c.Id,
             OsmType = c.OsmType,
-            Territory = new Territory
+            AddressType = c.AddressType,
+            Territory = c.Territory != null ? new Territory
             {
                 Id = c.Territory.Id,
                 OwnerId = c.Territory.OwnerId
-            },
+            } : null,
             TerritoryId = c.TerritoryId,
             Action = CityWithActionSpecExtensions.PopulateWithCity(c.Action, c),
             Population = c.Population,

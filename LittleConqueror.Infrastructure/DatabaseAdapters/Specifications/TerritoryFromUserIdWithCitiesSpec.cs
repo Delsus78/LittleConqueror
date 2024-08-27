@@ -17,6 +17,7 @@ public sealed class GetTerritoryOfUserWithAllCitiesWithoutGeoJsonSpec
             {
                 Id = c.Id,
                 OsmType = c.OsmType,
+                AddressType = c.AddressType,
                 TerritoryId = c.TerritoryId,
                 Action = CityWithActionSpecExtensions.PopulateWithCity(c.Action, c),
                 Name = c.Name,
@@ -43,6 +44,7 @@ public sealed class GetTerritoryCitiesOfUserWithFullDataSpec
             {
                 Id = c.Id,
                 OsmType = c.OsmType,
+                AddressType = c.AddressType,
                 TerritoryId = c.TerritoryId,
                 Action = CityWithActionSpecExtensions.PopulateWithCity(c.Action, c),
                 Name = c.Name,

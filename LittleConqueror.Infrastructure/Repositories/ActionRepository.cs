@@ -19,6 +19,7 @@ public class ActionRepository(DataContext applicationDbContext)
             {
                 OsmType = x.City.OsmType,
                 Id = x.City.Id,
+                AddressType = x.City.AddressType,
                 Longitude = x.City.Longitude,
                 Latitude = x.City.Latitude,
                 Population = x.City.Population,
