@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
-namespace LittleConqueror.AppService.Domain.Logic;
+namespace LittleConqueror.AppService.Domain.Logic.ActionsHelpers;
 
 public static class AgricoleExpressions
 {
