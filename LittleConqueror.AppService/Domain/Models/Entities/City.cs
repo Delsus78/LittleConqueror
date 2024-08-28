@@ -9,13 +9,14 @@ public class City : Entity
     public string Name { get; set; }
     public double Latitude { get; set; }
     public double Longitude { get; set; }
+    public string? AddressType { get; init; }
     
     public JToken Geojson { get; set; }
     public int Population { get; set; }
     
     // n:1 relationship
     public long? TerritoryId { get; set; }
-    public Territory Territory { get; set; }
+    public Territory? Territory { get; set; }
     
     // 1:1 relationship
     public virtual ActionEntities.Action? Action { get; set; }

@@ -8,7 +8,7 @@ public static class AgricoleExpressions
     public static Expression<Func<ActionEntities.Agricole, double>> GetAgriculturalFertilityExpression(double baseFertility)
     {
         return actionAgricole => 
-            Math.Round((1 - Math.Abs(actionAgricole.City.Latitude) / 90.0) * baseFertility, 2);
+            Math.Round((1 - Math.Abs(actionAgricole.City.Latitude) / 90.0) * baseFertility, 1);
     }
 
     public static Expression<Func<ActionEntities.Agricole, int>> GetFoodProductionExpression(double baseFertility)

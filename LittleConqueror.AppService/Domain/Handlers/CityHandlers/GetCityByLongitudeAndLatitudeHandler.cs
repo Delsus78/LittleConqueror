@@ -24,6 +24,7 @@ public class GetCityByLongitudeAndLatitudeHandler(
             Id = cityOSM.OsmId,
             OsmType = cityOSM.OsmIdType,
             Name = cityOSM.Name,
+            AddressType = cityOSM.AddressType,
             Population = cityOSM.Extratags?.Population ?? 0,
             Latitude = cityOSM.Lat,
             Longitude = cityOSM.Lon,

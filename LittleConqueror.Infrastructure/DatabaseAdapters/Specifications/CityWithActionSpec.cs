@@ -14,12 +14,13 @@ public sealed class CityWithActionSpec
         {
             Id = city.Id,
             OsmType = city.OsmType,
+            AddressType = city.AddressType,
             TerritoryId = city.TerritoryId,
-            Territory = new Territory
+            Territory = city.Territory != null ? new Territory
             {
                 Id = city.Territory.Id,
                 OwnerId = city.Territory.OwnerId
-            },
+            } : null,
             Action = CityWithActionSpecExtensions.PopulateWithCity(city.Action, city),
             Name = city.Name,
             Latitude = city.Latitude,
