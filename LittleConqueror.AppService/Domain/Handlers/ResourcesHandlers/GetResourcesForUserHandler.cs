@@ -25,6 +25,7 @@ public class GetResourcesForUserHandler(
                           throw new AppException("Resources not found", 404);
 
         resources.Food += await actionDatabase.ComputeTotalFood(query.UserId);
+        resources.FoodData.Add("AvailableFood", await actionDatabase.ComputeAvailableFood(query.UserId));
 
         return resources;
     }

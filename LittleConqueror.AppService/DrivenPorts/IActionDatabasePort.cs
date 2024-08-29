@@ -8,4 +8,5 @@ public interface IActionDatabasePort
     Task<(int total, List<ActionEntities.Action> actions)> GetPaginatedActionsByUserId(long userId, int skip, int take);
 
     Task<int> ComputeTotalFood(long userId);
+    Task<int> ComputeAvailableFood(long userId);
 }

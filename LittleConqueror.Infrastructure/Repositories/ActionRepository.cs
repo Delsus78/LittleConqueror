@@ -59,22 +59,35 @@ public class ActionRepository(DataContext applicationDbContext)
             .Where(a => a.City.Territory.OwnerId == userId)
             .SumAsync(AgricoleExpressions.GetFoodProductionExpression(baseFertility));
 
-        // Calculer les coûts de nourriture pour toutes les autres actions
-        var totalFoodCosts = await _dbSet
-            .Where(a => a is ActionEntities.Miniere 
-                        || a is ActionEntities.Militaire 
-                        || a is ActionEntities.Diplomatique 
-                        || a is ActionEntities.Espionnage 
-                        || a is ActionEntities.Technologique)
+        // Calculer les coûts de nourriture pour chaque type d'action séparément
+        var totalMiniereCosts = await _dbSet
+            .OfType<ActionEntities.Miniere>()
             .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(a => 
-                a is ActionEntities.Miniere ? MiniereExpressions.GetFoodPriceExpression().Compile().Invoke((ActionEntities.Miniere)a) 
-                : a is ActionEntities.Militaire ? MilitaireExpressions.GetFoodPriceExpression().Compile().Invoke((ActionEntities.Militaire)a)
-                : a is ActionEntities.Diplomatique ? DiplomatiqueExpressions.GetFoodPriceExpression().Compile().Invoke((ActionEntities.Diplomatique)a)
-                : a is ActionEntities.Espionnage ? EspionnageExpressions.GetFoodPriceExpression().Compile().Invoke((ActionEntities.Espionnage)a)
-                : a is ActionEntities.Technologique ? TechnologiqueExpressions.GetFoodPriceExpression().Compile().Invoke((ActionEntities.Technologique)a)
-                : 0
-            );
+            .SumAsync(MiniereExpressions.GetFoodPriceExpression());
+
+        var totalMilitaireCosts = await _dbSet
+            .OfType<ActionEntities.Militaire>()
+            .Where(a => a.City.Territory.OwnerId == userId)
+            .SumAsync(MilitaireExpressions.GetFoodPriceExpression());
+
+        var totalDiplomatiqueCosts = await _dbSet
+            .OfType<ActionEntities.Diplomatique>()
+            .Where(a => a.City.Territory.OwnerId == userId)
+            .SumAsync(DiplomatiqueExpressions.GetFoodPriceExpression());
+
+        var totalEspionnageCosts = await _dbSet
+            .OfType<ActionEntities.Espionnage>()
+            .Where(a => a.City.Territory.OwnerId == userId)
+            .SumAsync(EspionnageExpressions.GetFoodPriceExpression());
+
+        var totalScientifiqueCosts = await _dbSet
+            .OfType<ActionEntities.Technologique>()
+            .Where(a => a.City.Territory.OwnerId == userId)
+            .SumAsync(TechnologiqueExpressions.GetFoodPriceExpression());
+
+        // Additionner tous les coûts
+        var totalFoodCosts = totalMiniereCosts + totalMilitaireCosts + totalDiplomatiqueCosts + totalEspionnageCosts + totalScientifiqueCosts;
+
 
         // Retourner la différence entre la production et les coûts
         return totalFoodProduction - totalFoodCosts;

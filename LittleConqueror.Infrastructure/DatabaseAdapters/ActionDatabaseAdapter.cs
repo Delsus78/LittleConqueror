@@ -22,4 +22,7 @@ public class ActionDatabaseAdapter(
     
     public async Task<int> ComputeTotalFood(long userId)
         => await actionRepository.ComputeTotalFood(userId);
+    
+    public async Task<int> ComputeAvailableFood(long userId)
+        => await actionRepository.ComputeAvailableFood(userId);
 }

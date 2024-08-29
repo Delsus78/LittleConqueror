@@ -14,7 +14,13 @@ public class MappingProfile : Profile
     {
         CreateMap<City, CityDto>().ReverseMap();
         CreateMap<User, UserDto>().ReverseMap();
-        CreateMap<Resources, ResourcesDto>().ReverseMap();
+        CreateMap<Resources, ResourcesDto>()
+            .ForMember(dto => dto.FoodData,
+                opt => opt.MapFrom(resources =>
+                    resources.FoodData.Concat(new[] { new KeyValuePair<string, int>("Food", resources.Food) })
+                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+                )
+            );
         CreateMap<Territory, TerritoryDto>().ReverseMap();
         CreateMap<UserInformations, UserInformationsDto>().ReverseMap();
         CreateMap<AuthUser, AuthUserDto>()
