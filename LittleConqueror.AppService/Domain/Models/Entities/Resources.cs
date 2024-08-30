@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
 using LittleConqueror.AppService.Domain.Models.Entities.Base;
 
 namespace LittleConqueror.AppService.Domain.Models.Entities;
@@ -32,7 +33,19 @@ public class Resources : Entity
     
     // not mapped to the database
     [NotMapped]
-    public Dictionary<string, int> FoodData => new();
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> FoodData { get; set; } = new();
+    [NotMapped]
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> WoodData { get; set; } = new();
+    [NotMapped]
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> StoneData { get; set; } = new();
+    [NotMapped]
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> IronData { get; set; } = new();
+    [NotMapped]
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> GoldData { get; set; } = new();
+    [NotMapped]
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> DiamondData { get; set; } = new();
+    [NotMapped]
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> PetrolData { get; set; } = new();
 }
 
 public enum ResourceType

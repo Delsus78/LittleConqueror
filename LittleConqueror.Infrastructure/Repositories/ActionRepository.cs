@@ -1,5 +1,6 @@
 using LittleConqueror.AppService.Domain.Logic;
 using LittleConqueror.AppService.Domain.Logic.ActionsHelpers;
+using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.Infrastructure.DatabaseAdapters.DbDto;
 using LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
@@ -49,47 +50,136 @@ public class ActionRepository(DataContext applicationDbContext)
         return totalFood;
     }
     
-    public async Task<int> ComputeAvailableFood(long userId)
+    public async Task<int> ComputeUsedFood(long userId, ActionType? actionType = null)
     {
-        var baseFertility = GeoProceduralConfigs.BaseFertility;
+        var result = 0;
+        
+        if (actionType is null or ActionType.Miniere)
+            result += await _dbSet
+                .OfType<ActionEntities.Miniere>()
+                .Where(a => a.City.Territory.OwnerId == userId)
+                .SumAsync(MiniereExpressions.GetFoodPriceExpression());
 
-        // Calculer la production de nourriture pour les actions Agricole
-        var totalFoodProduction = await _dbSet
-            .OfType<ActionEntities.Agricole>()
-            .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(AgricoleExpressions.GetFoodProductionExpression(baseFertility));
+        if (actionType is null or ActionType.Militaire)
+            result += await _dbSet
+                .OfType<ActionEntities.Militaire>()
+                .Where(a => a.City.Territory.OwnerId == userId)
+                .SumAsync(MilitaireExpressions.GetFoodPriceExpression());
 
-        // Calculer les coûts de nourriture pour chaque type d'action séparément
-        var totalMiniereCosts = await _dbSet
-            .OfType<ActionEntities.Miniere>()
-            .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(MiniereExpressions.GetFoodPriceExpression());
+        if (actionType is null or ActionType.Diplomatique)
+            result += await _dbSet
+                .OfType<ActionEntities.Diplomatique>()
+                .Where(a => a.City.Territory.OwnerId == userId)
+                .SumAsync(DiplomatiqueExpressions.GetFoodPriceExpression());
 
-        var totalMilitaireCosts = await _dbSet
-            .OfType<ActionEntities.Militaire>()
-            .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(MilitaireExpressions.GetFoodPriceExpression());
+        if (actionType is null or ActionType.Espionnage)
+            result += await _dbSet
+                .OfType<ActionEntities.Espionnage>()
+                .Where(a => a.City.Territory.OwnerId == userId)
+                .SumAsync(EspionnageExpressions.GetFoodPriceExpression());
 
-        var totalDiplomatiqueCosts = await _dbSet
-            .OfType<ActionEntities.Diplomatique>()
-            .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(DiplomatiqueExpressions.GetFoodPriceExpression());
+        if (actionType is null or ActionType.Technologique)
+            result += await _dbSet
+                .OfType<ActionEntities.Technologique>()
+                .Where(a => a.City.Territory.OwnerId == userId)
+                .SumAsync(TechnologiqueExpressions.GetFoodPriceExpression());
 
-        var totalEspionnageCosts = await _dbSet
-            .OfType<ActionEntities.Espionnage>()
-            .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(EspionnageExpressions.GetFoodPriceExpression());
-
-        var totalScientifiqueCosts = await _dbSet
-            .OfType<ActionEntities.Technologique>()
-            .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(TechnologiqueExpressions.GetFoodPriceExpression());
-
-        // Additionner tous les coûts
-        var totalFoodCosts = totalMiniereCosts + totalMilitaireCosts + totalDiplomatiqueCosts + totalEspionnageCosts + totalScientifiqueCosts;
-
-
-        // Retourner la différence entre la production et les coûts
-        return totalFoodProduction - totalFoodCosts;
+        return result;
+    }
+    
+    public async Task<int> ComputeTotalWood(long userId)
+    {
+        // var totalWood = await _dbSet
+        //     .OfType<ActionEntities.Miniere>()
+        //     .Where(a => a.City.Territory.OwnerId == userId)
+        //     .SumAsync(MiniereExpressions.GetWoodProductionExpression());
+        //
+        // return totalWood;
+        return 1;
+    }
+    
+    public async Task<int> ComputeUsedWood(long userId, ActionType? actionType = null)
+    {
+        return 1;
+    }
+    
+    public async Task<int> ComputeTotalStone(long userId)
+    {
+        // var totalStone = await _dbSet
+        //     .OfType<ActionEntities.Miniere>()
+        //     .Where(a => a.City.Territory.OwnerId == userId)
+        //     .SumAsync(MiniereExpressions.GetStoneProductionExpression());
+        //
+        // return totalStone;
+        return 1;
+    }
+    
+    public async Task<int> ComputeUsedStone(long userId, ActionType? actionType = null)
+    {
+        return 1;
+    }
+    
+    public async Task<int> ComputeTotalIron(long userId)
+    {
+        // var totalIron = await _dbSet
+        //     .OfType<ActionEntities.Miniere>()
+        //     .Where(a => a.City.Territory.OwnerId == userId)
+        //     .SumAsync(MiniereExpressions.GetIronProductionExpression());
+        //
+        // return totalIron;
+        return 1;
+    }
+    
+    public async Task<int> ComputeUsedIron(long userId, ActionType? actionType = null)
+    {
+        return 1;
+    }
+    
+    public async Task<int> ComputeTotalGold(long userId)
+    {
+        // var totalGold = await _dbSet
+        //     .OfType<ActionEntities.Miniere>()
+        //     .Where(a => a.City.Territory.OwnerId == userId)
+        //     .SumAsync(MiniereExpressions.GetGoldProductionExpression());
+        //
+        // return totalGold;
+        return 1;
+    }
+    
+    public async Task<int> ComputeUsedGold(long userId, ActionType? actionType = null)
+    {
+        return 1;
+    }
+    
+    public async Task<int> ComputeTotalDiamond(long userId)
+    {
+        // var totalDiamond = await _dbSet
+        //     .OfType<ActionEntities.Miniere>()
+        //     .Where(a => a.City.Territory.OwnerId == userId)
+        //     .SumAsync(MiniereExpressions.GetDiamondProductionExpression());
+        //
+        // return totalDiamond;
+        return 1;
+    }
+    
+    public async Task<int> ComputeUsedDiamond(long userId, ActionType? actionType = null)
+    {
+        return 1;
+    }
+    
+    public async Task<int> ComputeTotalPetrol(long userId)
+    {
+        // var totalPetrol = await _dbSet
+        //     .OfType<ActionEntities.Miniere>()
+        //     .Where(a => a.City.Territory.OwnerId == userId)
+        //     .SumAsync(MiniereExpressions.GetPetrolProductionExpression());
+        //
+        // return totalPetrol;
+        return 1;
+    }
+    
+    public async Task<int> ComputeUsedPetrol(long userId, ActionType? actionType = null)
+    {
+        return 1;
     }
 }
