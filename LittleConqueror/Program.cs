@@ -8,11 +8,13 @@ using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.Domain.Strategies;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Remove;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Set;
+using LittleConqueror.AppService.Domain.Strategies.ResourceDetailsStrategies.Get;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Authentication;
 using LittleConqueror.Exceptions;
@@ -96,6 +98,9 @@ builder.Services.AddControllers(options =>
         
         // Pour les enums
         options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+        
+        // dictionary keys to camelCase 
+        options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
     });
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -145,12 +150,22 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ISetActionToCityHandler, SetActionToCityHandler>()
     .AddScoped<IRemoveActionOfCityHandler, RemoveActionOfCityHandler>()
     .AddScoped<IGetPaginatedActionsByUserIdHandler, GetPaginatedActionsByUserIdHandler>()
+    .AddScoped<IGetResourceDetailsHandler, GetResourceDetailsHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
     .AddKeyedScoped<ISetActionStrategy, SetActionMiniereStrategy>(ActionType.Miniere)
     .AddKeyedScoped<IRemoveActionStrategy, RemoveActionAgricoleStrategy>(ActionType.Agricole)
     .AddKeyedScoped<IRemoveActionStrategy, RemoveActionMiniereStrategy>(ActionType.Miniere)
+    
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetFoodResourceDetailsStrategy>(ResourceType.Food)
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetWoodResourceDetailsStrategy>(ResourceType.Wood)
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetStoneResourceDetailsStrategy>(ResourceType.Stone)
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetIronResourceDetailsStrategy>(ResourceType.Iron)
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetGoldResourceDetailsStrategy>(ResourceType.Gold)
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetDiamondResourceDetailsStrategy>(ResourceType.Diamond)
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetPetrolResourceDetailsStrategy>(ResourceType.Petrol)
+    
     
 // Services Driven
     .AddScoped<IOSMCityFetcherPort, NominatimOSMFetcherAdapter>()

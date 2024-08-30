@@ -15,12 +15,21 @@ public class MappingProfile : Profile
         CreateMap<City, CityDto>().ReverseMap();
         CreateMap<User, UserDto>().ReverseMap();
         CreateMap<Resources, ResourcesDto>()
-            .ForMember(dto => dto.FoodData,
-                opt => opt.MapFrom(resources =>
-                    resources.FoodData.Concat(new[] { new KeyValuePair<string, int>("Food", resources.Food) })
-                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
-                )
-            );
+            .ForMember(dto => dto.Food,
+                opt => opt.MapFrom(resources => resources.FoodData))
+            .ForMember(dto => dto.Wood,
+                opt => opt.MapFrom(resources => resources.WoodData))
+            .ForMember(dto => dto.Stone, 
+                opt => opt.MapFrom(resources => resources.StoneData))
+            .ForMember(dto => dto.Iron, 
+                opt => opt.MapFrom(resources => resources.IronData))
+            .ForMember(dto => dto.Gold,
+                opt => opt.MapFrom(resources => resources.GoldData))
+            .ForMember(dto => dto.Diamond,
+                opt => opt.MapFrom(resources => resources.DiamondData))
+            .ForMember(dto => dto.Petrol,
+                opt => opt.MapFrom(resources => resources.PetrolData))
+            .ReverseMap();
         CreateMap<Territory, TerritoryDto>().ReverseMap();
         CreateMap<UserInformations, UserInformationsDto>().ReverseMap();
         CreateMap<AuthUser, AuthUserDto>()
