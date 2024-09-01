@@ -10,7 +10,7 @@ namespace UnitTests.Domain.Handlers.ResourcesHandlers;
 public class GetResourcesForUserHandlerTest
 {
     private readonly Mock<IResourcesDatabasePort> _resourceDatabaseMock;
-    private readonly Mock<IActionDatabasePort> _actionDatabaseMock;
+    private readonly Mock<IGetResourceDetailsHandler> _getResourceDetailsHandlerMock;
     private readonly Mock<IUserContext> _userContextMock;
     
     private readonly GetResourcesForUserHandler _getResourcesForUserHandler;
@@ -19,11 +19,11 @@ public class GetResourcesForUserHandlerTest
     {
         _resourceDatabaseMock = new Mock<IResourcesDatabasePort>();
         _userContextMock = new Mock<IUserContext>();
-        _actionDatabaseMock = new Mock<IActionDatabasePort>();
+        _getResourceDetailsHandlerMock = new Mock<IGetResourceDetailsHandler>();
         
         _getResourcesForUserHandler = new GetResourcesForUserHandler(
             _resourceDatabaseMock.Object,
-            _actionDatabaseMock.Object,
+            _getResourceDetailsHandlerMock.Object,
             _userContextMock.Object);
     }
     

@@ -1,3 +1,5 @@
+using LittleConqueror.AppService.Domain.Logic;
+using LittleConqueror.AppService.Domain.Logic.ActionsHelpers;
 using LittleConqueror.AppService.Domain.Models.Entities.Base;
 using Newtonsoft.Json.Linq;
 
@@ -20,4 +22,9 @@ public class City : Entity
     
     // 1:1 relationship
     public virtual ActionEntities.Action? Action { get; set; }
+
+    public double? AgriculturalFertility
+        => AgricoleExpressions.GetAgriculturalFertilityExpression(GeoProceduralConfigs.BaseFertility).Compile()
+            .Invoke(this);
+
 }
