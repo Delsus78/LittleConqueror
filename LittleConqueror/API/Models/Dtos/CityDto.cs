@@ -13,6 +13,8 @@ public class CityDto
     public double? Longitude { get; set; }
     public JToken? Geojson { get; set; }
     
+    public double? AgriculturalFertility { get; set; }
+    
     public ActionDto? Action { get; set; }
 }
 

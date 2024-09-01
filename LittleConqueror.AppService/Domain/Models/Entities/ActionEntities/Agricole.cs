@@ -10,7 +10,7 @@ public class Agricole : Action
         get
         {
             var baseFertility = GeoProceduralConfigs.BaseFertility;
-            return AgricoleExpressions.GetAgriculturalFertilityExpression(baseFertility).Compile().Invoke(this);
+            return AgricoleExpressions.GetAgriculturalFertilityExpression(baseFertility).Compile().Invoke(City);
         }
     }
 
