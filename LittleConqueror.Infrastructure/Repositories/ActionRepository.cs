@@ -1,4 +1,3 @@
-using LittleConqueror.AppService.Domain.Logic;
 using LittleConqueror.AppService.Domain.Logic.ActionsHelpers;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
@@ -40,12 +39,10 @@ public class ActionRepository(DataContext applicationDbContext)
     
     public async Task<int> ComputeTotalFood(long userId)
     {
-        var baseFertility = GeoProceduralConfigs.BaseFertility;
-
         var totalFood = await _dbSet
             .OfType<ActionEntities.Agricole>()
             .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(AgricoleExpressions.GetFoodProductionExpression(baseFertility));
+            .SumAsync(AgricoleExpressions.GetFoodProductionExpression());
         
         return totalFood;
     }

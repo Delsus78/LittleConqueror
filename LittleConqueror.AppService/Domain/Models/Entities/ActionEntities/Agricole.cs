@@ -5,21 +5,8 @@ namespace LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
 public class Agricole : Action
 {
-    public double AgriculturalFertility
-    {
-        get
-        {
-            var baseFertility = GeoProceduralConfigs.BaseFertility;
-            return AgricoleExpressions.GetAgriculturalFertilityExpression(baseFertility).Compile().Invoke(City);
-        }
-    }
+    public double? AgriculturalFertility => City.AgriculturalFertility;
 
-    public int FoodProduction
-    {
-        get
-        {
-            var baseFertility = GeoProceduralConfigs.BaseFertility;
-            return AgricoleExpressions.GetFoodProductionExpression(baseFertility).Compile().Invoke(this);
-        }
-    }
+    public int FoodProduction 
+        => AgricoleExpressions.GetFoodProductionExpression().Compile().Invoke(this);
 }
