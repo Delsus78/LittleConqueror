@@ -39,11 +39,22 @@ public class ActionRepository(DataContext applicationDbContext)
     
     public async Task<int> ComputeTotalFood(long userId)
     {
-        var totalFood = await _dbSet
+        // Étape 1 : Récupérer uniquement les données nécessaires (filtrage côté serveur)
+        var cityAgricole = await _dbSet
             .OfType<ActionEntities.Agricole>()
             .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(AgricoleExpressions.GetFoodProductionExpression());
-        
+            .Select(a => new City
+            {
+                Id = a.City.Id,
+                OsmType = a.City.OsmType,
+                Latitude = a.City.Latitude,
+                Longitude = a.City.Longitude,
+                Population = a.City.Population
+            }).ToListAsync();
+
+        // Étape 2 : Calculer le total de la nourriture côté client
+        var totalFood = cityAgricole
+            .Sum(AgricoleExpressions.GetFoodProductionExpression);
         return totalFood;
     }
     
@@ -176,6 +187,21 @@ public class ActionRepository(DataContext applicationDbContext)
     }
     
     public async Task<int> ComputeUsedPetrol(long userId, ActionType? actionType = null)
+    {
+        return 1;
+    }
+    
+    public async Task<int> ComputeTotalResearchPoints(long userId)
+    {
+        var totalResearchPoints = await _dbSet
+            .OfType<ActionEntities.Technologique>()
+            .Where(a => a.City.Territory.OwnerId == userId)
+            .SumAsync(TechnologiqueExpressions.GetResearchPointsProductionExpression());
+        
+        return totalResearchPoints;
+    }
+    
+    public async Task<int> ComputeUsedResearchPoints(long userId, ActionType? actionType = null)
     {
         return 1;
     }

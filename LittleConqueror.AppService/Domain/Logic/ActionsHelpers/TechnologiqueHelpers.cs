@@ -9,4 +9,9 @@ public static class TechnologiqueExpressions
     {
         return actionTechnologique => actionTechnologique.City.Population;
     }
+    
+    public static Expression<Func<ActionEntities.Technologique, int>> GetResearchPointsProductionExpression()
+    {
+        return actionTechnologique => actionTechnologique.City.Population;
+    }
 }

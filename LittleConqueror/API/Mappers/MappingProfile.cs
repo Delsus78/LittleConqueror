@@ -29,6 +29,8 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(resources => resources.DiamondData))
             .ForMember(dto => dto.Petrol,
                 opt => opt.MapFrom(resources => resources.PetrolData))
+            .ForMember(dto => dto.ResearchPoints,
+                opt => opt.MapFrom(resources => resources.ResearchPointsData))
             .ReverseMap();
         CreateMap<Territory, TerritoryDto>().ReverseMap();
         CreateMap<UserInformations, UserInformationsDto>().ReverseMap();
