@@ -155,8 +155,10 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
     .AddKeyedScoped<ISetActionStrategy, SetActionMiniereStrategy>(ActionType.Miniere)
+    .AddKeyedScoped<ISetActionStrategy, SetActionTechnologiqueStrategy>(ActionType.Technologique)
     .AddKeyedScoped<IRemoveActionStrategy, RemoveActionAgricoleStrategy>(ActionType.Agricole)
     .AddKeyedScoped<IRemoveActionStrategy, RemoveActionMiniereStrategy>(ActionType.Miniere)
+    .AddKeyedScoped<IRemoveActionStrategy, RemoveActionTechnologiqueStrategy>(ActionType.Technologique)
     
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetFoodResourceDetailsStrategy>(ResourceType.Food)
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetWoodResourceDetailsStrategy>(ResourceType.Wood)
@@ -165,6 +167,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetGoldResourceDetailsStrategy>(ResourceType.Gold)
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetDiamondResourceDetailsStrategy>(ResourceType.Diamond)
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetPetrolResourceDetailsStrategy>(ResourceType.Petrol)
+    .AddKeyedScoped<IGetResourceDetailsStrategy, GetResearchPointsResourceDetailsStrategy>(ResourceType.ResearchPoints)
     
     
 // Services Driven

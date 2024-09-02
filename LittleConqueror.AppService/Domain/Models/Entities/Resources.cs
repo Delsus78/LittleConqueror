@@ -13,6 +13,7 @@ public class Resources : Entity
     public int Gold { get; set; }
     public int Diamond { get; set; }
     public int Petrol { get; set; }
+    public int ResearchPoints { get; set; }
     
     // 1:1 relationship
     public long UserId { get; set; }
@@ -28,7 +29,8 @@ public class Resources : Entity
             Iron = 0,
             Gold = 0,
             Diamond = 0,
-            Petrol = 0
+            Petrol = 0,
+            ResearchPoints = 0
         };
     
     // not mapped to the database
@@ -46,6 +48,8 @@ public class Resources : Entity
     public Dictionary<ResourceDetailsType, Dictionary<string, int>> DiamondData { get; set; } = new();
     [NotMapped]
     public Dictionary<ResourceDetailsType, Dictionary<string, int>> PetrolData { get; set; } = new();
+    [NotMapped]
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> ResearchPointsData { get; set; } = new();
 }
 
 public enum ResourceType
@@ -56,5 +60,6 @@ public enum ResourceType
     Iron,
     Gold,
     Diamond,
-    Petrol
+    Petrol,
+    ResearchPoints
 }

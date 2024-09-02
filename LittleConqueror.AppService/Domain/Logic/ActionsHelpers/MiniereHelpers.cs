@@ -9,10 +9,9 @@ public static class MiniereExpressions
     {
         return actionMiniere => actionMiniere.City.Population;
     }
+    
+    // public static Expression<Func<ActionEntities.Miniere, ResourceType>> GetActionResourceType(Dictionary<ResourceType, double> probabilities)
+    // {
+    //     return actionMiniere => 
+    // }
 }
-
-
-// public static Expression<Func<City, ResourceType>> GetCityResourceType(Dictionary<ResourceType, double> probabilities)
-// {
-//     return city => 
-// }

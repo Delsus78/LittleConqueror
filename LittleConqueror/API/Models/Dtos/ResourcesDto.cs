@@ -11,4 +11,5 @@ public class ResourcesDto
     public Dictionary<ResourceDetailsType, Dictionary<string, int>> Gold { get; set; }
     public Dictionary<ResourceDetailsType, Dictionary<string, int>> Diamond { get; set; }
     public Dictionary<ResourceDetailsType, Dictionary<string, int>> Petrol { get; set; }
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> ResearchPoints { get; set; }
 }

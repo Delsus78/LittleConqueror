@@ -24,7 +24,5 @@ public class City : Entity
     public virtual ActionEntities.Action? Action { get; set; }
 
     public double? AgriculturalFertility
-        => AgricoleExpressions.GetAgriculturalFertilityExpression(GeoProceduralConfigs.BaseFertility).Compile()
-            .Invoke(this);
-
+        => this.GetAgriculturalFertilityExpression(GeoProceduralConfigs.BaseFertility);
 }
