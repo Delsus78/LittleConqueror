@@ -24,8 +24,7 @@ public class GetResourcesForUserHandler(
         { ResourceType.Iron, (resources, data) => resources.IronData = data },
         { ResourceType.Gold, (resources, data) => resources.GoldData = data },
         { ResourceType.Diamond, (resources, data) => resources.DiamondData = data },
-        { ResourceType.Petrol, (resources, data) => resources.PetrolData = data },
-        { ResourceType.ResearchPoints, (resources, data) => resources.ResearchPointsData = data }
+        { ResourceType.Petrol, (resources, data) => resources.PetrolData = data }
     };
     
     public async Task<Resources> Handle(GetResourcesForUserQuery query)

@@ -167,7 +167,6 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetGoldResourceDetailsStrategy>(ResourceType.Gold)
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetDiamondResourceDetailsStrategy>(ResourceType.Diamond)
     .AddKeyedScoped<IGetResourceDetailsStrategy, GetPetrolResourceDetailsStrategy>(ResourceType.Petrol)
-    .AddKeyedScoped<IGetResourceDetailsStrategy, GetResearchPointsResourceDetailsStrategy>(ResourceType.ResearchPoints)
     
     
 // Services Driven

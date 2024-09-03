@@ -32,7 +32,6 @@ public class ActionDatabaseAdapter(
             ResourceType.Gold => await actionRepository.ComputeTotalGold(userId),
             ResourceType.Diamond => await actionRepository.ComputeTotalDiamond(userId),
             ResourceType.Petrol => await actionRepository.ComputeTotalPetrol(userId),
-            ResourceType.ResearchPoints => await actionRepository.ComputeTotalResearchPoints(userId),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     
@@ -46,7 +45,6 @@ public class ActionDatabaseAdapter(
             ResourceType.Gold => await actionRepository.ComputeUsedGold(userId, actionType),
             ResourceType.Diamond => await actionRepository.ComputeUsedDiamond(userId, actionType),
             ResourceType.Petrol => await actionRepository.ComputeUsedPetrol(userId, actionType),
-            ResourceType.ResearchPoints => await actionRepository.ComputeUsedResearchPoints(userId, actionType),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
 }
