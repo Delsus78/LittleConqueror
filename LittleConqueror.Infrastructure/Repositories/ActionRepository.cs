@@ -190,19 +190,4 @@ public class ActionRepository(DataContext applicationDbContext)
     {
         return 1;
     }
-    
-    public async Task<int> ComputeTotalResearchPoints(long userId)
-    {
-        var totalResearchPoints = await _dbSet
-            .OfType<ActionEntities.Technologique>()
-            .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(TechnologiqueExpressions.GetResearchPointsProductionExpression());
-        
-        return totalResearchPoints;
-    }
-    
-    public async Task<int> ComputeUsedResearchPoints(long userId, ActionType? actionType = null)
-    {
-        return 1;
-    }
 }
