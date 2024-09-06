@@ -11,7 +11,7 @@ public interface IGetTechTreeOfUserIdHandler
     Task<List<TechResearchData>> Handle(GetTechTreeOfUserIdQuery query);
 }
 
-public class GetTechTreeOfUserIdHandler(UserContext userContext, 
+public class GetTechTreeOfUserIdHandler(IUserContext userContext, 
     ITechResearchDatabasePort techResearchDatabase,
     ITechRulesServices techRulesServices) : IGetTechTreeOfUserIdHandler
 {

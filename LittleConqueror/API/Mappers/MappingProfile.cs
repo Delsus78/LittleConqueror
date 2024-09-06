@@ -4,6 +4,7 @@ using LittleConqueror.API.Models.Dtos.ActionsDtos;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
 namespace LittleConqueror.API.Mappers;
@@ -29,8 +30,6 @@ public class MappingProfile : Profile
                 opt => opt.MapFrom(resources => resources.DiamondData))
             .ForMember(dto => dto.Petrol,
                 opt => opt.MapFrom(resources => resources.PetrolData))
-            // .ForMember(dto => dto.ResearchPoints,
-            //     opt => opt.MapFrom(resources => resources.ResearchPointsData))
             .ReverseMap();
         CreateMap<Territory, TerritoryDto>().ReverseMap();
         CreateMap<UserInformations, UserInformationsDto>().ReverseMap();
@@ -92,5 +91,9 @@ public class MappingProfile : Profile
             .ForMember(dto => dto.ActionType, 
                 opt => opt.MapFrom(_ => ActionType.Miniere));
             
+        
+        // TechResearches
+        CreateMap<TechResearchData, TechResearchDataDto>()
+            .ReverseMap();
     }
 }
