@@ -1,6 +1,6 @@
 namespace LittleConqueror.AppService.Domain.Models.TechResearches;
 
-public record TechResearchData
+public class TechResearchData
 {
     public TechResearchTypes ResearchType { get; init; }
     public TechResearchCategories ResearchCategory { get; init; }
