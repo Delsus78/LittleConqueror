@@ -10,4 +10,7 @@ public class User : Entity
     public Territory? Territory { get; set; }
     public Resources? Resources { get; set; }
     public AuthUser AuthUser { get; set; }
+    
+    // 1:n relationship
+    public List<TechResearch> TechResearches { get; set; }
 }
