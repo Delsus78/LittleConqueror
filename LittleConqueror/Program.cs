@@ -5,6 +5,7 @@ using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
 using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
+using LittleConqueror.AppService.Domain.Handlers.TechResearchHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Models;
@@ -151,6 +152,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IRemoveActionOfCityHandler, RemoveActionOfCityHandler>()
     .AddScoped<IGetPaginatedActionsByUserIdHandler, GetPaginatedActionsByUserIdHandler>()
     .AddScoped<IGetResourceDetailsHandler, GetResourceDetailsHandler>()
+    .AddScoped<IGetTechTreeOfUserIdHandler, GetTechTreeOfUserIdHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
@@ -195,6 +197,8 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IUserContext, UserContext>()
     .AddSingleton<ITemporaryCodeService, TemporaryCodeService>()
     .AddSingleton<ITokenManagerService, TokenManagerService>()
+    .AddScoped<ITechRulesServices, TechRulesServices>()
+
 // HttpClients
     .AddHttpClient("NominatimOSM", httpClient =>
 {
@@ -212,13 +216,13 @@ if (app.Environment.IsDevelopment())
 }
 
 
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<UserContextMiddleware>();
 app.UseMiddleware<TokenBlacklistMiddleware>();
 
-app.UseCors();
 app.UseHttpsRedirection();
 app.MapControllers().WithOpenApi();
 

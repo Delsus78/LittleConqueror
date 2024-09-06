@@ -18,10 +18,11 @@ public class DataContext(
     public DbSet<Territory> Territories { get; set; }
     public DbSet<AuthUser> AuthUsers { get; set; }
     public DbSet<Resources> Resources { get; set; }
-    
+    public DbSet<TechResearch> TechResearches { get; set; }
+
     // ActionEntities
     public DbSet<Action> Actions { get; set; }
-    
+
     public DbSet<Agricole> ActionsAgricoles { get; set; }
     public DbSet<Miniere> ActionsMiniere { get; set; }
     public DbSet<Militaire> ActionsMilitaires { get; set; }
@@ -46,6 +47,8 @@ public class DataContext(
             entity.HasOne(user => user.Resources)
                 .WithOne(resources => resources.User)
                 .HasForeignKey<Resources>(resources => resources.UserId);
+            entity.HasMany(user => user.TechResearches)
+                .WithOne(techResearch => techResearch.User);
         });
         
         modelBuilder.Entity<Resources>(
@@ -118,5 +121,10 @@ public class DataContext(
         modelBuilder.Entity<Diplomatique>().ToTable("ActionsDiplomatiques");
         modelBuilder.Entity<Espionnage>().ToTable("ActionsEspionnages");
         modelBuilder.Entity<Technologique>().ToTable("ActionsTechnologiques");
+        
+        // index
+        modelBuilder.Entity<TechResearch>()
+            .HasIndex(techResearch => new { techResearch.UserId, ResearchType = techResearch.ResearchCategory })
+            .IsUnique();
     }
 }
