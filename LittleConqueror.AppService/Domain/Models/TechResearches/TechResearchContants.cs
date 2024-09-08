@@ -303,7 +303,7 @@ public static class TechResearchesDataDictionaries
         
         { TechResearchTypes.Routes, 
             (cost: 0, researchTime: TimeSpan.FromDays(1), category: TechResearchCategories.EngineeringResearch,
-            preReqs: new List<TechResearchTypes> { TechResearchTypes.Pierre },
+            preReqs: new List<TechResearchTypes> { TechResearchTypes.Pierre, TechResearchTypes.Roue },
             name:"Routes",
             description: "Vous avez découvert comment construire des routes ! Vos unités se déplacent plus rapidement.") },
         
