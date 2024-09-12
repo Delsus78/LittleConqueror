@@ -213,7 +213,7 @@ public static class TechResearchesDataDictionaries
         { TechResearchTypes.Explosion, 
             (cost: 0, researchTime: TimeSpan.FromDays(1), category: TechResearchCategories.TheoryResearch,
             preReqs: new List<TechResearchTypes> { TechResearchTypes.Physiques },
-            name:"Explsion",
+            name:"Explosion",
             description: "Vous avez découvert comment faire des explosions, Boom ! Attention c'est dangereux comme même...") },
         
         { TechResearchTypes.Traitement_Des_Fluides, 
