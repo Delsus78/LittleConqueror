@@ -26,10 +26,8 @@ public class SetActionToCityHandler(
         if (city.Territory.OwnerId != userContext.UserId)
             throw new AppException("You are not the owner of this territory", 403);
         
-        command.City = city;
-        
-        await strategyContext.ExecuteStrategy<SetActionToCityCommand, object?, ISetActionStrategy>(
-            command.ActionType, command, default);
+        await strategyContext.ExecuteStrategy<(SetActionToCityCommand command, City city), object?, ISetActionStrategy>(
+            command.ActionType, (command, city), default);
 
         return city;
     }
