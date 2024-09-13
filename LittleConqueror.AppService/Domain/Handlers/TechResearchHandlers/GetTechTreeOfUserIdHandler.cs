@@ -18,7 +18,7 @@ public class GetTechTreeOfUserIdHandler(IUserContext userContext,
     public async Task<List<TechResearchData>> Handle(GetTechTreeOfUserIdQuery query)
     {
         if (query.UserId != userContext.UserId)
-            throw new AppException("You are not the owner of this territory", 403);
+            throw new AppException("You are not the owner of this tech tree", 403);
         
         var techResearches = await techResearchDatabase.GetAllTechResearchsForUser(query.UserId);
         

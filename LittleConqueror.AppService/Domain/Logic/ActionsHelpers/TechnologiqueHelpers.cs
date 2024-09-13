@@ -12,6 +12,6 @@ public static class TechnologiqueExpressions
     
     public static Expression<Func<ActionEntities.Technologique, int>> GetResearchPointsProductionExpression()
     {
-        return actionTechnologique => actionTechnologique.City.Population;
+        return actionTechnologique => actionTechnologique.City.Population / 2;
     }
 }

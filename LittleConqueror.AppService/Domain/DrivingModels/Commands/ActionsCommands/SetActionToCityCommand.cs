@@ -1,6 +1,6 @@
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
-using Newtonsoft.Json;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 
 namespace LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
 
@@ -22,6 +22,15 @@ public class SetActionToCityCommand
         }
     }
 
-    [JsonIgnore]
-    internal City? City { get; set; }
+    private TechResearchCategories _techResearchCategory;
+    public TechResearchCategories TechResearchCategory
+    {
+        get => _techResearchCategory;
+        set 
+        {
+            if (ActionType != ActionType.Technologique)
+                throw new ArgumentException("TechResearchCategory can only be set for Technologique action type");
+            _techResearchCategory = value;
+        }
+    }
 }

@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands.ActionsCommands;
 using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 
@@ -11,12 +12,12 @@ public class SetActionMiniereStrategy(
     IRemoveActionOfCityHandler removeActionOfCityHandler,
     ITransactionManagerPort transactionManager) : ISetActionStrategy
 {
-    public async Task<object?> Execute(SetActionToCityCommand input, CancellationToken cancellationToken)
+    public async Task<object?> Execute((SetActionToCityCommand command, City city) input, CancellationToken cancellationToken)
     {
         await transactionManager.BeginTransaction();
         try
         {
-            var city = input.City ?? throw new AppException("ERROR IN SETACTIONMINIERE", 500);
+            var city = input.city ?? throw new AppException("ERROR IN SETACTIONMINIERE", 500);
 
             // Check if city already has an action, if so, call if the action is removable via the handler
             if (city.Action != null)
@@ -32,7 +33,7 @@ public class SetActionMiniereStrategy(
             {
                 Id = city.Id,
                 StartTime = DateTime.Now,
-                ResourceType = input.ResourceType
+                ResourceType = input.command.ResourceType
             };
 
             await actionDatabase.AddAction(actionMiniere);

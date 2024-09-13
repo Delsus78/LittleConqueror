@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.Logic.ActionsHelpers;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.Infrastructure.DatabaseAdapters.DbDto;
 using LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 using Microsoft.EntityFrameworkCore;
@@ -189,5 +190,15 @@ public class ActionRepository(DataContext applicationDbContext)
     public async Task<int> ComputeUsedPetrol(long userId, ActionType? actionType = null)
     {
         return 1;
+    }
+    
+    public async Task<int> ComputeTotalResearch(long userId, TechResearchCategories category)
+    {
+        var totalResearch = await _dbSet
+            .OfType<ActionEntities.Technologique>()
+            .Where(a => a.City.Territory.OwnerId == userId)
+            .SumAsync(TechnologiqueExpressions.GetResearchPointsProductionExpression());
+        
+        return totalResearch;
     }
 }

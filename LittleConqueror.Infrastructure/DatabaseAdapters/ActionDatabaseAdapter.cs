@@ -1,5 +1,6 @@
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Infrastructure.Repositories;
@@ -47,4 +48,7 @@ public class ActionDatabaseAdapter(
             ResourceType.Petrol => await actionRepository.ComputeUsedPetrol(userId, actionType),
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
+    
+    public async Task<int> ComputeTotalResearch(long userId, TechResearchCategories category)
+        => await actionRepository.ComputeTotalResearch(userId, category);
 }

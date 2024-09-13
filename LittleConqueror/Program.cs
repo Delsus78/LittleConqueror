@@ -153,6 +153,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetPaginatedActionsByUserIdHandler, GetPaginatedActionsByUserIdHandler>()
     .AddScoped<IGetResourceDetailsHandler, GetResourceDetailsHandler>()
     .AddScoped<IGetTechTreeOfUserIdHandler, GetTechTreeOfUserIdHandler>()
+    .AddScoped<IGetSciencePointsOfUserIdHandler, GetSciencePointsOfUserIdHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
