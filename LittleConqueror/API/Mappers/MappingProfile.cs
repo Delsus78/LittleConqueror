@@ -90,6 +90,16 @@ public class MappingProfile : Profile
         CreateMap<Miniere, ActionMiniereDto>()
             .ForMember(dto => dto.ActionType, 
                 opt => opt.MapFrom(_ => ActionType.Miniere));
+        
+        CreateMap<Technologique, ActionTechnologiqueDto>()
+            .ForMember(dto => dto.ActionType, 
+                opt => opt.MapFrom(_ => ActionType.Technologique))
+            .ForMember(dto => dto.SciencePoints,
+                opt => opt.MapFrom(action => action.SciencePoints))
+            .ForMember(dto => dto.TechnologiqueEfficiency,
+                opt => opt.MapFrom(action => 0.5))
+            .ForMember(dto => dto.TechResearchCategory, 
+                opt => opt.MapFrom(action => action.TechResearchCategory));
             
         
         // TechResearches

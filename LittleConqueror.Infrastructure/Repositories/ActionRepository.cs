@@ -194,11 +194,17 @@ public class ActionRepository(DataContext applicationDbContext)
     
     public async Task<int> ComputeTotalResearch(long userId, TechResearchCategories category)
     {
-        var totalResearch = await _dbSet
+        // TODO : impl user tech efficiency
+        const double techEffiencecyTODO = 0.5;
+        
+        var totalResearchActionPopulations = await _dbSet
             .OfType<ActionEntities.Technologique>()
             .Where(a => a.City.Territory.OwnerId == userId)
-            .SumAsync(TechnologiqueExpressions.GetResearchPointsProductionExpression());
+            .Where(a => a.TechResearchCategory == category)
+            .Select(a => a.City.Population)
+            .ToListAsync();
         
-        return totalResearch;
+        return totalResearchActionPopulations
+            .Sum(pop => TechnologiqueExpressions.GetResearchPointsProductionExpression(pop, techEffiencecyTODO));
     }
 }
