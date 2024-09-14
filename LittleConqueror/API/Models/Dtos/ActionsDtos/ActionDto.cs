@@ -1,11 +1,13 @@
 using System.Text.Json.Serialization;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 
 namespace LittleConqueror.API.Models.Dtos.ActionsDtos;
 
 [JsonDerivedType(typeof(ActionAgricoleDto))]
 [JsonDerivedType(typeof(ActionMiniereDto))]
+[JsonDerivedType(typeof(ActionTechnologiqueDto))]
 public abstract class ActionDto
 {
     public long Id { get; set; }
@@ -28,4 +30,11 @@ public class ActionAgricoleDto : ActionDto
 public class ActionMiniereDto : ActionDto
 {
     public ResourceType ResourceType { get; set; }
+}
+
+public class ActionTechnologiqueDto : ActionDto
+{
+    public TechResearchCategories TechResearchCategory { get; set; }
+    public int SciencePoints { get; set; }
+    public double? TechnologiqueEfficiency { get; set; }
 }

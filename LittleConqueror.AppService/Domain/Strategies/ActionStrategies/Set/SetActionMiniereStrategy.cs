@@ -33,7 +33,7 @@ public class SetActionMiniereStrategy(
             {
                 Id = city.Id,
                 StartTime = DateTime.Now,
-                ResourceType = input.command.ResourceType
+                ResourceType = input.command.ResourceType ?? throw new AppException("ResourceType is required", 400)
             };
 
             await actionDatabase.AddAction(actionMiniere);

@@ -10,8 +10,8 @@ public class SetActionToCityCommand
     public long CityId { get; set; }
     public ActionType ActionType { get; set; }
     
-    private ResourceType _resourceType;
-    public ResourceType ResourceType
+    private ResourceType? _resourceType;
+    public ResourceType? ResourceType
     {
         get => _resourceType;
         set 
@@ -22,8 +22,8 @@ public class SetActionToCityCommand
         }
     }
 
-    private TechResearchCategories _techResearchCategory;
-    public TechResearchCategories TechResearchCategory
+    private TechResearchCategories? _techResearchCategory;
+    public TechResearchCategories? TechResearchCategory
     {
         get => _techResearchCategory;
         set 

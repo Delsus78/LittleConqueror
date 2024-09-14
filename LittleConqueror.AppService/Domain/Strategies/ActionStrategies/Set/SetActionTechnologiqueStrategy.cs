@@ -31,7 +31,7 @@ public class SetActionTechnologiqueStrategy(
             {
                 Id = city.Id,
                 StartTime = DateTime.Now,
-                TechResearchCategory = input.command.TechResearchCategory
+                TechResearchCategory = input.command.TechResearchCategory ?? throw new AppException("TechResearchCategory is required", 400)
             };
 
             await actionDatabase.AddAction(actionTechnologique);
