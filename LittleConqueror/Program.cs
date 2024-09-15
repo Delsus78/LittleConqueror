@@ -154,6 +154,8 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetResourceDetailsHandler, GetResourceDetailsHandler>()
     .AddScoped<IGetTechTreeOfUserIdHandler, GetTechTreeOfUserIdHandler>()
     .AddScoped<IGetSciencePointsOfUserIdHandler, GetSciencePointsOfUserIdHandler>()
+    .AddScoped<ISetTechToResearchOfUserIdHandler, SetTechToResearchOfUserIdHandler>()
+    .AddScoped<ICancelTechResearchOfUserIdHandler, CancelTechResearchOfUserIdHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)

@@ -22,8 +22,8 @@ public class SetActionToCityCommand
         }
     }
 
-    private TechResearchCategories? _techResearchCategory;
-    public TechResearchCategories? TechResearchCategory
+    private TechResearchCategory? _techResearchCategory;
+    public TechResearchCategory? TechResearchCategory
     {
         get => _techResearchCategory;
         set 
