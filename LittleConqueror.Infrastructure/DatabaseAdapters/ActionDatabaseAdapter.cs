@@ -49,6 +49,6 @@ public class ActionDatabaseAdapter(
             _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
         };
     
-    public async Task<int> ComputeTotalResearch(long userId, TechResearchCategories category)
+    public async Task<int> ComputeTotalResearch(long userId, TechResearchCategory category)
         => await actionRepository.ComputeTotalResearch(userId, category);
 }

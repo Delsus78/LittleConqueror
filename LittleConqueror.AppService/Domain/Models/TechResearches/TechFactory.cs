@@ -4,7 +4,7 @@ namespace LittleConqueror.AppService.Domain.Models.TechResearches;
 
 public static class TechFactory
 {
-    public static TechResearch CreateTechResearch(DateTime researchDate, TechResearchCategories researchCategory, TechResearchTypes researchType, long userId)
+    public static TechResearch CreateTechResearch(DateTime researchDate, TechResearchCategory researchCategory, TechResearchType researchType, long userId)
     {
         return new TechResearch
         {
@@ -19,8 +19,8 @@ public static class TechFactory
 public static class TechDataFactory
 {
     public static TechResearchData CreateTechResearches(
-        TechResearchCategories researchCategory, 
-        TechResearchTypes researchType,
+        TechResearchCategory researchCategory, 
+        TechResearchType researchType,
         TechResearchStatus status)
     {
         var TechConstants = TechResearchesDataDictionaries.Values[researchType];
