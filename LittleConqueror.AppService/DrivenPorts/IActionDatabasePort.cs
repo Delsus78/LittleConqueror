@@ -12,5 +12,5 @@ public interface IActionDatabasePort
     
     Task<int> ComputeTotal(ResourceType type, long userId);
     Task<int> ComputeUsed(ResourceType type, long userId, ActionType? actionType = null);
-    Task<int> ComputeTotalResearch(long userId, TechResearchCategories category);
+    Task<int> ComputeTotalResearch(long userId, TechResearchCategory category);
 }

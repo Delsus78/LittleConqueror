@@ -34,7 +34,7 @@ public class ActionMiniereDto : ActionDto
 
 public class ActionTechnologiqueDto : ActionDto
 {
-    public TechResearchCategories TechResearchCategory { get; set; }
+    public TechResearchCategory TechResearchCategory { get; set; }
     public int SciencePoints { get; set; }
     public double? TechnologiqueEfficiency { get; set; }
 }

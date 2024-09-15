@@ -192,7 +192,7 @@ public class ActionRepository(DataContext applicationDbContext)
         return 1;
     }
     
-    public async Task<int> ComputeTotalResearch(long userId, TechResearchCategories category)
+    public async Task<int> ComputeTotalResearch(long userId, TechResearchCategory category)
     {
         // TODO : impl user tech efficiency
         const double techEffiencecyTODO = 0.5;
