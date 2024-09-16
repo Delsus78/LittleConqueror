@@ -12,7 +12,7 @@ public interface IRepository<T> where T : class
     Task<T?> GetAsync(Expression<Func<T, bool>>? filter = null, bool disableTracking = true);
     Task<IReadOnlyList<T>> GetAsync(ISpecification<T> spec);
     Task<int> CountAsync(ISpecification<T> spec);
-    Task<EntityEntry<T>> CreateAsync(T entity);
+    Task<EntityEntry<T>> CreateAsync(T entity, bool disableTracking = true);
     Task UpdateAsync(T entity);
     Task RemoveAsync(T entity);
     Task<bool> AnyAsync(Expression<Func<T, bool>> filter);
@@ -35,10 +35,15 @@ public class Repository<T> : IRepository<T> where T : Entity
         return ApplySpecification(spec).CountAsync();
     }
 
-    public async Task<EntityEntry<T>> CreateAsync(T entity)
+    public async Task<EntityEntry<T>> CreateAsync(T entity, bool disableTracking = true)
     {
         var response = await _dbSet.AddAsync(entity);
         await SaveAsync();
+        
+        if (disableTracking)
+        {
+            _applicationDbContext.Entry(entity).State = EntityState.Detached;
+        }
         
         return response;
     }

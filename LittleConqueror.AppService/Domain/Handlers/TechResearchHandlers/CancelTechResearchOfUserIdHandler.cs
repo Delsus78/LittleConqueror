@@ -1,4 +1,5 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.DrivenPorts;
 
@@ -17,6 +18,6 @@ public class CancelTechResearchOfUserIdHandler(
         if (command.UserId != userContext.UserId)
             throw new UnauthorizedAccessException("User can only cancel their own tech researches");
         
-        return techResearchDatabase.CancelTechResearch(command.UserId, command.TechResearchType);
+        return techResearchDatabase.SetStatusForTechResearchForUser(command.UserId, command.TechResearchType, TechResearchStatus.Undiscovered);
     }
 }
