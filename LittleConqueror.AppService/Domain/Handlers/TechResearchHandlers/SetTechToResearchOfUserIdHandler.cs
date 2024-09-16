@@ -14,6 +14,8 @@ public interface ISetTechToResearchOfUserIdHandler
 public class SetTechToResearchOfUserIdHandler(
     ITechResearchDatabasePort techResearchDatabase,
     IGetSciencePointsOfUserIdHandler getSciencePointsOfUserIdHandler,
+    ICancelTechResearchOfUserIdHandler cancelTechResearchOfUserIdHandler,
+    IBackgroundJobService backgroundJobService,
     IUserContext userContext) : ISetTechToResearchOfUserIdHandler
 {
     public async Task Handle(SetTechToResearchOfUserIdCommand command)
@@ -26,16 +28,21 @@ public class SetTechToResearchOfUserIdHandler(
         {
             if (command.Force)
             {
-                await techResearchDatabase.CancelTechResearch(command.UserId, techResearch.ResearchType);
-                await SetTechResearchForUser(command.UserId, command.TechResearchType);
+                await cancelTechResearchOfUserIdHandler.Handle(new CancelTechToResearchOfUserIdCommand
+                {
+                    UserId = command.UserId,
+                    TechResearchType = techResearch.ResearchType
+                });
             }
             else throw new AppException("You already have a tech research in progress", 400);
         }
+        
+        await SetTechResearchForUser(command.UserId, command.TechResearchType);
     }
     
     private async Task SetTechResearchForUser(long userId, TechResearchType techResearchType)
     {
-        var techResearch = await techResearchDatabase.GetTechResearchOfUser(userId, techResearchType);
+        var techResearch = await techResearchDatabase.GetOrCreateTechResearchOfUserAsync(userId, techResearchType);
         if (techResearch.ResearchStatus != TechResearchStatus.Undiscovered)
             throw new AppException("You already have this tech researched or in progress", 400);
 
@@ -47,4 +54,7 @@ public class SetTechToResearchOfUserIdHandler(
         
         await techResearchDatabase.SetTechResearchForUser(userId, techResearchType);
     }
+    
+    private TimeSpan GetResearchTime(TechResearchType techResearchType)
+        => TechResearchesDataDictionaries.Values[techResearchType].researchTime;
 }

@@ -1,7 +1,6 @@
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.DrivenPorts;
-using LittleConqueror.AppService.Exceptions;
 using LittleConqueror.Infrastructure.Repositories;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters;
@@ -14,35 +13,37 @@ public class TechResearchDatabaseAdapter(TechResearchRepository techResearchRepo
     public async Task<TechResearch?> TryGetInProgressTechResearchForUser(long userId)
         => await techResearchRepository.GetAsync(research => research.UserId == userId && research.ResearchStatus == TechResearchStatus.Researching);
 
-    public async Task<TechResearch> GetTechResearchOfUser(long userId, TechResearchType techResearchType)
-        => await techResearchRepository.GetAsync(research =>
-            research.UserId == userId && research.ResearchType == techResearchType) ?? new TechResearch
+    public async Task<TechResearch> GetOrCreateTechResearchOfUserAsync(long userId, TechResearchType techResearchType, bool disableTracking = true)
+    {
+        var techResearch = await techResearchRepository.GetAsync(research =>
+            research.UserId == userId && research.ResearchType == techResearchType);
+
+        if (techResearch is not null) 
+            return techResearch;
+        
+        techResearch = new TechResearch
         {
             ResearchCategory = TechResearchesDataDictionaries.Values[techResearchType].category,
             ResearchType = techResearchType,
             ResearchStatus = TechResearchStatus.Undiscovered,
             UserId = userId
         };
-
-    public async Task CancelTechResearch(long userId, TechResearchType techResearchType)
-    {
-        var techResearch = await techResearchRepository.GetAsync(research =>
-            research.UserId == userId && research.ResearchType == techResearchType && research.ResearchStatus == TechResearchStatus.Researching)
-                           ?? throw new AppException("Tech research is not in progress", 400);
-        
-        techResearch.ResearchStatus = TechResearchStatus.Undiscovered;
-        
-        await techResearchRepository.UpdateAsync(techResearch);
+        await techResearchRepository.CreateAsync(techResearch, disableTracking);
+        return techResearch;
     }
 
-    public async Task SetTechResearchForUser(long userId, TechResearchType techResearchType)
+    public async Task SetStatusForTechResearchForUser(long userId, TechResearchType techResearchType, TechResearchStatus techResearchStatus)
     {
-        var techResearch = await techResearchRepository.GetAsync(research =>
-                               research.UserId == userId && research.ResearchType == techResearchType && research.ResearchStatus == TechResearchStatus.Researching)
-                           ?? throw new AppException("Tech research is not in progress", 400);
+        var techResearch = await GetOrCreateTechResearchOfUserAsync(userId, techResearchType);
         
-        techResearch.ResearchStatus = TechResearchStatus.Researching;
-        
+        techResearch.ResearchStatus = techResearchStatus;
+
+        techResearch.ResearchDate = techResearchStatus switch
+        {
+            TechResearchStatus.Researching => DateTime.UtcNow,
+            TechResearchStatus.Undiscovered => null,
+            _ => techResearch.ResearchDate
+        };
         await techResearchRepository.UpdateAsync(techResearch);
     }
 }
