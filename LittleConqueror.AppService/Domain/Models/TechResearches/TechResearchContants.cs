@@ -120,7 +120,7 @@ public static class TechResearchesDataDictionaries
         
         // GeoPolitique
         { TechResearchType.Classement,
-            (cost: 0, researchTime: TimeSpan.FromDays(1), category: TechResearchCategory.GeopoliticResearch,
+            (cost: 0, researchTime: TimeSpan.FromMinutes(1), category: TechResearchCategory.GeopoliticResearch,
             preReqs: new List<TechResearchType> {},
             name:"Classement",
             description:"Vous avez désormais une idée de votre position par rapport aux autres dans le menu principal.") },

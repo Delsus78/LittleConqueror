@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using Hangfire;
+using Hangfire.PostgreSql;
 using LittleConqueror;
 using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
@@ -126,6 +128,15 @@ builder.Services.AddDbContext<DataContext>(options =>
             return true;
         });
 
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(c =>
+        c.UseNpgsqlConnection(builder.Configuration.GetConnectionString("HangfireConnection"))));
+
+builder.Services.AddHangfireServer();
+
 // Services Driving
 builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetTerritoryByUserIdHandler, GetTerritoryByUserIdHandler>()
@@ -156,6 +167,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IGetSciencePointsOfUserIdHandler, GetSciencePointsOfUserIdHandler>()
     .AddScoped<ISetTechToResearchOfUserIdHandler, SetTechToResearchOfUserIdHandler>()
     .AddScoped<ICancelTechResearchOfUserIdHandler, CancelTechResearchOfUserIdHandler>()
+    .AddScoped<ICompleteTechResearchOfUserIdHandler, CompleteTechResearchOfUserIdHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
@@ -203,6 +215,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddSingleton<ITemporaryCodeService, TemporaryCodeService>()
     .AddSingleton<ITokenManagerService, TokenManagerService>()
     .AddScoped<ITechRulesServices, TechRulesServices>()
+    .AddSingleton<IBackgroundJobService, BackgroundJobService>()
 
 // HttpClients
     .AddHttpClient("NominatimOSM", httpClient =>
@@ -220,6 +233,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHangfireDashboard();
 
 app.UseCors();
 app.UseAuthentication();

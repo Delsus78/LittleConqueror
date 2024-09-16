@@ -5,7 +5,7 @@ namespace LittleConqueror.AppService.Domain.Models.Entities;
 
 public class TechResearch : Entity
 {
-    public DateTime ResearchDate { get; set; }
+    public DateTime? ResearchDate { get; set; }
     public TechResearchCategory ResearchCategory { get; set; }
     public TechResearchType ResearchType { get; set; }
     public TechResearchStatus ResearchStatus { get; set; }
