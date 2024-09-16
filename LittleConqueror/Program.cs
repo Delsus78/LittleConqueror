@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Google.Cloud.Firestore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using LittleConqueror;
@@ -26,6 +27,7 @@ using LittleConqueror.Infrastructure.DatabaseAdapters;
 using LittleConqueror.Infrastructure.FetchingAdapters;
 using LittleConqueror.Infrastructure.JwtAdapters;
 using LittleConqueror.Infrastructure.Repositories;
+using LittleConqueror.Infrastructure.Repositories.Firebases;
 using LittleConqueror.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -107,6 +109,8 @@ builder.Services.AddControllers(options =>
     });
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "littleconquerorconfigs-firebase-adminsdk-t0asg-cadf5ee4f2.json");
 
 builder.Services.AddDbContext<DataContext>(options => 
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")))
@@ -206,6 +210,8 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ResourcesRepository>()
     .AddScoped<ActionRepository>()
     .AddScoped<TechResearchRepository>()
+    .AddScoped<TechConfigsRepository>(repo => 
+        new TechConfigsRepository(FirestoreDb.Create("littleconquerorconfigs")))
 
 // Others
     .AddAutoMapper(typeof(MappingProfile))

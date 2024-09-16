@@ -37,4 +37,8 @@
       <Folder Include="API\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="littleconquerorconfigs-firebase-adminsdk-t0asg-cadf5ee4f2.json" />
+    </ItemGroup>
+
 </Project>
