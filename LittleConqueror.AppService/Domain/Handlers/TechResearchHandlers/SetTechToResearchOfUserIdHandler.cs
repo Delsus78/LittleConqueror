@@ -16,6 +16,7 @@ public class SetTechToResearchOfUserIdHandler(
     IGetSciencePointsOfUserIdHandler getSciencePointsOfUserIdHandler,
     ICancelTechResearchOfUserIdHandler cancelTechResearchOfUserIdHandler,
     IBackgroundJobService backgroundJobService,
+    ITechResearchConfigsProviderPort techResearchConfigsProvider,
     IUserContext userContext) : ISetTechToResearchOfUserIdHandler
 {
     public async Task Handle(SetTechToResearchOfUserIdCommand command)
@@ -49,7 +50,8 @@ public class SetTechToResearchOfUserIdHandler(
         var userSciencesPoints =
             await getSciencePointsOfUserIdHandler.Handle(new GetSciencePointsOfUserIdQuery { UserId = userId });
         
-        if (TechResearchesDataDictionaries.Values[techResearchType].cost > userSciencesPoints[techResearch.ResearchCategory])
+        var techConfig = await techResearchConfigsProvider.GetByType(techResearchType);
+        if (techConfig.Cost > userSciencesPoints[techResearch.ResearchCategory])
             throw new AppException("You don't have enough science points", 400);
         
         // TODO: check if user has required techs researched
@@ -61,9 +63,6 @@ public class SetTechToResearchOfUserIdHandler(
         {
             UserId = userId,
             ResearchType = techResearchType
-        }), GetResearchTime(techResearchType));
+        }), techConfig.ResearchTime);
     }
-    
-    private TimeSpan GetResearchTime(TechResearchType techResearchType)
-        => TechResearchesDataDictionaries.Values[techResearchType].researchTime;
 }

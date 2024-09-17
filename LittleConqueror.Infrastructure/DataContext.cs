@@ -20,6 +20,8 @@ public class DataContext(
     public DbSet<Resources> Resources { get; set; }
     public DbSet<TechResearch> TechResearches { get; set; }
 
+    public DbSet<Configs> Configs { get; set; }
+    
     // ActionEntities
     public DbSet<Action> Actions { get; set; }
 
@@ -36,6 +38,13 @@ public class DataContext(
         var geoJsonConverter = new ValueConverter<JToken, string>(
             v => v.ToString(),
             v => JToken.Parse(v));
+
+        modelBuilder.Entity<Configs>(entity =>
+        {
+            entity.HasKey(configs => configs.Id);
+            entity.Property(configs => configs.Id).ValueGeneratedOnAdd();
+            entity.OwnsMany(configs => configs.TechResearchConfigs, builder => builder.ToJson());
+        });
         
         modelBuilder.Entity<User>(entity =>
         {

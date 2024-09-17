@@ -77,7 +77,7 @@ public enum TechResearchStatus
     Researched
 }
 
-public static class TechResearchesDataDictionaries
+public static class TechResearchesDataDictionariesDeprecated
 {
     public static Dictionary<TechResearchType, (int cost, TimeSpan researchTime, TechResearchCategory category, List<TechResearchType> preReqs, string name, string description)> Values { get; } = new()
     {

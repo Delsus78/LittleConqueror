@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Google.Cloud.Firestore;
 using Hangfire;
 using Hangfire.PostgreSql;
 using LittleConqueror;
@@ -7,12 +6,14 @@ using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
+using LittleConqueror.AppService.Domain.Handlers.ConfigsHandlers;
 using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TechResearchHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
 using LittleConqueror.AppService.Domain.Handlers.UserHandlers;
 using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.Domain.Strategies;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies;
@@ -23,11 +24,11 @@ using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Authentication;
 using LittleConqueror.Exceptions;
 using LittleConqueror.Infrastructure;
+using LittleConqueror.Infrastructure.ConfigsAdapters;
 using LittleConqueror.Infrastructure.DatabaseAdapters;
 using LittleConqueror.Infrastructure.FetchingAdapters;
 using LittleConqueror.Infrastructure.JwtAdapters;
 using LittleConqueror.Infrastructure.Repositories;
-using LittleConqueror.Infrastructure.Repositories.Firebases;
 using LittleConqueror.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -110,10 +111,10 @@ builder.Services.AddControllers(options =>
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "littleconquerorconfigs-firebase-adminsdk-t0asg-cadf5ee4f2.json");
-
-builder.Services.AddDbContext<DataContext>(options => 
-        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")))
+builder.Services.AddDbContext<DataContext>(options =>
+    {
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    })
     .Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"))
     .AddOptions<AppSettings>()
         .Bind(builder.Configuration.GetSection("AppSettings"))
@@ -172,6 +173,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ISetTechToResearchOfUserIdHandler, SetTechToResearchOfUserIdHandler>()
     .AddScoped<ICancelTechResearchOfUserIdHandler, CancelTechResearchOfUserIdHandler>()
     .AddScoped<ICompleteTechResearchOfUserIdHandler, CompleteTechResearchOfUserIdHandler>()
+    .AddScoped<ISetTechResearchConfigHandler, SetTechResearchConfigHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
@@ -203,6 +205,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IResourcesDatabasePort, ResourcesDatabaseAdapter>()
     .AddScoped<IActionDatabasePort, ActionDatabaseAdapter>()
     .AddScoped<ITechResearchDatabasePort, TechResearchDatabaseAdapter>()
+    .AddScoped<ITechResearchConfigsProviderPort, TechResearchConfigsProviderAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()
     .AddScoped<CityRepository>()
@@ -210,17 +213,16 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ResourcesRepository>()
     .AddScoped<ActionRepository>()
     .AddScoped<TechResearchRepository>()
-    .AddScoped<TechConfigsRepository>(repo => 
-        new TechConfigsRepository(FirestoreDb.Create("littleconquerorconfigs")))
+    .AddScoped<ConfigsRepository>()
 
 // Others
     .AddAutoMapper(typeof(MappingProfile))
     .ConfigureJwt(builder.Configuration.GetSection("AppSettings").Get<AppSettings>())
     .Configure<OSMSettings>(builder.Configuration.GetSection("OSMSettings"))
     .AddScoped<IUserContext, UserContext>()
+    .AddScoped<ITechDataFactoryService, TechDataFactoryService>()
     .AddSingleton<ITemporaryCodeService, TemporaryCodeService>()
     .AddSingleton<ITokenManagerService, TokenManagerService>()
-    .AddScoped<ITechRulesServices, TechRulesServices>()
     .AddSingleton<IBackgroundJobService, BackgroundJobService>()
 
 // HttpClients

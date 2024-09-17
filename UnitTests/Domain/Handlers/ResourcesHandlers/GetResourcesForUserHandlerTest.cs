@@ -35,6 +35,9 @@ public class GetResourcesForUserHandlerTest
         _resourceDatabaseMock
             .Setup(x => x.GetResourcesOfUser(query.UserId))
             .ReturnsAsync(expected);
+        _userContextMock
+            .Setup(x => x.UserId)
+            .Returns(query.UserId);
         
         // act
         var result = await _getResourcesForUserHandler.Handle(query);
