@@ -5,6 +5,7 @@ using LittleConqueror.AppService.Domain.Models;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
+using LittleConqueror.AppService.Domain.Models.TechResearches.Configs;
 using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
 namespace LittleConqueror.API.Mappers;
@@ -105,5 +106,14 @@ public class MappingProfile : Profile
         // TechResearches
         CreateMap<TechResearchData, TechResearchDataDto>()
             .ReverseMap();
+        CreateMap<TechConfigDto, TechConfig>()
+            .ForMember(dest => dest.PreReqs,
+                opt => opt.MapFrom(src => src.PreReqs.Select(Enum.Parse<TechResearchType>).ToList()))
+            .ForMember(dest => dest.Type,
+                opt => opt.MapFrom(src => Enum.Parse<TechResearchType>(src.Type)))
+            .ForMember(dest => dest.Category,
+                opt => opt.MapFrom(src => Enum.Parse<TechResearchCategory>(src.Category)))
+            .ForMember(dest => dest.ResearchTime,
+                opt => opt.MapFrom(src => TimeSpan.FromSeconds(src.ResearchTime)));
     }
 }

@@ -1,4 +1,5 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.DrivenPorts;
@@ -13,7 +14,8 @@ public interface IGetTechTreeOfUserIdHandler
 
 public class GetTechTreeOfUserIdHandler(IUserContext userContext, 
     ITechResearchDatabasePort techResearchDatabase,
-    ITechRulesServices techRulesServices) : IGetTechTreeOfUserIdHandler
+    ITechDataFactoryService techDataFactoryService,
+    ITechResearchConfigsProviderPort techResearchConfigsProvider) : IGetTechTreeOfUserIdHandler
 {
     public async Task<List<TechResearchData>> Handle(GetTechTreeOfUserIdQuery query)
     {
@@ -22,6 +24,29 @@ public class GetTechTreeOfUserIdHandler(IUserContext userContext,
         
         var techResearches = await techResearchDatabase.GetAllTechResearchsForUser(query.UserId);
         
-        return techRulesServices.TransformTechResearchesFromUserResearchList(techResearches);
+        return await TransformTechResearchesFromUserResearchList(techResearches);
+    }
+    
+    private async Task<List<TechResearchData>> TransformTechResearchesFromUserResearchList(IEnumerable<TechResearch> techResearches)
+    {
+        var result = new List<TechResearchData>();
+        var researches = techResearches.ToList();
+        var techConfigs = await techResearchConfigsProvider.GetAll();
+        
+        result.AddRange(researches
+            .Select(techResearch => techDataFactoryService
+                .CreateTechResearchesAsync(techResearch.ResearchCategory, techResearch.ResearchType,
+                    techResearch.ResearchStatus).Result)
+            .ToList());
+        
+        result.AddRange(techConfigs
+            .Where(techConstants => researches.All(techResearch =>
+                techResearch.ResearchType != techConstants.Type))
+            .Select(techConstants => techDataFactoryService
+                .CreateTechResearchesAsync(techConstants.Category, techConstants.Type,
+                    TechResearchStatus.Undiscovered).Result)
+            .ToList());
+        
+        return result;
     }
 }

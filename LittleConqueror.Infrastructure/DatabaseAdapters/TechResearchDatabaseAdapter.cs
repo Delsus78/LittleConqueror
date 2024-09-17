@@ -1,11 +1,14 @@
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.DrivenPorts;
+using LittleConqueror.AppService.Exceptions;
 using LittleConqueror.Infrastructure.Repositories;
 
 namespace LittleConqueror.Infrastructure.DatabaseAdapters;
 
-public class TechResearchDatabaseAdapter(TechResearchRepository techResearchRepository) : ITechResearchDatabasePort
+public class TechResearchDatabaseAdapter(
+    TechResearchRepository techResearchRepository,
+    ConfigsRepository configsRepository) : ITechResearchDatabasePort
 {
     public async Task<List<TechResearch>> GetAllTechResearchsForUser(long id)
         => await techResearchRepository.GetAllAsync(x => x.UserId == id);
@@ -20,10 +23,13 @@ public class TechResearchDatabaseAdapter(TechResearchRepository techResearchRepo
 
         if (techResearch is not null) 
             return techResearch;
+
+        var techConfig = await configsRepository.GetTechConfig(techResearchType) 
+                         ?? throw new AppException($"TechConfig with type {techResearchType} not found", 404);
         
         techResearch = new TechResearch
         {
-            ResearchCategory = TechResearchesDataDictionaries.Values[techResearchType].category,
+            ResearchCategory = techConfig.Category,
             ResearchType = techResearchType,
             ResearchStatus = TechResearchStatus.Undiscovered,
             UserId = userId
