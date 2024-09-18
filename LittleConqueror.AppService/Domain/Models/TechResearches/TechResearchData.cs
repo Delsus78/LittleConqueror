@@ -9,4 +9,7 @@ public class TechResearchData
     public int Cost { get; init; }
     public List<TechResearchType> Prerequisites { get; init; }
     public TechResearchStatus ResearchStatus { get; init; }
+    
+    public DateTime? StartSearchingDate { get; init; }
+    public DateTime? EndSearchingDate { get; init; }
 }

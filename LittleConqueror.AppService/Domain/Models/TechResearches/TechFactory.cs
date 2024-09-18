@@ -1,17 +1,20 @@
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 
 namespace LittleConqueror.AppService.Domain.Models.TechResearches;
 
 public interface ITechDataFactoryService
 {
-    Task<TechResearchData> CreateTechResearchesAsync(
+    Task<TechResearchData> CreateTechResearchesDataAsync(
         TechResearchCategory researchCategory,
         TechResearchType researchType,
         TechResearchStatus status);
+    
+    Task<TechResearchData> CreateTechResearchesDataAsync(TechResearch techResearch);
 }
 public class TechDataFactoryService(ITechResearchConfigsProviderPort techResearchConfigsProvider) : ITechDataFactoryService
 {
-    public async Task<TechResearchData> CreateTechResearchesAsync(
+    public async Task<TechResearchData> CreateTechResearchesDataAsync(
         TechResearchCategory researchCategory, 
         TechResearchType researchType,
         TechResearchStatus status)
@@ -26,6 +29,23 @@ public class TechDataFactoryService(ITechResearchConfigsProviderPort techResearc
             Name = TechConstants.Name,
             Prerequisites = TechConstants.PreReqs,
             ResearchStatus = status
+        };
+    }
+
+    public async Task<TechResearchData> CreateTechResearchesDataAsync(TechResearch techResearch)
+    {
+        var TechConstants = await techResearchConfigsProvider.GetByType(techResearch.ResearchType);
+        return new TechResearchData
+        {
+            ResearchCategory = techResearch.ResearchCategory,
+            ResearchType = techResearch.ResearchType,
+            Cost = TechConstants.Cost,
+            Description = TechConstants.Description,
+            Name = TechConstants.Name,
+            Prerequisites = TechConstants.PreReqs,
+            ResearchStatus = techResearch.ResearchStatus,
+            StartSearchingDate = techResearch.ResearchDate,
+            EndSearchingDate = techResearch.ResearchDate?.Add(TechConstants.ResearchTime)
         };
     }
 }
