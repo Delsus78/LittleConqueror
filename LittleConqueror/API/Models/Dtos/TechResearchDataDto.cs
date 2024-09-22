@@ -9,5 +9,7 @@ public record TechResearchDataDto(
     string Description,
     int Cost,
     List<TechResearchType> Prerequisites,
-    TechResearchStatus ResearchStatus
+    TechResearchStatus ResearchStatus,
+    DateTime? StartSearchingDate,
+    DateTime? EndSearchingDate
 );
