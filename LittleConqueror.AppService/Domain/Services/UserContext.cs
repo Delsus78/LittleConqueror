@@ -1,10 +1,9 @@
-using LittleConqueror.AppService.Exceptions;
-
 namespace LittleConqueror.AppService.Domain.Services;
 
 public interface IUserContext
 {
-    long UserId { get; set; }
+    long UserId { set; }
+    bool IsUnauthorized(long userId);
 }
 
 public class UserContext : IUserContext
@@ -13,7 +12,13 @@ public class UserContext : IUserContext
 
     public long UserId
     {
-        get => _userId ?? throw new AppException("User Id is not set", 404);
         set => _userId = value;
     }
+    
+    /// <summary>
+    /// admin => userId < 0
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public bool IsUnauthorized(long userId) => _userId > 0 && _userId != userId;
 }

@@ -29,7 +29,7 @@ public class GetResourcesForUserHandler(
     
     public async Task<Resources> Handle(GetResourcesForUserQuery query)
     {
-        if (query.UserId != userContext.UserId)
+        if (userContext.IsUnauthorized(query.UserId))
             throw new AppException("You are not authorized to access this resource", 403);
         
         var resources = await resourcesDatabase.GetResourcesOfUser(query.UserId) ??

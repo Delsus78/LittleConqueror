@@ -18,7 +18,7 @@ public class GetTerritoryCitiesWithGeoJsonByUserIdHandler(
 {
     public async Task<List<City>> Handle(GetTerritoryCitiesWithGeoJsonByUserIdQuery query)
     {
-        if (query.UserId != userContext.UserId)
+        if (userContext.IsUnauthorized(query.UserId))
             throw new AppException("You are not the owner of this territory", 403);
         
         return await territoryDatabase.GetTerritoryCitiesFullDataOfUser(query.UserId) ??

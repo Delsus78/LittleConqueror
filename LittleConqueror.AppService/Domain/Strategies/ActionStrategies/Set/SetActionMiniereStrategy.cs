@@ -12,7 +12,7 @@ public class SetActionMiniereStrategy(
     IRemoveActionOfCityHandler removeActionOfCityHandler,
     ITransactionManagerPort transactionManager) : ISetActionStrategy
 {
-    public async Task<object?> Execute((SetActionToCityCommand command, City city) input, CancellationToken cancellationToken)
+    public async Task<object?> Execute(SetActionStrategyParams input, CancellationToken cancellationToken)
     {
         await transactionManager.BeginTransaction();
         try
@@ -33,7 +33,7 @@ public class SetActionMiniereStrategy(
             {
                 Id = city.Id,
                 StartTime = DateTime.Now,
-                ResourceType = input.command.ResourceType ?? throw new AppException("ResourceType is required", 400)
+                ResourceType = input.ResourceType ?? throw new AppException("ResourceType is required", 400)
             };
 
             await actionDatabase.AddAction(actionMiniere);

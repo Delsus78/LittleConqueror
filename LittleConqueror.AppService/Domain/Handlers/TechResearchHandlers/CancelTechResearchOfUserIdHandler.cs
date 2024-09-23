@@ -15,7 +15,7 @@ public class CancelTechResearchOfUserIdHandler(
 {
     public Task Handle(CancelTechToResearchOfUserIdCommand command)
     {
-        if (command.UserId != userContext.UserId)
+        if (userContext.IsUnauthorized(command.UserId))
             throw new UnauthorizedAccessException("User can only cancel their own tech researches");
         
         return techResearchDatabase.SetStatusForTechResearchForUser(command.UserId, command.TechResearchType, TechResearchStatus.Undiscovered);
