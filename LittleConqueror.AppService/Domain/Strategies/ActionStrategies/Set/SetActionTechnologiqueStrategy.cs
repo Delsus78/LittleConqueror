@@ -12,7 +12,7 @@ public class SetActionTechnologiqueStrategy(
     IRemoveActionOfCityHandler removeActionOfCityHandler,
     ITransactionManagerPort transactionManager) : ISetActionStrategy
 {
-    public async Task<object?> Execute((SetActionToCityCommand command, City city) input, CancellationToken cancellationToken)
+    public async Task<object?> Execute(SetActionStrategyParams input, CancellationToken cancellationToken)
     {
         await transactionManager.BeginTransaction();
         try
@@ -31,7 +31,7 @@ public class SetActionTechnologiqueStrategy(
             {
                 Id = city.Id,
                 StartTime = DateTime.Now,
-                TechResearchCategory = input.command.TechResearchCategory ?? throw new AppException("TechResearchCategory is required", 400)
+                TechResearchCategory = input.TechResearchCategory ?? throw new AppException("TechResearchCategory is required", 400)
             };
 
             await actionDatabase.AddAction(actionTechnologique);

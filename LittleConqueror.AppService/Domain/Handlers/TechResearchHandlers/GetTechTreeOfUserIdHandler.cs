@@ -15,19 +15,20 @@ public interface IGetTechTreeOfUserIdHandler
 public class GetTechTreeOfUserIdHandler(IUserContext userContext, 
     ITechResearchDatabasePort techResearchDatabase,
     ITechDataFactoryService techDataFactoryService,
+    IGetSciencePointsOfUserIdHandler getSciencePointsOfUserIdHandler,
     ITechResearchConfigsProviderPort techResearchConfigsProvider) : IGetTechTreeOfUserIdHandler
 {
     public async Task<List<TechResearchData>> Handle(GetTechTreeOfUserIdQuery query)
     {
-        if (query.UserId != userContext.UserId)
+        if (userContext.IsUnauthorized(query.UserId))
             throw new AppException("You are not the owner of this tech tree", 403);
         
         var techResearches = await techResearchDatabase.GetAllTechResearchsForUser(query.UserId);
         
-        return await TransformTechResearchesFromUserResearchList(techResearches);
+        return await TransformTechResearchesFromUserResearchList(techResearches, query.UserId);
     }
     
-    private async Task<List<TechResearchData>> TransformTechResearchesFromUserResearchList(IEnumerable<TechResearch> techResearches)
+    private async Task<List<TechResearchData>> TransformTechResearchesFromUserResearchList(IEnumerable<TechResearch> techResearches, long userId)
     {
         var result = new List<TechResearchData>();
         var researches = techResearches.ToList();
@@ -46,6 +47,43 @@ public class GetTechTreeOfUserIdHandler(IUserContext userContext,
                     TechResearchStatus.Undiscovered).Result)
             .ToList());
         
+        // Populate availability
+        var sciencePoints = await getSciencePointsOfUserIdHandler
+            .Handle(new GetSciencePointsOfUserIdQuery { UserId = userId });
+
+        PopulateTechResearchDataWithAvailability(result, sciencePoints);
+        
         return result;
+    }
+    
+    private static void PopulateTechResearchDataWithAvailability(List<TechResearchData> techResearchData, IReadOnlyDictionary<TechResearchCategory, int> sciencePoints)
+    {
+        foreach (var techResearch in techResearchData)
+        {
+            // ALREADY RESEARCHED CHECK
+            if (techResearch.ResearchStatus is TechResearchStatus.Researched or TechResearchStatus.Researching)
+                techResearch.Availability = TechResearchAvailabilityEnum
+                    .TechResearchAlreadyInProgressOrCompleted;
+            
+            // AN OTHER TECH RESEARCH IS ALREADY IN PROGRESS CHECK
+            else if (techResearchData.Any(data => data.ResearchStatus == TechResearchStatus.Researching))
+                techResearch.Availability = TechResearchAvailabilityEnum
+                    .AnotherTechResearchIsAlreadyInProgress;
+        
+            // COST CHECK
+            else if (techResearch.Cost > sciencePoints[techResearch.ResearchCategory])
+                techResearch.Availability = TechResearchAvailabilityEnum
+                    .NotEnoughSciencePoints;
+        
+            // PREREQUISITE TECH RESEARCH CHECK
+            else if (techResearchData
+                .Any(data => techResearch.Prerequisites.Contains(data.ResearchType) && data.ResearchStatus != TechResearchStatus.Researched))
+                techResearch.Availability = TechResearchAvailabilityEnum
+                    .PrerequisiteTechResearchNotCompleted;
+            
+            // AVAILABLE
+            else 
+                techResearch.Availability = TechResearchAvailabilityEnum.Available;
+        }
     }
 }

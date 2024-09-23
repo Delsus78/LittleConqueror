@@ -8,7 +8,7 @@ namespace LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Remove;
 public class RemoveActionAgricoleStrategy(
     IActionDatabasePort actionDatabase) : IRemoveActionStrategy
 {
-    public async Task<object?> Execute(RemoveActionOfCityCommand input, CancellationToken cancellationToken)
+    public async Task<object?> Execute(RemoveActionStrategyParams input, CancellationToken cancellationToken)
     {
         var city = input.City ?? throw new AppException("ERROR IN REMOVEACTIONAGRICOLE", 500);
         

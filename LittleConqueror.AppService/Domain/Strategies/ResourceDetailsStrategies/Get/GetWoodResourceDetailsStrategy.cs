@@ -8,7 +8,7 @@ namespace LittleConqueror.AppService.Domain.Strategies.ResourceDetailsStrategies
 
 public class GetWoodResourceDetailsStrategy(IActionDatabasePort actionDatabase) : IGetResourceDetailsStrategy
 {
-    public async Task<Dictionary<ResourceDetailsType, Dictionary<string, int>>> Execute(GetResourceDetailsQuery input, CancellationToken cancellationToken)
+    public async Task<Dictionary<ResourceDetailsType, Dictionary<string, int>>> Execute(GetResourceDetailsStrategyParams input, CancellationToken cancellationToken)
     {
         var result = new Dictionary<ResourceDetailsType, Dictionary<string, int>>();
         

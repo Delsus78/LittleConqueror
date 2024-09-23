@@ -21,7 +21,7 @@ public class SetTechToResearchOfUserIdHandler(
 {
     public async Task Handle(SetTechToResearchOfUserIdCommand command)
     {
-        if (command.UserId != userContext.UserId)
+        if (userContext.IsUnauthorized(command.UserId))
             throw new AppException("You can't set tech research for another user", 403);
         
         var techResearch = await techResearchDatabase.TryGetInProgressTechResearchForUser(command.UserId);

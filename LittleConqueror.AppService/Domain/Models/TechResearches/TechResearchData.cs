@@ -9,7 +9,16 @@ public class TechResearchData
     public int Cost { get; init; }
     public List<TechResearchType> Prerequisites { get; init; }
     public TechResearchStatus ResearchStatus { get; init; }
-    
     public DateTime? StartSearchingDate { get; init; }
     public DateTime? EndSearchingDate { get; init; }
+    public TechResearchAvailabilityEnum Availability { get; set; }
+}
+
+public enum TechResearchAvailabilityEnum
+{
+    Available,
+    NotEnoughSciencePoints,
+    TechResearchAlreadyInProgressOrCompleted,
+    PrerequisiteTechResearchNotCompleted,
+    AnotherTechResearchIsAlreadyInProgress
 }

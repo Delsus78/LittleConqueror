@@ -23,12 +23,12 @@ public class RemoveActionOfCityHandler(
         if (city == null)
             throw new AppException("City not found", 404);
             
-        if (city.Territory.OwnerId != userContext.UserId)
+        if (userContext.IsUnauthorized(city.Territory.OwnerId))
             throw new AppException("You are not the owner of this territory", 403);
         
         command.City = city;
         
-        await strategyContext.ExecuteStrategy<RemoveActionOfCityCommand, object?, IRemoveActionStrategy>(
-            command.ActualActionType, command, default);
+        await strategyContext.ExecuteStrategy<RemoveActionStrategyParams, object?, IRemoveActionStrategy>(
+            command.ActualActionType, new RemoveActionStrategyParams {City = city}, default);
     }
 }

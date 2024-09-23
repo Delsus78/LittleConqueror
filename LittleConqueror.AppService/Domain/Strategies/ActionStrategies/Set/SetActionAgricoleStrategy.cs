@@ -12,7 +12,7 @@ public class SetActionAgricoleStrategy(
     IRemoveActionOfCityHandler removeActionOfCityHandler,
     ITransactionManagerPort transactionManager) : ISetActionStrategy
 {
-    public async Task<object?> Execute((SetActionToCityCommand command, City city) input, CancellationToken cancellationToken)
+    public async Task<object?> Execute(SetActionStrategyParams input, CancellationToken cancellationToken)
     {
         await transactionManager.BeginTransaction();
         try

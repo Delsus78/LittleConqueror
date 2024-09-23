@@ -1,4 +1,5 @@
 using AutoMapper;
+using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.API.Models.Dtos.ActionsDtos;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
@@ -14,7 +15,12 @@ public class ActionRestAdapter(
     IGetPaginatedActionsByUserIdHandler getPaginatedActionsByUserIdHandler,
     IMapper mapper) : ControllerBase
 {
-    [HttpGet]
-    public async Task<ActionsListDto> GetPaginatedActionsByUserId([FromQuery] GetPaginatedActionsByUserIdQuery query)
-        => mapper.Map<ActionsListDto>((await getPaginatedActionsByUserIdHandler.Handle(query)));
+    [HttpGet("{userId}")]
+    public async Task<ActionsListDto> GetPaginatedActionsByUserId(long userId, [FromQuery] GetPaginatedActionsByUserIdQueryDto query)
+        => mapper.Map<ActionsListDto>(await getPaginatedActionsByUserIdHandler.Handle(new GetPaginatedActionsByUserIdQuery
+        {
+            UserId = userId,
+            Page = query.Page,
+            PageSize = query.PageSize
+        }));
 }
