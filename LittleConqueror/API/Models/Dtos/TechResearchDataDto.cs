@@ -11,4 +11,6 @@ public record TechResearchDataDto(
     List<TechResearchType> Prerequisites,
     TechResearchStatus ResearchStatus, 
     TechResearchAvailabilityEnum Availability
+    DateTime? StartSearchingDate,
+    DateTime? EndSearchingDate
 );

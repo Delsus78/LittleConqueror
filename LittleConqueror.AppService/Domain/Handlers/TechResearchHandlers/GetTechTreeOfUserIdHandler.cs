@@ -36,15 +36,14 @@ public class GetTechTreeOfUserIdHandler(IUserContext userContext,
         
         result.AddRange(researches
             .Select(techResearch => techDataFactoryService
-                .CreateTechResearchesAsync(techResearch.ResearchCategory, techResearch.ResearchType,
-                    techResearch.ResearchStatus).Result)
+                .CreateTechResearchesDataAsync(techResearch).Result)
             .ToList());
         
         result.AddRange(techConfigs
             .Where(techConstants => researches.All(techResearch =>
                 techResearch.ResearchType != techConstants.Type))
             .Select(techConstants => techDataFactoryService
-                .CreateTechResearchesAsync(techConstants.Category, techConstants.Type,
+                .CreateTechResearchesDataAsync(techConstants.Category, techConstants.Type,
                     TechResearchStatus.Undiscovered).Result)
             .ToList());
         
