@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 using LittleConqueror.AppService.DrivenPorts;
+using LittleConqueror.Infrastructure.DatabaseAdapters.DbDto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json.Linq;
@@ -21,6 +22,7 @@ public class DataContext(
     public DbSet<TechResearch> TechResearches { get; set; }
 
     public DbSet<Configs> Configs { get; set; }
+    public DbSet<BackgroundJobIdentifierDbDto> BackgroundJobIdentifiers { get; set; }
     
     // ActionEntities
     public DbSet<Action> Actions { get; set; }
@@ -44,6 +46,11 @@ public class DataContext(
             entity.HasKey(configs => configs.Id);
             entity.Property(configs => configs.Id).ValueGeneratedOnAdd();
             entity.OwnsMany(configs => configs.TechResearchConfigs, builder => builder.ToJson());
+        });
+        
+        modelBuilder.Entity<BackgroundJobIdentifierDbDto>(entity =>
+        {
+            entity.HasKey(backgroundJobIdentifier => backgroundJobIdentifier.Id);
         });
         
         modelBuilder.Entity<User>(entity =>

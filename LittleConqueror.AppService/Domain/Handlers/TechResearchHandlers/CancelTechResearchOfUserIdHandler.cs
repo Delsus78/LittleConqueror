@@ -11,13 +11,17 @@ public interface ICancelTechResearchOfUserIdHandler
 }
 public class CancelTechResearchOfUserIdHandler(
     ITechResearchDatabasePort techResearchDatabase,
+    IBackgroundJobService backgroundJobService,
     IUserContext userContext) : ICancelTechResearchOfUserIdHandler
 {
-    public Task Handle(CancelTechToResearchOfUserIdCommand command)
+    public async Task Handle(CancelTechToResearchOfUserIdCommand command)
     {
         if (userContext.IsUnauthorized(command.UserId))
             throw new UnauthorizedAccessException("User can only cancel their own tech researches");
         
-        return techResearchDatabase.SetStatusForTechResearchForUser(command.UserId, command.TechResearchType, TechResearchStatus.Undiscovered);
+        // cancel job task
+        await backgroundJobService.StopJob($"{BackgroundJobNaturalId.CompleteTechResearchOfUserId}_{command.UserId}_{command.TechResearchType}");
+        
+        await techResearchDatabase.SetStatusForTechResearchForUser(command.UserId, command.TechResearchType, TechResearchStatus.Undiscovered);
     }
 }

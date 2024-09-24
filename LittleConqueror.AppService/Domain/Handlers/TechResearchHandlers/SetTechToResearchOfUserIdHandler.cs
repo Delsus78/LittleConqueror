@@ -59,10 +59,13 @@ public class SetTechToResearchOfUserIdHandler(
         await techResearchDatabase.SetStatusForTechResearchForUser(userId, techResearchType, TechResearchStatus.Researching);
         
         // start hangfire job
-        backgroundJobService.StartJobWithDelay<ICompleteTechResearchOfUserIdHandler>(handler => handler.Handle(new CompleteTechResearchOfUserIdCommand
-        {
-            UserId = userId,
-            ResearchType = techResearchType
-        }), techConfig.ResearchTime);
+        backgroundJobService.StartJobWithDelay<ICompleteTechResearchOfUserIdHandler>(
+             $"{BackgroundJobNaturalId.CompleteTechResearchOfUserId}_{userId}_{techResearchType}",
+            handler => handler.Handle(new CompleteTechResearchOfUserIdCommand
+            {
+                UserId = userId,
+                ResearchType = techResearchType
+            }), 
+            techConfig.ResearchTime);
     }
 }

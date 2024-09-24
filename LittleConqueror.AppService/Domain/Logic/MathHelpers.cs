@@ -1,4 +1,6 @@
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace LittleConqueror.AppService.Domain.Logic;
 
@@ -39,5 +41,18 @@ public class MathHelpers
         }
         
         throw new InvalidOperationException("The elements dictionary is not valid. Resulted random : " + result);
+    }
+    
+    public static long StringToLong(string input)
+    {
+        // Utilisation de SHA-256 pour hacher la chaîne
+        using var sha256 = SHA256.Create();
+        // Conversion du string en tableau de bytes
+        var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+            
+        // Extraire les 8 premiers octets du hachage et les convertir en long
+        var result = BitConverter.ToInt64(bytes, 0);
+            
+        return result;
     }
 }

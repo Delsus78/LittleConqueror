@@ -28,7 +28,9 @@ public class TechDataFactoryService(ITechResearchConfigsProviderPort techResearc
             Description = TechConstants.Description,
             Name = TechConstants.Name,
             Prerequisites = TechConstants.PreReqs,
-            ResearchStatus = status
+            ResearchStatus = status,
+            StartSearchingDate = DateTime.Now.ToUniversalTime(),
+            EndSearchingDate = DateTime.Now.ToUniversalTime().Add(TechConstants.ResearchTime)
         };
     }
 
