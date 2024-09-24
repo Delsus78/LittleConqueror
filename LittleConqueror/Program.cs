@@ -206,6 +206,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IActionDatabasePort, ActionDatabaseAdapter>()
     .AddScoped<ITechResearchDatabasePort, TechResearchDatabaseAdapter>()
     .AddScoped<ITechResearchConfigsProviderPort, TechResearchConfigsProviderAdapter>()
+    .AddScoped<IBackgroundJobIdentifiersDatabasePort, BackgroundJobIdentifiersDatabaseAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()
     .AddScoped<CityRepository>()
@@ -214,6 +215,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ActionRepository>()
     .AddScoped<TechResearchRepository>()
     .AddScoped<ConfigsRepository>()
+    .AddScoped<BackgroundJobIdentifierRepository>()
 
 // Others
     .AddAutoMapper(typeof(MappingProfile))
@@ -221,9 +223,9 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .Configure<OSMSettings>(builder.Configuration.GetSection("OSMSettings"))
     .AddScoped<IUserContext, UserContext>()
     .AddScoped<ITechDataFactoryService, TechDataFactoryService>()
+    .AddScoped<IBackgroundJobService, BackgroundJobService>()
     .AddSingleton<ITemporaryCodeService, TemporaryCodeService>()
     .AddSingleton<ITokenManagerService, TokenManagerService>()
-    .AddSingleton<IBackgroundJobService, BackgroundJobService>()
 
 // HttpClients
     .AddHttpClient("NominatimOSM", httpClient =>

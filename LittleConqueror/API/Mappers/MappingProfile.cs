@@ -105,7 +105,17 @@ public class MappingProfile : Profile
         
         // TechResearches
         CreateMap<TechResearchData, TechResearchDataDto>()
-            .ReverseMap();
+            .ForMember(dto => dto.StartSearchingDate,
+                opt => opt.MapFrom(data =>
+                    data.StartSearchingDate.HasValue
+                        ? data.StartSearchingDate.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffffff")
+                        : null))
+            .ForMember(dto => dto.EndSearchingDate,
+                opt => opt.MapFrom(data =>
+                    data.EndSearchingDate.HasValue
+                        ? data.EndSearchingDate.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffffff")
+                        : null));
+
         CreateMap<TechConfigDto, TechConfig>()
             .ForMember(dest => dest.PreReqs,
                 opt => opt.MapFrom(src => src.PreReqs.Select(Enum.Parse<TechResearchType>).ToList()))
