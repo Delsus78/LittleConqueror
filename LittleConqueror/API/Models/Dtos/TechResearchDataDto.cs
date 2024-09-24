@@ -10,7 +10,7 @@ public record TechResearchDataDto(
     int Cost,
     List<TechResearchType> Prerequisites,
     TechResearchStatus ResearchStatus, 
-    TechResearchAvailabilityEnum Availability
+    TechResearchAvailabilityEnum Availability,
     DateTime? StartSearchingDate,
     DateTime? EndSearchingDate
 );
