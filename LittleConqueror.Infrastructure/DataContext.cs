@@ -140,7 +140,7 @@ public class DataContext(
         
         // index
         modelBuilder.Entity<TechResearch>()
-            .HasIndex(techResearch => new { techResearch.UserId, ResearchType = techResearch.ResearchCategory })
+            .HasIndex(techResearch => new { techResearch.UserId, techResearch.ResearchType })
             .IsUnique();
     }
 }

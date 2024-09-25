@@ -71,7 +71,7 @@ namespace LittleConqueror.Infrastructure.Migrations
                         new
                         {
                             Id = -1L,
-                            Hash = "$2a$13$T7FQJA54xpvMOOQpn0HkjOw6EIjvrEweLUIB3UXleSlqOccboYEaa",
+                            Hash = "$2a$13$LTSgQKByHPhK7KG2WZgBIeelE.kuddR4uguTJ9u7keWZ3gfJVu1DK",
                             Role = "Admin",
                             Username = "admin"
                         });
@@ -196,7 +196,7 @@ namespace LittleConqueror.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId", "ResearchCategory")
+                    b.HasIndex("UserId", "ResearchType")
                         .IsUnique();
 
                     b.ToTable("TechResearches");
