@@ -1,4 +1,4 @@
-using LittleConqueror.AppService.Domain.Models.TechResearches;
+using LittleConqueror.AppService.Domain.Models.Configs;
 
 namespace LittleConqueror.AppService.Domain.DrivingModels.Commands;
 

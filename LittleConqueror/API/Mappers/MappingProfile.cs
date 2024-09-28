@@ -2,10 +2,10 @@ using AutoMapper;
 using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.API.Models.Dtos.ActionsDtos;
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
-using LittleConqueror.AppService.Domain.Models.TechResearches.Configs;
 using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 
 namespace LittleConqueror.API.Mappers;

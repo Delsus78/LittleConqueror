@@ -1,5 +1,5 @@
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities.Base;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
 
 namespace LittleConqueror.AppService.Domain.Models.Entities;
 

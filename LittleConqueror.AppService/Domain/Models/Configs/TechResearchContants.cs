@@ -1,4 +1,4 @@
-namespace LittleConqueror.AppService.Domain.Models.TechResearches;
+namespace LittleConqueror.AppService.Domain.Models.Configs;
 
 public enum TechResearchType
 {
@@ -77,7 +77,7 @@ public enum TechResearchStatus
     Researched
 }
 
-public static class TechResearchesDataDictionariesDeprecated
+public static class TechResearchesDataDictionariesInitialisator
 {
     public static Dictionary<TechResearchType, (int cost, TimeSpan researchTime, TechResearchCategory category, List<TechResearchType> preReqs, string name, string description)> Values { get; } = new()
     {

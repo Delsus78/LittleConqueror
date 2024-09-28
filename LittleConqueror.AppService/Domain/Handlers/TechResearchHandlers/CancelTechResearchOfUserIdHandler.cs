@@ -1,5 +1,5 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.DrivenPorts;
 

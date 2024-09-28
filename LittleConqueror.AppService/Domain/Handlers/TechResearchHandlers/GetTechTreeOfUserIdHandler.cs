@@ -1,4 +1,5 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.Domain.Services;
@@ -16,7 +17,7 @@ public class GetTechTreeOfUserIdHandler(IUserContext userContext,
     ITechResearchDatabasePort techResearchDatabase,
     ITechDataFactoryService techDataFactoryService,
     IGetSciencePointsOfUserIdHandler getSciencePointsOfUserIdHandler,
-    ITechResearchConfigsProviderPort techResearchConfigsProvider) : IGetTechTreeOfUserIdHandler
+    ITechResearchConfigsDatabasePort techResearchConfigsDatabase) : IGetTechTreeOfUserIdHandler
 {
     public async Task<List<TechResearchData>> Handle(GetTechTreeOfUserIdQuery query)
     {
@@ -32,7 +33,7 @@ public class GetTechTreeOfUserIdHandler(IUserContext userContext,
     {
         var result = new List<TechResearchData>();
         var researches = techResearches.ToList();
-        var techConfigs = await techResearchConfigsProvider.GetAll();
+        var techConfigs = await techResearchConfigsDatabase.GetAllTechConfigs();
         
         result.AddRange(researches
             .Select(techResearch => techDataFactoryService

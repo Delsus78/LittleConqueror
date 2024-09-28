@@ -1,3 +1,4 @@
+using LittleConqueror.AppService.Domain.Models.Configs;
 namespace LittleConqueror.AppService.Domain.Models.TechResearches;
 
 public class TechResearchData

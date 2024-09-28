@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
 
 namespace LittleConqueror.API.Models.Dtos.ActionsDtos;
 

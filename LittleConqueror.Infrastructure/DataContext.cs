@@ -46,6 +46,9 @@ public class DataContext(
             entity.HasKey(configs => configs.Id);
             entity.Property(configs => configs.Id).ValueGeneratedOnAdd();
             entity.OwnsMany(configs => configs.TechResearchConfigs, builder => builder.ToJson());
+            entity.OwnsMany(configs => configs.PopHappinessConfigs, builder => builder.ToJson());
+            
+            entity.HasData(AppService.Domain.Models.Entities.Configs.CreateDefault());
         });
         
         modelBuilder.Entity<BackgroundJobIdentifierDbDto>(entity =>
