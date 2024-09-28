@@ -1,4 +1,4 @@
-namespace LittleConqueror.AppService.Domain.Models.TechResearches.Configs;
+namespace LittleConqueror.AppService.Domain.Models.Configs;
 
 public class TechConfig
 {

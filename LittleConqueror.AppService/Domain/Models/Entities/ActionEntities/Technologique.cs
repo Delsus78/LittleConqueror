@@ -1,5 +1,5 @@
 using LittleConqueror.AppService.Domain.Logic.ActionsHelpers;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
+using LittleConqueror.AppService.Domain.Models.Configs;
 
 namespace LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 

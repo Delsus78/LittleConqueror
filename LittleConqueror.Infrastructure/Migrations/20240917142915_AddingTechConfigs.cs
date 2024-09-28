@@ -1,4 +1,4 @@
-﻿using LittleConqueror.AppService.Domain.Models.TechResearches.Configs;
+﻿using LittleConqueror.AppService.Domain.Models.Configs;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 

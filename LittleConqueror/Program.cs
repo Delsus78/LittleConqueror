@@ -6,7 +6,6 @@ using LittleConqueror.API.Mappers;
 using LittleConqueror.AppService.Domain.Handlers.ActionHandlers;
 using LittleConqueror.AppService.Domain.Handlers.AuthHandlers;
 using LittleConqueror.AppService.Domain.Handlers.CityHandlers;
-using LittleConqueror.AppService.Domain.Handlers.ConfigsHandlers;
 using LittleConqueror.AppService.Domain.Handlers.ResourcesHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TechResearchHandlers;
 using LittleConqueror.AppService.Domain.Handlers.TerritoryHandlers;
@@ -16,7 +15,6 @@ using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.Domain.Strategies;
-using LittleConqueror.AppService.Domain.Strategies.ActionStrategies;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Remove;
 using LittleConqueror.AppService.Domain.Strategies.ActionStrategies.Set;
 using LittleConqueror.AppService.Domain.Strategies.ResourceDetailsStrategies.Get;
@@ -24,7 +22,6 @@ using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.Authentication;
 using LittleConqueror.Exceptions;
 using LittleConqueror.Infrastructure;
-using LittleConqueror.Infrastructure.ConfigsAdapters;
 using LittleConqueror.Infrastructure.DatabaseAdapters;
 using LittleConqueror.Infrastructure.FetchingAdapters;
 using LittleConqueror.Infrastructure.JwtAdapters;
@@ -173,7 +170,6 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ISetTechToResearchOfUserIdHandler, SetTechToResearchOfUserIdHandler>()
     .AddScoped<ICancelTechResearchOfUserIdHandler, CancelTechResearchOfUserIdHandler>()
     .AddScoped<ICompleteTechResearchOfUserIdHandler, CompleteTechResearchOfUserIdHandler>()
-    .AddScoped<ISetTechResearchConfigHandler, SetTechResearchConfigHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
@@ -205,7 +201,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<IResourcesDatabasePort, ResourcesDatabaseAdapter>()
     .AddScoped<IActionDatabasePort, ActionDatabaseAdapter>()
     .AddScoped<ITechResearchDatabasePort, TechResearchDatabaseAdapter>()
-    .AddScoped<ITechResearchConfigsProviderPort, TechResearchConfigsProviderAdapter>()
+    .AddScoped<ITechResearchConfigsDatabasePort, GameConfigsDatabaseAdapter>()
     .AddScoped<IBackgroundJobIdentifiersDatabasePort, BackgroundJobIdentifiersDatabaseAdapter>()
     .AddScoped<UserRepository>()
     .AddScoped<TerritoryRepository>()

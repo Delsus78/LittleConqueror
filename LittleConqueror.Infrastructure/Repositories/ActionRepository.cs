@@ -1,7 +1,7 @@
 using LittleConqueror.AppService.Domain.Logic.ActionsHelpers;
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.Infrastructure.DatabaseAdapters.DbDto;
 using LittleConqueror.Infrastructure.DatabaseAdapters.Specifications;
 using Microsoft.EntityFrameworkCore;

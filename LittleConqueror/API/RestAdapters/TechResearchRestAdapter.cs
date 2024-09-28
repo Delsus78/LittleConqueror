@@ -3,7 +3,7 @@ using LittleConqueror.API.Models.Dtos;
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Handlers.TechResearchHandlers;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,3 +1,4 @@
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.TechResearches;
 
 namespace LittleConqueror.API.Models.Dtos;

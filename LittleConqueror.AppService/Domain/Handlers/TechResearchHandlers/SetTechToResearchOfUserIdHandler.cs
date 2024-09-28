@@ -1,6 +1,6 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
@@ -16,7 +16,7 @@ public class SetTechToResearchOfUserIdHandler(
     IGetSciencePointsOfUserIdHandler getSciencePointsOfUserIdHandler,
     ICancelTechResearchOfUserIdHandler cancelTechResearchOfUserIdHandler,
     IBackgroundJobService backgroundJobService,
-    ITechResearchConfigsProviderPort techResearchConfigsProvider,
+    ITechResearchConfigsDatabasePort techResearchConfigsDatabase,
     IUserContext userContext) : ISetTechToResearchOfUserIdHandler
 {
     public async Task Handle(SetTechToResearchOfUserIdCommand command)
@@ -50,7 +50,7 @@ public class SetTechToResearchOfUserIdHandler(
         var userSciencesPoints =
             await getSciencePointsOfUserIdHandler.Handle(new GetSciencePointsOfUserIdQuery { UserId = userId });
         
-        var techConfig = await techResearchConfigsProvider.GetByType(techResearchType);
+        var techConfig = await techResearchConfigsDatabase.GetTechConfigByType(techResearchType);
         if (techConfig.Cost > userSciencesPoints[techResearch.ResearchCategory])
             throw new AppException("You don't have enough science points", 400);
         

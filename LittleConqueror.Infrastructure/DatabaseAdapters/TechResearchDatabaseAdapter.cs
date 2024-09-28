@@ -1,5 +1,5 @@
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 using LittleConqueror.Infrastructure.Repositories;

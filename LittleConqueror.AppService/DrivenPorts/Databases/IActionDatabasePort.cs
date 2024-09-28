@@ -1,6 +1,6 @@
 using LittleConqueror.AppService.Domain.Models;
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
-using LittleConqueror.AppService.Domain.Models.TechResearches;
 using ActionEntities = LittleConqueror.AppService.Domain.Models.Entities.ActionEntities;
 namespace LittleConqueror.AppService.DrivenPorts;
 

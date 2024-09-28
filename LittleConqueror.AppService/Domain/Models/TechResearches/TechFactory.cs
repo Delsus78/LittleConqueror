@@ -1,3 +1,4 @@
+using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 
@@ -12,14 +13,14 @@ public interface ITechDataFactoryService
     
     Task<TechResearchData> CreateTechResearchesDataAsync(TechResearch techResearch);
 }
-public class TechDataFactoryService(ITechResearchConfigsProviderPort techResearchConfigsProvider) : ITechDataFactoryService
+public class TechDataFactoryService(ITechResearchConfigsDatabasePort techResearchConfigsDatabase) : ITechDataFactoryService
 {
     public async Task<TechResearchData> CreateTechResearchesDataAsync(
         TechResearchCategory researchCategory, 
         TechResearchType researchType,
         TechResearchStatus status)
     {
-        var TechConstants = await techResearchConfigsProvider.GetByType(researchType);
+        var TechConstants = await techResearchConfigsDatabase.GetTechConfigByType(researchType);
         return new TechResearchData
         {
             ResearchCategory = researchCategory,
@@ -36,7 +37,7 @@ public class TechDataFactoryService(ITechResearchConfigsProviderPort techResearc
 
     public async Task<TechResearchData> CreateTechResearchesDataAsync(TechResearch techResearch)
     {
-        var TechConstants = await techResearchConfigsProvider.GetByType(techResearch.ResearchType);
+        var TechConstants = await techResearchConfigsDatabase.GetTechConfigByType(techResearch.ResearchType);
         return new TechResearchData
         {
             ResearchCategory = techResearch.ResearchCategory,
