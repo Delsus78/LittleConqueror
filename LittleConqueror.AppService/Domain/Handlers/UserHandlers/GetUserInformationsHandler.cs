@@ -12,7 +12,8 @@ public interface IGetUserInformationsHandler
 public class GetUserInformationsHandler(
     IGetUserByIdHandler getUserByIdHandler,
     IGetTerritoryByUserIdHandler getTerritoryByUserIdHandler,
-    IGetResourcesForUserHandler getResourcesForUserHandler) : IGetUserInformationsHandler
+    IGetResourcesForUserHandler getResourcesForUserHandler,
+    IGetPopulationHappinessForUserIdHandler getPopulationHappinessForUserIdHandler) : IGetUserInformationsHandler
 {
     public async Task<UserInformations?> Handle(GetUserInformationsQuery query)
     {
@@ -38,6 +39,9 @@ public class GetUserInformationsHandler(
                 { UserId = query.UserId });
             userInformations.Resources = resources;
         }
+        
+        userInformations.TotalHappiness = await getPopulationHappinessForUserIdHandler.Handle(
+            new GetPopulationHappinessForUserIdQuery { UserId = query.UserId });
 
         return userInformations;
     }

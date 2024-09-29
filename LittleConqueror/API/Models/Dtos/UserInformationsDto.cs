@@ -7,4 +7,5 @@ public class UserInformationsDto
     public int? TotalPopulation { get; set; }
     public int? TotalCities { get; set; }
     public ResourcesDto? Resources { get; set; }
+    public double TotalHappiness { get; set; }
 }

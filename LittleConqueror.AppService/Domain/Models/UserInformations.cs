@@ -9,4 +9,5 @@ public class UserInformations
     public int? TotalPopulation { get; set; }
     public int? TotalCities { get; set; }
     public Resources? Resources { get; set; }
+    public double TotalHappiness { get; set; }
 }
