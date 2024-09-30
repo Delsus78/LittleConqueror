@@ -25,7 +25,7 @@ public class ConfigsRepository(DataContext applicationDbContext)
             forceRefresh
         );
 
-    public async Task<PopHappinessConfig?> GetPopHappinessConfig(PopHappinessType popHappinessType, bool forceRefresh = false) 
+    public async Task<PopHappinessConfig?> GetPopHappinessConfig(ResourceType popHappinessType, bool forceRefresh = false) 
         => await GetConfigFromCache(
             popHappinessConfigsCache,
             EnsurePopHappinessConfigsInitialized,

@@ -1,4 +1,5 @@
 using LittleConqueror.AppService.Domain.Models.Configs;
+using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
 using LittleConqueror.Infrastructure.Repositories;
@@ -11,7 +12,7 @@ public class GameConfigsDatabaseAdapter(
     public async Task<List<TechConfig>> GetAllTechConfigs(bool forceRefresh = false)
         => await configsRepository.GetAllTechConfigs(forceRefresh);
 
-    public async Task<PopHappinessConfig> GetPopHappinessConfigByType(PopHappinessType type, bool forceRefresh = false)
+    public async Task<PopHappinessConfig> GetPopHappinessConfigByType(ResourceType type, bool forceRefresh = false)
         => await configsRepository.GetPopHappinessConfig(type, forceRefresh)
               ?? throw new AppException($"PopHappinessConfig with type {type} not found", 404);
 

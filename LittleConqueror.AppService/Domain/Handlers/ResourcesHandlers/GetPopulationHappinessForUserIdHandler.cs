@@ -1,5 +1,4 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
-using LittleConqueror.AppService.Domain.Models.Configs;
 using LittleConqueror.AppService.Domain.Models.Entities;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
@@ -26,8 +25,13 @@ public class GetPopulationHappinessForUserIdHandler(
 
         var happinessConfig = await populationHappinessConfigsDatabase.GetAllPopHappinessConfigs();
         
-        // food happiness
-        result += CalculateFoodHappiness(resources, happinessConfig.First(config => config.Type == PopHappinessType.Food).Coef);
+        // each resource happiness
+        foreach (var resourceId in Enum.GetValues<ResourceType>())
+        {
+            result += CalculateResourceHappiness(
+                resources.GetData(resourceId),
+                happinessConfig.First(config => config.Type == resourceId).Coef);
+        }
         
         return result;
     }
@@ -37,16 +41,18 @@ public class GetPopulationHappinessForUserIdHandler(
         return used / max * happiness;
     }
     
-    private double CalculateFoodHappiness(Resources resources, double foodHappiness)
+    private double CalculateResourceHappiness(
+        IReadOnlyDictionary<ResourceDetailsType, Dictionary<string, int>> resourceData, 
+        double resourceHappiness)
     {
-        var foodUsed = resources.FoodData.GetValueOrDefault(ResourceDetailsType.Used)
-            ?? throw new AppException("Food used not found", 404);
-        foodUsed.TryGetValue("Total", out var foodUsedTotal);
+        var resourceUsed = resourceData.GetValueOrDefault(ResourceDetailsType.Used)
+            ?? throw new AppException("Resource used not found", 404);
+        resourceUsed.TryGetValue("Total", out var resourceUsedTotal);
         
-        var foodProduction = resources.FoodData.GetValueOrDefault(ResourceDetailsType.Production)
-            ?? throw new AppException("Food production not found", 404);
-        foodProduction.TryGetValue("Available", out var foodAvailable);
+        var resourceProduction = resourceData.GetValueOrDefault(ResourceDetailsType.Production)
+            ?? throw new AppException("Resource production not found", 404);
+        resourceProduction.TryGetValue("Available", out var resourceAvailable);
         
-        return CalculateHappinessPourcentage(foodAvailable, foodUsedTotal, foodHappiness);
+        return CalculateHappinessPourcentage(resourceAvailable, resourceUsedTotal, resourceHappiness);
     }
 }
