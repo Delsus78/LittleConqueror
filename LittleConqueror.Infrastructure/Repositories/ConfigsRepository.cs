@@ -82,7 +82,7 @@ public class ConfigsRepository(DataContext applicationDbContext)
 
     private async Task<Configs> GetUniqueConfig()
     {
-        var configs = await GetAllAsync(x => true);
+        var configs = await GetAllAsync(x => true, disableTracking: false);
         return configs.FirstOrDefault() ?? (await CreateAsync(Configs.CreateDefault())).Entity;
     }
     
