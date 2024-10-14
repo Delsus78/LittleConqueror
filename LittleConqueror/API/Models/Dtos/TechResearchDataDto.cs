@@ -12,7 +12,7 @@ public record TechResearchDataDto
     public int Cost { get; init; }
     public List<TechResearchType> Prerequisites { get; init; }
     public TechResearchStatus ResearchStatus { get; init; } 
-    public TechResearchAvailabilityEnum Availability { get; init; }
+    public List<TechResearchAvailabilityEnum> Availabilities { get; init; }
     public string? StartSearchingDate { get; init; }
     public string? EndSearchingDate { get; init; }
 }

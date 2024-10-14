@@ -171,6 +171,7 @@ builder.Services.AddScoped<ICreateUserHandler, CreateUserHandler>()
     .AddScoped<ICancelTechResearchOfUserIdHandler, CancelTechResearchOfUserIdHandler>()
     .AddScoped<ICompleteTechResearchOfUserIdHandler, CompleteTechResearchOfUserIdHandler>()
     .AddScoped<IGetPopulationHappinessForUserIdHandler, GetPopulationHappinessForUserIdHandler>()
+    .AddScoped<IGetPopulatedTechResearchesFromUserResearchListHandler, GetPopulatedTechResearchesFromUserResearchListHandler>()
 
 // Strategies KeyedServices
     .AddKeyedScoped<ISetActionStrategy, SetActionAgricoleStrategy>(ActionType.Agricole)
