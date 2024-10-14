@@ -46,6 +46,21 @@ public class Resources : Entity
     public Dictionary<ResourceDetailsType, Dictionary<string, int>> DiamondData { get; set; } = new();
     [NotMapped]
     public Dictionary<ResourceDetailsType, Dictionary<string, int>> PetrolData { get; set; } = new();
+    
+    public Dictionary<ResourceDetailsType, Dictionary<string, int>> GetData(ResourceType type)
+    {
+        return type switch
+        {
+            ResourceType.Food => FoodData,
+            ResourceType.Wood => WoodData,
+            ResourceType.Stone => StoneData,
+            ResourceType.Iron => IronData,
+            ResourceType.Gold => GoldData,
+            ResourceType.Diamond => DiamondData,
+            ResourceType.Petrol => PetrolData,
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
+    }
 }
 
 public enum ResourceType

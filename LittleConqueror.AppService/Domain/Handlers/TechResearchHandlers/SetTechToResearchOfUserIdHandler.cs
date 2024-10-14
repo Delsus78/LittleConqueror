@@ -1,6 +1,7 @@
 using LittleConqueror.AppService.Domain.DrivingModels.Commands;
 using LittleConqueror.AppService.Domain.DrivingModels.Queries;
 using LittleConqueror.AppService.Domain.Models.Configs;
+using LittleConqueror.AppService.Domain.Models.TechResearches;
 using LittleConqueror.AppService.Domain.Services;
 using LittleConqueror.AppService.DrivenPorts;
 using LittleConqueror.AppService.Exceptions;
@@ -13,48 +14,58 @@ public interface ISetTechToResearchOfUserIdHandler
 }
 public class SetTechToResearchOfUserIdHandler(
     ITechResearchDatabasePort techResearchDatabase,
-    IGetSciencePointsOfUserIdHandler getSciencePointsOfUserIdHandler,
     ICancelTechResearchOfUserIdHandler cancelTechResearchOfUserIdHandler,
     IBackgroundJobService backgroundJobService,
     ITechResearchConfigsDatabasePort techResearchConfigsDatabase,
+    IGetPopulatedTechResearchesFromUserResearchListHandler getPopulatedTechResearchesFromUserResearchListHandler,
     IUserContext userContext) : ISetTechToResearchOfUserIdHandler
 {
     public async Task Handle(SetTechToResearchOfUserIdCommand command)
     {
         if (userContext.IsUnauthorized(command.UserId))
             throw new AppException("You can't set tech research for another user", 403);
+
+        var techResearchType = command.TechResearchType;
+        var userId = command.UserId;
+        var techResearch = await techResearchDatabase.GetOrCreateTechResearchOfUserAsync(userId, techResearchType);
+        var techConfig = await techResearchConfigsDatabase.GetTechConfigByType(techResearchType);
         
-        var techResearch = await techResearchDatabase.TryGetInProgressTechResearchForUser(command.UserId);
-        if (techResearch is not null)
+        var techResearchPopulated = (await getPopulatedTechResearchesFromUserResearchListHandler.Handle(new GetPopulatedTechResearchesFromUserResearchListQuery
         {
-            if (command.Force)
-            {
-                await cancelTechResearchOfUserIdHandler.Handle(new CancelTechToResearchOfUserIdCommand
-                {
-                    UserId = command.UserId,
-                    TechResearchType = techResearch.ResearchType
-                });
-            }
-            else throw new AppException("You already have a tech research in progress", 400);
+            UserId = userId,
+            TechResearches = new []{ techResearch }
+        })).FirstOrDefault() ?? throw new AppException("Tech research not found", 404);
+        var techResearchAvailabilities = techResearchPopulated.Availabilities;
+        
+        // is valid
+        if (techResearchAvailabilities.Count == 0)
+        {
+            await SetTechResearchForUser(userId, techResearchType, techConfig);
+            return;
         }
         
-        await SetTechResearchForUser(command.UserId, command.TechResearchType);
+        // is not valid
+        
+        // special case: force research if another tech is already in progress
+        if (command.Force 
+            && techResearchAvailabilities.Count == 1 
+            && techResearchAvailabilities.Contains(TechResearchAvailabilityEnum.AnotherTechResearchIsAlreadyInProgress))
+        {
+            await cancelTechResearchOfUserIdHandler.Handle(new CancelTechToResearchOfUserIdCommand
+            {
+                UserId = command.UserId,
+                TechResearchType = techResearch.ResearchType
+            });
+            
+            // after canceling, set tech research
+            await SetTechResearchForUser(command.UserId, techResearchType, techConfig);
+        }
+        else throw new AppException("Tech research is not valid : " 
+                                    + string.Join(", ", techResearchAvailabilities), 400);
     }
     
-    private async Task SetTechResearchForUser(long userId, TechResearchType techResearchType)
+    private async Task SetTechResearchForUser(long userId, TechResearchType techResearchType, TechConfig techConfig)
     {
-        var techResearch = await techResearchDatabase.GetOrCreateTechResearchOfUserAsync(userId, techResearchType);
-        if (techResearch.ResearchStatus != TechResearchStatus.Undiscovered)
-            throw new AppException("You already have this tech researched or in progress", 400);
-
-        var userSciencesPoints =
-            await getSciencePointsOfUserIdHandler.Handle(new GetSciencePointsOfUserIdQuery { UserId = userId });
-        
-        var techConfig = await techResearchConfigsDatabase.GetTechConfigByType(techResearchType);
-        if (techConfig.Cost > userSciencesPoints[techResearch.ResearchCategory])
-            throw new AppException("You don't have enough science points", 400);
-        
-        // TODO: check if user has required techs researched
         
         await techResearchDatabase.SetStatusForTechResearchForUser(userId, techResearchType, TechResearchStatus.Researching);
         

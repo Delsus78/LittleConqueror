@@ -7,89 +7,104 @@ namespace LittleConqueror.Infrastructure.Repositories;
 public class ConfigsRepository(DataContext applicationDbContext)
     : Repository<Configs>(applicationDbContext)
 {
-    
     private static readonly ConcurrentStack<TechConfig> techConfigsCache = new();
     private static readonly ConcurrentStack<PopHappinessConfig> popHappinessConfigsCache = new();
-    
-    public async Task<TechConfig?> GetTechConfig(TechResearchType techResearchType, bool forceRefresh = false)
+
+    public async Task<TechConfig?> GetTechConfig(TechResearchType techResearchType, bool forceRefresh = false) 
+        => await GetConfigFromCache(
+            techConfigsCache,
+            EnsureTechResearchConfigsInitialized,
+            x => x.Type == techResearchType,
+            forceRefresh
+        );
+
+    public async Task<List<TechConfig>> GetAllTechConfigs(bool forceRefresh = false) 
+        => await GetAllConfigsFromCache(
+            techConfigsCache,
+            EnsureTechResearchConfigsInitialized,
+            forceRefresh
+        );
+
+    public async Task<PopHappinessConfig?> GetPopHappinessConfig(ResourceType popHappinessType, bool forceRefresh = false) 
+        => await GetConfigFromCache(
+            popHappinessConfigsCache,
+            EnsurePopHappinessConfigsInitialized,
+            x => x.Type == popHappinessType,
+            forceRefresh
+        );
+
+    public async Task<List<PopHappinessConfig>> GetAllPopHappinessConfigs(bool forceRefresh = false) 
+        => await GetAllConfigsFromCache(
+            popHappinessConfigsCache, 
+            EnsurePopHappinessConfigsInitialized, 
+            forceRefresh
+        );
+
+    private async Task<T?> GetConfigFromCache<T>(
+        ConcurrentStack<T> cache,
+        Func<Configs, Task<IEnumerable<T>>> getConfigList,
+        Func<T, bool> predicate,
+        bool forceRefresh
+    ) where T : class
     {
-        if (!techConfigsCache.IsEmpty && !forceRefresh)
-            return techConfigsCache.FirstOrDefault(x => x.Type == techResearchType);
-        
-        var configs = await GetAllAsync(x => true);
-        techConfigsCache.Clear();
-        
-        var techResearchConfigs = configs
-            .FindAll(config => config.TechResearchConfigs != null)
-            .SelectMany(config => config.TechResearchConfigs!)
-            .ToList();
-        
-        foreach (var techConfig in techResearchConfigs)
+        if (!cache.IsEmpty && !forceRefresh)
+            return cache.FirstOrDefault(predicate);
+
+        var config = await GetUniqueConfig();
+        await UpdateCache(cache, getConfigList(config));
+
+        return cache.FirstOrDefault(predicate);
+    }
+
+    private async Task<List<T>> GetAllConfigsFromCache<T>(
+        ConcurrentStack<T> cache,
+        Func<Configs, Task<IEnumerable<T>>> getConfigList,
+        bool forceRefresh
+    )
+    {
+        if (!cache.IsEmpty && !forceRefresh)
+            return cache.ToList();
+
+        var config = await GetUniqueConfig();
+        await UpdateCache(cache, getConfigList(config));
+
+        return cache.ToList();
+    }
+
+    private async Task UpdateCache<T>(ConcurrentStack<T> cache, Task<IEnumerable<T>> items)
+    {
+        cache.Clear();
+        foreach (var item in await items)
         {
-            techConfigsCache.Push(techConfig);
+            cache.Push(item);
         }
-        
-        return techConfigsCache.FirstOrDefault(x => x.Type == techResearchType);
+    }
+
+    private async Task<Configs> GetUniqueConfig()
+    {
+        var configs = await GetAllAsync(x => true, disableTracking: false);
+        return configs.FirstOrDefault() ?? (await CreateAsync(Configs.CreateDefault())).Entity;
     }
     
-    public async Task<List<TechConfig>> GetAllTechConfigs(bool forceRefresh = false)
+    private async Task<IEnumerable<TechConfig>> EnsureTechResearchConfigsInitialized(Configs config)
     {
-        if (!techConfigsCache.IsEmpty && !forceRefresh) 
-            return techConfigsCache.ToList();
+        if (config.TechResearchConfigs != null) return config.TechResearchConfigs;
         
-        var configs = await GetAllAsync(x => true);
-        techConfigsCache.Clear();
-        
-        var techResearchConfigs = configs
-            .FindAll(config => config.TechResearchConfigs != null)
-            .SelectMany(config => config.TechResearchConfigs!)
-            .ToList();
-        
-        foreach (var techConfig in techResearchConfigs)
-        {
-            techConfigsCache.Push(techConfig);
-        }
-        return techConfigsCache.ToList();
+        config.TechResearchConfigs = Configs.CreateDefault().TechResearchConfigs!;
+            
+        // Save changes to the database
+        await UpdateAsync(config);
+        return config.TechResearchConfigs;
     }
-    
-    public async Task<PopHappinessConfig?> GetPopHappinessConfig(PopHappinessType popHappinessType, bool forceRefresh = false)
+
+    private async Task<IEnumerable<PopHappinessConfig>> EnsurePopHappinessConfigsInitialized(Configs config)
     {
-        if (!popHappinessConfigsCache.IsEmpty && !forceRefresh)
-            return popHappinessConfigsCache.FirstOrDefault(x => x.Type == popHappinessType);
+        if (config.PopHappinessConfigs != null) return config.PopHappinessConfigs;
         
-        var configs = await GetAllAsync(x => true);
-        popHappinessConfigsCache.Clear();
-        
-        var popHappinessConfigs = configs
-            .FindAll(config => config.PopHappinessConfigs != null)
-            .SelectMany(config => config.PopHappinessConfigs!)
-            .ToList();
-        
-        foreach (var popHappinessConfig in popHappinessConfigs)
-        {
-            popHappinessConfigsCache.Push(popHappinessConfig);
-        }
-        return popHappinessConfigsCache.FirstOrDefault(x => x.Type == popHappinessType);
-    }
-    
-    public async Task<List<PopHappinessConfig>> GetAllPopHappinessConfigs(bool forceRefresh = false)
-    {
-        if (!popHappinessConfigsCache.IsEmpty && !forceRefresh)
-            return popHappinessConfigsCache.ToList();
-        
-        var configs = await GetAllAsync(x => true);
-        popHappinessConfigsCache.Clear();
-        
-        var popHappinessConfigs = configs
-            .FindAll(config => config.PopHappinessConfigs != null)
-            .SelectMany(config => config.PopHappinessConfigs!)
-            .ToList();
-        
-        foreach (var popHappinessConfig in popHappinessConfigs)
-        {
-            popHappinessConfigsCache.Push(popHappinessConfig);
-        }
-        
-        return popHappinessConfigsCache.ToList();
+        config.PopHappinessConfigs = Configs.CreateDefault().PopHappinessConfigs!;
+            
+        // Save changes to the database
+        await UpdateAsync(config);
+        return config.PopHappinessConfigs;
     }
 }

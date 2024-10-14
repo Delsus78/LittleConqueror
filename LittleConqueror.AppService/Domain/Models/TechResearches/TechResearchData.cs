@@ -12,7 +12,7 @@ public class TechResearchData
     public TechResearchStatus ResearchStatus { get; init; }
     public DateTime? StartSearchingDate { get; init; }
     public DateTime? EndSearchingDate { get; init; }
-    public TechResearchAvailabilityEnum Availability { get; set; }
+    public List<TechResearchAvailabilityEnum> Availabilities { get; set; }
 }
 
 public enum TechResearchAvailabilityEnum
